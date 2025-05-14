@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoginView } from "./login-view.jsx";
+import { LoginView } from "./login-view";
 import { LoginPresenter } from "./login-presenter";
 
 const LoginPage = () => {
@@ -23,6 +23,10 @@ const LoginPage = () => {
     presenter.login(username, password);
   };
 
+  const handleGoToRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <LoginView
       username={username}
@@ -31,6 +35,7 @@ const LoginPage = () => {
       onPasswordChange={setPassword}
       onSubmit={handleSubmit}
       error={error}
+      onGoToRegister={handleGoToRegister} // 👈 kirim ke view
     />
   );
 };
