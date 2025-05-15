@@ -17,7 +17,7 @@ export const LoginView = ({
     <div className="flex h-screen bg-[#EEE9FF]">
       <div className="flex-1 flex flex-col justify-center items-center bg-[#BFA5FF] text-black p-12 rounded-r-full">
         <img
-          src="/emoji 5.png"
+          src="/emoji1.png"
           alt="Emojis"
           className="h-24 w-auto mb-4 object-contain"
         />
