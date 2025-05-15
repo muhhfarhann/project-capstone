@@ -1,5 +1,4 @@
-// register-view.jsx
-import React from "react";
+import React from 'react';
 
 export const RegisterView = ({
   username,
@@ -12,10 +11,10 @@ export const RegisterView = ({
   onGenderChange,
   onSubmit,
   error,
+  onSocialLogin,
 }) => {
   return (
     <div className="flex h-screen bg-[#F1EDFF]">
-      {/* ... layout seperti gambar yang kamu kirim ... */}
       <div className="flex-1 flex flex-col justify-center items-center px-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
           Yuk, <span className="text-purple-600">Daftar!</span>
@@ -60,7 +59,8 @@ export const RegisterView = ({
           </div>
           <button
             onClick={onSubmit}
-            className="w-full bg-purple-600 text-white rounded-full py-2 shadow-md cursor-pointer">
+            className="w-full bg-purple-600 text-white rounded-full py-2 shadow-md cursor-pointer"
+          >
             Daftar
           </button>
           <div className="text-center my-4 text-sm text-gray-500">
@@ -71,41 +71,45 @@ export const RegisterView = ({
               src="/google.png"
               alt="Google"
               className="w-6 h-6 cursor-pointer"
+              onClick={() => onSocialLogin('google')}
             />
             <img
               src="/facebook.png"
               alt="Facebook"
               className="w-6 h-6 cursor-pointer"
+              onClick={() => onSocialLogin('facebook')}
             />
             <img
               src="/github.png"
               alt="GitHub"
               className="w-6 h-6 cursor-pointer"
+              onClick={() => onSocialLogin('github')}
             />
             <img
               src="/linkedin.png"
               alt="LinkedIn"
               className="w-6 h-6 cursor-pointer"
+              onClick={() => onSocialLogin('linkedin')}
             />
           </div>
         </div>
       </div>
-      {/* Kanan: ilustrasi / kalimat sambutan */}
       <div className="flex h-screen bg-[#EEE9FF]">
         <div className="flex-1 flex flex-col justify-center items-center bg-[#BFA5FF] text-black p-60 rounded-l-full">
           <img
             src="/emoji 5.png"
             alt="Emojis"
-            className="h-24 w-auto mb-4 object-contain "
+            className="h-24 w-auto mb-4 object-contain"
           />
-          <h1 className="ttext-2xl font-bold">Halo, Senang Ketemu Lagi!</h1>
+          <h1 className="text-2xl font-bold">Halo, Senang Ketemu Lagi!</h1>
           <p className="mt-2 text-center max-w-md">
             Mamood senang banget kamu kembali, siap melangkah lebih jauh? Yuk,
             masuk sekarang dan lanjutkan perjalanan kenal dirimu lebih dalam.
           </p>
           <a
             href="/"
-            className="bg-purple-600 text-white px-4 py-2 rounded-full shadow mt-6">
+            className="bg-purple-600 text-white px-4 py-2 rounded-full shadow mt-6"
+          >
             Yuk, masuk lagi!
           </a>
         </div>
