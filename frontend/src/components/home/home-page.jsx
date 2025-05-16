@@ -1,13 +1,18 @@
-import React from 'react';
+// home-page.jsx
+import { useEffect } from 'react';
+import HomeView from './home-view';
+import HomePresenter from './home-presenter';
 
-const HomePage = () => {
-  return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-3xl font-bold text-purple-600">
-        Selamat Datang di Home!
-      </h1>
-    </div>
-  );
-};
+export default function HomePage() {
+  useEffect(() => {
+    const presenter = new HomePresenter({
+      renderContent: () => {
+        // Belum ada data yang perlu di-pass ke view karena view pakai teks statis
+      },
+    });
 
-export default HomePage;
+    presenter.loadContent();
+  }, []);
+
+  return <HomeView />;
+}
