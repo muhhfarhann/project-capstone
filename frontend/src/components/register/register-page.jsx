@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RegisterPresenter } from './register-presenter';
 import { RegisterView } from './register-view';
@@ -6,7 +6,6 @@ import {
   googleProvider,
   facebookProvider,
   githubProvider,
-  linkedinProvider,
 } from '../../firebase';
 
 const RegisterPage = () => {
@@ -15,7 +14,6 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [gender, setGender] = useState('');
   const [error, setError] = useState('');
-  const [isRedirectHandled, setIsRedirectHandled] = useState(false);
   const navigate = useNavigate();
 
   const presenter = new RegisterPresenter({
@@ -37,7 +35,6 @@ const RegisterPage = () => {
       google: googleProvider,
       facebook: facebookProvider,
       github: githubProvider,
-      linkedin: linkedinProvider,
     };
     const provider = providers[providerName];
     if (provider) {
@@ -55,30 +52,6 @@ const RegisterPage = () => {
       setError('Provider tidak valid');
     }
   };
-
-  useEffect(() => {
-    if (isRedirectHandled) {
-      const handleRedirectEffect = async () => {
-        try {
-          console.log('Memeriksa hasil redirect...');
-          const result = await presenter.handleRedirect();
-          if (result?.success) {
-            console.log('Registrasi sosial berhasil:', result.user);
-            presenter.view.onRegisterSuccess(result.user);
-          } else if (result?.error) {
-            console.error('Error registrasi sosial:', result.error);
-            presenter.view.onRegisterError(result.error);
-          }
-        } catch (error) {
-          console.error('Error di handleRedirectEffect:', error);
-          setError('Gagal memproses login sosial');
-        } finally {
-          setIsRedirectHandled(false);
-        }
-      };
-      handleRedirectEffect();
-    }
-  }, [isRedirectHandled, presenter]);
 
   return (
     <RegisterView

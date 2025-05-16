@@ -20,40 +20,30 @@ export class RegisterPresenter {
     try {
       console.log('Memulai autentikasi sosial dengan provider:', provider.providerId);
       const result = await loginModel.socialLogin(provider);
+      if (result.success) {
+        // Simpan data tambahan ke backend
+        const updateResult = await registerModel.updateUserData(
+          result.user.uid,
+          result.user.displayName || 'User',
+          '' // Gender tidak tersedia dari Google
+        );
+        if (updateResult.success) {
+          return {
+            success: true,
+            user: {
+              username: result.user.displayName || 'User',
+              email: result.user.email,
+              gender: ''
+            }
+          };
+        } else {
+          return { success: false, error: updateResult.error };
+        }
+      }
       return result;
     } catch (error) {
       console.error('Error di handleSocialLogin:', error);
       return { success: false, error: error.message || 'Gagal login dengan sosial media' };
     }
-  }
-
-  async handleRedirect() {
-    console.log('Memulai penanganan redirect...');
-    const result = await loginModel.handleRedirectResult();
-    if (result?.success) {
-      console.log('Registrasi sosial berhasil:', result.user);
-      // Simpan data tambahan ke backend
-      const updateResult = await registerModel.updateUserData(
-        result.user.uid,
-        result.user.displayName || 'User',
-        result.user.gender || ''
-      );
-      if (updateResult.success) {
-        return {
-          success: true,
-          user: {
-            username: result.user.displayName || 'User',
-            email: result.user.email,
-            gender: result.user.gender || '',
-          },
-        };
-      } else {
-        return { success: false, error: updateResult.error };
-      }
-    } else if (result?.error) {
-      console.error('Error saat registrasi sosial:', result.error);
-      return { success: false, error: result.error };
-    }
-    return { success: false, error: 'Tidak ada hasil redirect' };
   }
 }

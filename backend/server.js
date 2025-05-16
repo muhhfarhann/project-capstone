@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import admin from "firebase-admin";
 import fs from "fs";
+import bcrypt from "bcrypt";
 
 // Baca file serviceAccountKey.json
 const serviceAccount = JSON.parse(fs.readFileSync("./serviceAccountKey.json", "utf8"));
@@ -26,18 +27,37 @@ app.get("/", (req, res) => {
 });
 
 // Endpoint untuk registrasi manual
-app.post("/api/auth/register", (req, res) => {
+app.post("/api/auth/register", async (req, res) => {
     const { username, email, password, gender } = req.body;
     if (!username || !email || !password || !gender) {
         return res.status(400).json({ error: "Semua field wajib diisi" });
     }
-    const user = { username, email, gender };
-    console.log("Data pengguna:", user);
-    users[email] = user; // Simpan ke "database" sementara
-    res.status(200).json({ user });
+    try {
+        // Buat pengguna di Firebase Authentication
+        const userRecord = await admin.auth().createUser({
+            email,
+            password,
+            displayName: username,
+        });
+        // Hash password untuk penyimpanan lokal (opsional)
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = { uid: userRecord.uid, username, email, gender, password: hashedPassword };
+        users[userRecord.uid] = user; // Simpan dengan uid sebagai kunci
+        console.log("Data pengguna:", user);
+        res.status(200).json({ user: { username, email, gender } });
+    } catch (error) {
+        console.error("Error di register:", error);
+        let errorMessage = 'Gagal registrasi.';
+        if (error.code === 'auth/email-already-exists') {
+            errorMessage = 'Email sudah terdaftar.';
+        } else if (error.code === 'auth/invalid-email') {
+            errorMessage = 'Format email tidak valid.';
+        }
+        res.status(400).json({ error: errorMessage });
+    }
 });
 
-// Endpoint untuk login manual (opsional, untuk verifikasi token)
+// Endpoint untuk login manual
 app.post("/api/auth/login", async (req, res) => {
     const { token } = req.body;
     if (!token) {
@@ -77,7 +97,7 @@ app.post("/api/auth/update-user", async (req, res) => {
     }
     try {
         const user = { uid, username, gender };
-        users[uid] = user; // Simpan ke "database" sementara
+        users[uid] = user; // Simpan dengan uid sebagai kunci
         console.log("Memperbarui data pengguna:", user);
         res.status(200).json({ success: true });
     } catch (error) {

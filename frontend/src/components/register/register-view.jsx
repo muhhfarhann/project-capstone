@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export const RegisterView = ({
   username,
@@ -13,6 +13,8 @@ export const RegisterView = ({
   error,
   onSocialLogin,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div className="flex h-screen bg-[#F1EDFF]">
       <div className="flex-1 flex flex-col justify-center items-center px-8">
@@ -38,7 +40,7 @@ export const RegisterView = ({
             className="w-full mb-4 px-4 py-2 rounded-full border focus:outline-none"
           />
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             placeholder="Kata Sandi"
             value={password}
             onChange={(e) => onPasswordChange(e.target.value)}
@@ -53,8 +55,14 @@ export const RegisterView = ({
           />
           {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
           <div className="flex justify-between items-center mb-4">
-            <label className="text-sm">
-              <input type="checkbox" /> Tampilkan kata sandi
+            <label className="text-sm flex items-center">
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+                className="mr-1"
+              />
+              Tampilkan kata sandi
             </label>
           </div>
           <button
@@ -84,12 +92,6 @@ export const RegisterView = ({
               alt="GitHub"
               className="w-6 h-6 cursor-pointer"
               onClick={() => onSocialLogin('github')}
-            />
-            <img
-              src="/linkedin.png"
-              alt="LinkedIn"
-              className="w-6 h-6 cursor-pointer"
-              onClick={() => onSocialLogin('linkedin')}
             />
           </div>
         </div>
