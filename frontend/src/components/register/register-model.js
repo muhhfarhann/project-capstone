@@ -1,7 +1,9 @@
+import { API_BASE_URL } from '../../firebase';
+
 export const registerModel = {
   async register(username, email, password, gender) {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, gender }),
@@ -23,7 +25,7 @@ export const registerModel = {
 
   async verifyToken(token) {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/verify-token', {
+      const response = await fetch(`${API_BASE_URL}/auth/verify-token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token }),
@@ -43,7 +45,7 @@ export const registerModel = {
   async updateUserData(uid, username, gender) {
     try {
       console.log('Mengirim data ke update-user:', { uid, username, gender });
-      const response = await fetch('http://localhost:5000/api/auth/update-user', {
+      const response = await fetch(`${API_BASE_URL}/auth/update-user`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid, username, gender }),

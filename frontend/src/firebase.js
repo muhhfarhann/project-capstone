@@ -3,7 +3,6 @@ import {
     getAuth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signInWithRedirect,
     signInWithPopup,
     getRedirectResult,
     GoogleAuthProvider,
@@ -20,8 +19,7 @@ const firebaseConfig = {
     storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
     messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
-    measurementId: import.meta.env.VITE_MEASUREMENT_ID,
-    databaseURL: import.meta.env.VITE_API_BASE_URL,
+    measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
@@ -32,21 +30,19 @@ const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 const githubProvider = new GithubAuthProvider();
 const linkedinProvider = (() => {
-    // LinkedIn tidak langsung didukung Firebase, ini hanya placeholder
-    // Implementasi sesungguhnya memerlukan OAuth custom
+    // Placeholder untuk LinkedIn (tidak didukung langsung oleh Firebase)
     const provider = new GoogleAuthProvider();
     provider.setCustomParameters({ 'login_hint': 'linkedin' });
     return provider;
 })();
 
-// API base URL
+// API base URL untuk backend
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 export {
     auth,
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
-    signInWithRedirect,
     signInWithPopup,
     getRedirectResult,
     googleProvider,
