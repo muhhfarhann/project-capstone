@@ -37,6 +37,23 @@ app.post("/api/auth/register", (req, res) => {
     res.status(200).json({ user });
 });
 
+// Endpoint untuk login manual (opsional, untuk verifikasi token)
+app.post("/api/auth/login", async (req, res) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.status(400).json({ error: "Token diperlukan" });
+    }
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const uid = decodedToken.uid;
+        const user = users[uid] || { uid, username: 'User', gender: '' };
+        res.status(200).json({ success: true, user });
+    } catch (error) {
+        console.error("Error di login:", error);
+        res.status(401).json({ error: "Token tidak valid" });
+    }
+});
+
 // Endpoint untuk verifikasi token Firebase
 app.post("/api/auth/verify-token", async (req, res) => {
     const { token } = req.body;

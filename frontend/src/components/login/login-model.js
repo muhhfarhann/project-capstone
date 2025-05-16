@@ -1,47 +1,36 @@
-// import { auth, signInWithRedirect, getRedirectResult } from '../../firebase';
-
-// export const loginModel = {
-//   socialLogin: async (provider) => {
-//     try {
-//       console.log('Memulai signInWithRedirect untuk provider:', provider.providerId);
-//       await signInWithRedirect(auth, provider);
-//       console.log('signInWithRedirect dipanggil');
-//     } catch (error) {
-//       console.error('Error di socialLogin:', error);
-//       throw error;
-//     }
-//   },
-
-//   handleRedirectResult: async () => {
-//     try {
-//       console.log('Memeriksa hasil redirect...');
-//       const result = await getRedirectResult(auth);
-//       if (result) {
-//         const user = result.user;
-//         console.log('Hasil redirect berhasil:', user);
-//         return {
-//           success: true,
-//           user: {
-//             uid: user.uid,
-//             email: user.email,
-//             displayName: user.displayName,
-//             gender: '', // Gender tidak tersedia dari OAuth, bisa diisi via form
-//           },
-//         };
-//       }
-//       console.log('Tidak ada hasil redirect');
-//       return null;
-//     } catch (error) {
-//       console.error('Error di handleRedirectResult:', error);
-//       return { success: false, error: error.message };
-//     }
-//   },
-// };
-
-import { auth, signInWithPopup } from '../../firebase';
+import { auth, signInWithPopup, signInWithEmailAndPassword } from '../../firebase';
 
 export const loginModel = {
-  socialLogin: async (provider) => {
+  async login(email, password) {
+    try {
+      console.log('Memulai login manual dengan email:', email);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      const user = result.user;
+      console.log('Login manual berhasil:', user);
+      return {
+        success: true,
+        user: {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName || 'User',
+          gender: '' // Gender tidak tersedia dari Firebase secara default
+        }
+      };
+    } catch (error) {
+      console.error('Error di login manual:', error);
+      let errorMessage = 'Gagal login. Periksa email atau kata sandi.';
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'Pengguna tidak ditemukan.';
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Kata sandi salah.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Format email tidak valid.';
+      }
+      return { success: false, error: errorMessage };
+    }
+  },
+
+  async socialLogin(provider) {
     try {
       console.log('Memulai signInWithPopup untuk provider:', provider.providerId);
       const result = await signInWithPopup(auth, provider);
@@ -52,18 +41,22 @@ export const loginModel = {
         user: {
           uid: user.uid,
           email: user.email,
-          displayName: user.displayName,
-          gender: '',
-        },
+          displayName: user.displayName || 'User',
+          gender: ''
+        }
       };
     } catch (error) {
       console.error('Error di socialLogin:', error);
-      return { success: false, error: error.message };
+      let errorMessage = 'Gagal login dengan sosial media.';
+      if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = 'Jendela login ditutup sebelum selesai.';
+      }
+      return { success: false, error: errorMessage };
     }
   },
 
-  handleRedirectResult: async () => {
+  async handleRedirectResult() {
     console.log('handleRedirectResult tidak digunakan untuk popup');
     return null;
-  },
+  }
 };

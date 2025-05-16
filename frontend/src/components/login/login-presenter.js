@@ -10,7 +10,17 @@ export class LoginPresenter {
     console.log('Memulai login manual:', { email });
     const result = await loginModel.login(email, password);
     if (result.success) {
-      this.view.onLoginSuccess(result.user);
+      // Perbarui data pengguna di backend
+      const updateResult = await registerModel.updateUserData(
+        result.user.uid,
+        result.user.displayName || 'User',
+        result.user.gender || ''
+      );
+      if (updateResult.success) {
+        this.view.onLoginSuccess(result.user);
+      } else {
+        this.view.onLoginError(updateResult.error);
+      }
     } else {
       this.view.onLoginError(result.error);
     }
