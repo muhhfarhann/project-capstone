@@ -14,6 +14,9 @@ export const registerModel = {
       return { success: false, error: data.error || 'Registrasi gagal' };
     } catch (error) {
       console.error('Error di register:', error);
+      if (error.message === 'Failed to fetch') {
+        return { success: false, error: 'Tidak dapat terhubung ke server. Pastikan backend berjalan di http://localhost:5000' };
+      }
       return { success: false, error: 'Gagal terhubung ke server' };
     }
   },
