@@ -24,7 +24,7 @@ export default function HomeView() {
           {/* Nav Menu */}
           <ul className="flex items-center gap-6 text-base font-medium">
             <li>
-              <a href="#" className="hover:text-purple-700">
+              <a href="/home" className="hover:text-purple-700">
                 Beranda
               </a>
             </li>
@@ -38,22 +38,30 @@ export default function HomeView() {
               {isDropdownOpen && (
                 <ul className="absolute left-0 mt-2 bg-white rounded-md shadow-md text-sm py-2 w-48 z-20">
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-purple-100">
+                    <a
+                      href="/catatan"
+                      className="block px-4 py-2 hover:bg-purple-100">
                       Catatan Mood
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-purple-100">
+                    <a
+                      href="/jurnal"
+                      className="block px-4 py-2 hover:bg-purple-100">
                       Jurnal Harian
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-purple-100">
+                    <a
+                      href="/refleksi"
+                      className="block px-4 py-2 hover:bg-purple-100">
                       Refleksi Diri
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-purple-100">
+                    <a
+                      href="/rekomendasi"
+                      className="block px-4 py-2 hover:bg-purple-100">
                       Rekomendasi
                     </a>
                   </li>
@@ -62,7 +70,7 @@ export default function HomeView() {
             </li>
 
             <li>
-              <a href="#" className="hover:text-purple-700">
+              <a href="/tentangkami" className="hover:text-purple-700">
                 Tentang Kami
               </a>
             </li>
