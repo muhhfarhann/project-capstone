@@ -1,11 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function HomeView() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    alert('anda ingin login');
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -53,9 +58,9 @@ export default function HomeView() {
           {/* Nav Menu */}
           <ul className="flex items-center gap-6 text-base font-medium">
             <li>
-              <a href="/home" className="hover:text-purple-700">
+              <Link to="/home" className="hover:text-purple-700">
                 Beranda
-              </a>
+              </Link>
             </li>
 
             <li className="relative" ref={dropdownRef}>
@@ -68,55 +73,55 @@ export default function HomeView() {
               {isDropdownOpen && (
                 <ul className="absolute left-0 mt-2 bg-white rounded-md shadow-md text-sm py-2 w-48 z-20">
                   <li>
-                    <a
-                      href="/catatan"
+                    <Link
+                      to="/catatan"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Catatan Mood
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="/jurnal"
+                    <Link
+                      to="/jurnal"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Jurnal Harian
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="/refleksi"
+                    <Link
+                      to="/refleksi"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Refleksi Diri
-                    </a>
+                    </Link>
                   </li>
                   <li>
-                    <a
-                      href="/rekomendasi"
+                    <Link
+                      to="/rekomendasi"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Rekomendasi
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               )}
             </li>
 
             <li>
-              <a href="/tentangkami" className="hover:text-purple-700">
+              <Link to="/tentangkami" className="hover:text-purple-700">
                 Tentang Kami
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/testimoni" className="hover:text-purple-700">
+              <Link to="/testimoni" className="hover:text-purple-700">
                 Testimoni
-              </a>
+              </Link>
             </li>
           </ul>
 
           {/* Auth Buttons */}
-          <div className="flex gap-3">
+          <div className="relative flex gap-3">
             <div
               className="icon flex gap-1 items-center cursor-pointer"
               onClick={toggleDropdownProfile}
@@ -130,15 +135,30 @@ export default function HomeView() {
               ▾
             </div>
             {profileDropdown && (
-              <ul className="absolute right-0 top- Richards10 mt-2 bg-white rounded-md shadow-md text-sm w-auto py-2 z-20">
+              <ul className="absolute right-0 top-10 mt-2 bg-white rounded-md shadow-md text-sm w-auto py-2 z-20">
                 <li>
-                  <a className="w-full hover:bg-purple-100">Dashboard</a>
+                  <Link
+                    to="/dashboard"
+                    className="block px-4 py-2 hover:bg-purple-100"
+                  >
+                    Dashboard
+                  </Link>
                 </li>
                 <li>
-                  <a className="w-full hover:bg-purple-100">Akun Saya</a>
+                  <Link
+                    to="/akunsaya"
+                    className="block px-4 py-2 hover:bg-purple-100"
+                  >
+                    Akun Saya
+                  </Link>
                 </li>
                 <li>
-                  <a className="w-full hover:bg-purple-100">Keluar</a>
+                  <button
+                    onClick={() => handleLogout}
+                    className="block px-4 py-2 hover:bg-purple-100 w-full text-left"
+                  >
+                    Keluar
+                  </button>
                 </li>
               </ul>
             )}
