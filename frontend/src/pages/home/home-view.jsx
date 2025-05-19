@@ -105,6 +105,7 @@ export default function HomeView() {
                 Tentang Kami
               </Link>
             </li>
+
             <li>
               <Link to="/testimoni" className="hover:text-purple-700">
                 Testimoni
@@ -113,7 +114,7 @@ export default function HomeView() {
           </ul>
 
           {/* Auth Buttons */}
-          <li
+          <div
             className="relative"
             ref={profileRef}
             tabIndex={0}
@@ -161,7 +162,7 @@ export default function HomeView() {
                 </li>
               </ul>
             )}
-          </li>
+          </div>
         </div>
       </nav>
       {/* Hero Section */}

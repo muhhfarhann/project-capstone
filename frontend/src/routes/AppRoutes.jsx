@@ -1,14 +1,14 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "../components/login/login-page";
-import RegisterPage from "../components/register/register-page";
-import LandingPage from "../components/landing page/landing-page";
-import Testimoni from "../components/testimoni/testimoni-page";
-import CatatanPage from "../components/Eksplorasi Diri/catatan/catatan-page";
-import JurnalHarian from "../components/Eksplorasi Diri/jurnal/jurnal-page";
-import RefleksiDiri from "../components/Eksplorasi Diri/refleksi/refleksi-page";
-import Rekomendasi from "../components/Eksplorasi Diri/rekomendasi/rekomendasi-page";
-import TentangKamiPage from "../components/tentangkami/tentangkami-page";
-import HomePage from "../components/home/home-page";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from '../pages/login/login-page';
+import RegisterPage from '../pages/register/register-page';
+import LandingPage from '../pages/landing page/landing-page';
+import Testimoni from '../pages/testimoni/testimoni-page';
+import CatatanPage from '../pages/Eksplorasi Diri/catatan/catatan-page';
+import JurnalHarian from '../pages/Eksplorasi Diri/jurnal/jurnal-page';
+import RefleksiDiri from '../pages/Eksplorasi Diri/refleksi/refleksi-page';
+import Rekomendasi from '../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page';
+import TentangKamiPage from '../pages/tentangkami/tentangkami-page';
+import HomePage from '../pages/home/home-page';
 
 export default function AppRoutes() {
   return (
