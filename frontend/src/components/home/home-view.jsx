@@ -1,12 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function HomeView() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [profileDropdown, setProfileDropdown] = useState(false);
   const dropdownRef = useRef(null);
   const profileRef = useRef(null);
-  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -16,15 +15,6 @@ export default function HomeView() {
   const toggleDropdownProfile = () => {
     setProfileDropdown((prev) => !prev);
     setDropdownOpen(false); // Tutup eksplorasi dropdown saat membuka profile
-  };
-
-  // Menangani logout
-  const handleLogout = () => {
-    // Hapus semua data sesi pengguna
-    sessionStorage.clear();
-    localStorage.clear();
-    // Arahkan ke halaman login
-    navigate('/login');
   };
 
   // Menangani klik di luar dropdown
@@ -63,9 +53,9 @@ export default function HomeView() {
           {/* Nav Menu */}
           <ul className="flex items-center gap-6 text-base font-medium">
             <li>
-              <Link to="/home" className="hover:text-purple-700">
+              <a href="/home" className="hover:text-purple-700">
                 Beranda
-              </Link>
+              </a>
             </li>
 
             <li className="relative" ref={dropdownRef}>
@@ -78,50 +68,50 @@ export default function HomeView() {
               {isDropdownOpen && (
                 <ul className="absolute left-0 mt-2 bg-white rounded-md shadow-md text-sm py-2 w-48 z-20">
                   <li>
-                    <Link
-                      to="/catatan"
+                    <a
+                      href="/catatan"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Catatan Mood
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link
-                      to="/jurnal"
+                    <a
+                      href="/jurnal"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Jurnal Harian
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link
-                      to="/refleksi"
+                    <a
+                      href="/refleksi"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Refleksi Diri
-                    </Link>
+                    </a>
                   </li>
                   <li>
-                    <Link
-                      to="/rekomendasi"
+                    <a
+                      href="/rekomendasi"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
                       Rekomendasi
-                    </Link>
+                    </a>
                   </li>
                 </ul>
               )}
             </li>
 
             <li>
-              <Link to="/tentangkami" className="hover:text-purple-700">
+              <a href="/tentangkami" className="hover:text-purple-700">
                 Tentang Kami
-              </Link>
+              </a>
             </li>
             <li>
-              <Link to="/testimoni" className="hover:text-purple-700">
+              <a href="/testimoni" className="hover:text-purple-700">
                 Testimoni
-              </Link>
+              </a>
             </li>
           </ul>
 
@@ -140,30 +130,15 @@ export default function HomeView() {
               ▾
             </div>
             {profileDropdown && (
-              <ul className="absolute right-0 top-10 mt-2 bg-white rounded-md shadow-md text-sm w-auto py-2 z-20">
+              <ul className="absolute right-0 top- Richards10 mt-2 bg-white rounded-md shadow-md text-sm w-auto py-2 z-20">
                 <li>
-                  <Link
-                    to="/dashboard"
-                    className="block px-4 py-2 hover:bg-purple-100"
-                  >
-                    Dashboard
-                  </Link>
+                  <a className="w-full hover:bg-purple-100">Dashboard</a>
                 </li>
                 <li>
-                  <Link
-                    to="/akunsaya"
-                    className="block px-4 py-2 hover:bg-purple-100"
-                  >
-                    Akun Saya
-                  </Link>
+                  <a className="w-full hover:bg-purple-100">Akun Saya</a>
                 </li>
                 <li>
-                  <button
-                    onClick={handleLogout}
-                    className="block px-4 py-2 hover:bg-purple-100 w-full text-left"
-                  >
-                    Keluar
-                  </button>
+                  <a className="w-full hover:bg-purple-100">Keluar</a>
                 </li>
               </ul>
             )}
