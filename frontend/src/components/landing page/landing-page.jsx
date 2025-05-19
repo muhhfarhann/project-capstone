@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import HomeView from "./home-view";
-import HomePresenter from "./home-presenter";
+import LandingView from "./landing-view";
+import LandingPresenter from "./landing-presenter";
 
-export default function HomePage() {
+export default function LandingPage() {
   useEffect(() => {
-    const presenter = new HomePresenter({
+    const presenter = new LandingPresenter({
       renderContent: () => {
         // Belum ada data yang perlu di-pass ke view karena view pakai teks statis
       },
@@ -13,5 +13,5 @@ export default function HomePage() {
     presenter.loadContent();
   }, []);
 
-  return <HomeView />;
+  return <LandingView />;
 }

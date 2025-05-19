@@ -1,10 +1,10 @@
 // landing-presenter.js
-import HomeModel from "./home-model";
+import LandingModel from "./landing-model";
 
-export default class HomePresenter {
+export default class landingPresenter {
   constructor(view) {
     this.view = view;
-    this.model = new HomeModel();
+    this.model = new LandingModel();
   }
 
   async loadContent() {

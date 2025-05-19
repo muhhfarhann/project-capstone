@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom"; // ⬅️ Tambahkan ini
 
-export default function HomeView() {
+export default function LandingView() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -24,7 +24,7 @@ export default function HomeView() {
           {/* Nav Menu */}
           <ul className="flex items-center gap-6 text-base font-medium">
             <li>
-              <a href="/home" className="hover:text-purple-700">
+              <a href="/" className="hover:text-purple-700">
                 Beranda
               </a>
             </li>
@@ -83,12 +83,15 @@ export default function HomeView() {
 
           {/* Auth Buttons */}
           <div className="flex gap-3">
-            <Link to="/profile" className="cursor-pointer">
-              <img
-                src="/profile.png"
-                alt="Profile"
-                className="h-10 w-10 rounded-full border-2 border-purple-700 hover:border-purple-500 transition"
-              />
+            <Link
+              to="/register"
+              className="border border-purple-700 text-purple-700 px-4 py-2 rounded-full hover:bg-purple-100 transition cursor-pointer">
+              Daftar
+            </Link>
+            <Link
+              to="/login"
+              className="bg-purple-700 text-white px-4 py-2 rounded-full hover:bg-purple-800 transition cursor-pointer">
+              Masuk
             </Link>
           </div>
         </div>
