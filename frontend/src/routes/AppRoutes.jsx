@@ -9,6 +9,7 @@ import RefleksiDiri from '../pages/Eksplorasi Diri/refleksi/refleksi-page';
 import Rekomendasi from '../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page';
 import TentangKamiPage from '../pages/tentangkami/tentangkami-page';
 import HomePage from '../pages/home/home-page';
+import PrivateRoute from '../utils/PrivateRoute';
 
 export default function AppRoutes() {
   return (
@@ -17,13 +18,64 @@ export default function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/testimoni" element={<Testimoni />} />
-        <Route path="/catatan" element={<CatatanPage />} />
-        <Route path="/jurnal" element={<JurnalHarian />} />
-        <Route path="/refleksi" element={<RefleksiDiri />} />
-        <Route path="/rekomendasi" element={<Rekomendasi />} />
-        <Route path="/tentangkami" element={<TentangKamiPage />} />
-        <Route path="/home" element={<HomePage />} />
+        <Route
+          path="/testimoni"
+          element={
+            <PrivateRoute>
+              <Testimoni />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/catatan"
+          element={
+            <PrivateRoute>
+              {' '}
+              <CatatanPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/jurnal"
+          element={
+            <PrivateRoute>
+              {' '}
+              <JurnalHarian />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/refleksi"
+          element={
+            <PrivateRoute>
+              <RefleksiDiri />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/rekomendasi"
+          element={
+            <PrivateRoute>
+              <Rekomendasi />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/tentangkami"
+          element={
+            <PrivateRoute>
+              <TentangKamiPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/home"
+          element={
+            <PrivateRoute>
+              <HomePage />
+            </PrivateRoute>
+          }
+        />
         {/* Add more routes as needed */}
       </Routes>
     </BrowserRouter>

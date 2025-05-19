@@ -12,6 +12,7 @@ export default function HomeView() {
     console.log('Tombol di klik bro');
 
     if (confirm('Anda ingin logout?')) {
+      localStorage.removeItem('user');
       navigate('/login'); // atau aksi logout lain
     }
   };
@@ -25,6 +26,14 @@ export default function HomeView() {
     setProfileDropdown((prev) => !prev);
     setDropdownOpen(false); // Tutup eksplorasi dropdown saat membuka profile
   };
+
+  // Kode untuk cek di console browser user siapa yang login
+  // useEffect(() => {
+  //   const storedUser = JSON.parse(localStorage.getItem('user'));
+  //   if (storedUser) {
+  //     console.log(storedUser);
+  //   }
+  // }, []);
 
   return (
     <div className="min-h-screen bg-[#c9a7ff] text-gray-900">

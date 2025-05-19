@@ -19,6 +19,9 @@ const LoginPage = () => {
   const presenter = new LoginPresenter({
     onLoginSuccess: (user) => {
       alert('Berhasil login sebagai ' + user.email);
+      if (localStorage) {
+        localStorage.setItem('user', JSON.stringify(user));
+      }
       navigate('/home');
     },
     onLoginError: (errorMessage) => {
