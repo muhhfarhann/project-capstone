@@ -9,7 +9,11 @@ export default function HomeView() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    alert('anda ingin login');
+    console.log('Tombol di klik bro');
+
+    if (confirm('Anda ingin logout?')) {
+      navigate('/login'); // atau aksi logout lain
+    }
   };
 
   const toggleDropdown = () => {
@@ -21,26 +25,6 @@ export default function HomeView() {
     setProfileDropdown((prev) => !prev);
     setDropdownOpen(false); // Tutup eksplorasi dropdown saat membuka profile
   };
-
-  // Menangani klik di luar dropdown
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        profileRef.current &&
-        !profileRef.current.contains(event.target)
-      ) {
-        setDropdownOpen(false);
-        setProfileDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   return (
     <div className="min-h-screen bg-[#c9a7ff] text-gray-900">
@@ -63,7 +47,11 @@ export default function HomeView() {
               </Link>
             </li>
 
-            <li className="relative" ref={dropdownRef}>
+            <li
+              onBlur={() => setDropdownOpen(false)}
+              className="relative"
+              ref={dropdownRef}
+            >
               <button
                 onClick={toggleDropdown}
                 className="hover:text-purple-700 focus:outline-none cursor-pointer"
@@ -74,6 +62,7 @@ export default function HomeView() {
                 <ul className="absolute left-0 mt-2 bg-white rounded-md shadow-md text-sm py-2 w-48 z-20">
                   <li>
                     <Link
+                      onMouseDown={(e) => e.preventDefault()}
                       to="/catatan"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
@@ -82,6 +71,7 @@ export default function HomeView() {
                   </li>
                   <li>
                     <Link
+                      onMouseDown={(e) => e.preventDefault()}
                       to="/jurnal"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
@@ -90,6 +80,7 @@ export default function HomeView() {
                   </li>
                   <li>
                     <Link
+                      onMouseDown={(e) => e.preventDefault()}
                       to="/refleksi"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
@@ -98,6 +89,7 @@ export default function HomeView() {
                   </li>
                   <li>
                     <Link
+                      onMouseDown={(e) => e.preventDefault()}
                       to="/rekomendasi"
                       className="block px-4 py-2 hover:bg-purple-100"
                     >
@@ -121,11 +113,15 @@ export default function HomeView() {
           </ul>
 
           {/* Auth Buttons */}
-          <div className="relative flex gap-3">
+          <li
+            className="relative"
+            ref={profileRef}
+            tabIndex={0}
+            onBlur={() => setProfileDropdown(false)}
+          >
             <div
               className="icon flex gap-1 items-center cursor-pointer"
               onClick={toggleDropdownProfile}
-              ref={profileRef}
             >
               <img
                 src="/profile.png"
@@ -138,7 +134,8 @@ export default function HomeView() {
               <ul className="absolute right-0 top-10 mt-2 bg-white rounded-md shadow-md text-sm w-auto py-2 z-20">
                 <li>
                   <Link
-                    to="/dashboard"
+                    onMouseDown={(e) => e.preventDefault()}
+                    to="/home"
                     className="block px-4 py-2 hover:bg-purple-100"
                   >
                     Dashboard
@@ -146,7 +143,8 @@ export default function HomeView() {
                 </li>
                 <li>
                   <Link
-                    to="/akunsaya"
+                    onMouseDown={(e) => e.preventDefault()}
+                    to="/home"
                     className="block px-4 py-2 hover:bg-purple-100"
                   >
                     Akun Saya
@@ -154,7 +152,8 @@ export default function HomeView() {
                 </li>
                 <li>
                   <button
-                    onClick={() => handleLogout}
+                    onMouseDown={(e) => e.preventDefault()} // cegah blur
+                    onClick={handleLogout}
                     className="block px-4 py-2 hover:bg-purple-100 w-full text-left"
                   >
                     Keluar
@@ -162,7 +161,7 @@ export default function HomeView() {
                 </li>
               </ul>
             )}
-          </div>
+          </li>
         </div>
       </nav>
       {/* Hero Section */}
