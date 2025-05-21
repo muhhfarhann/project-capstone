@@ -1,7 +1,10 @@
-export default class JurnalPresenter {
-  constructor(view) {
-    this.view = view;
+// jurnal-presenter.js
+class JurnalPresenter {
+  constructor(model) {
+    this.model = model;
   }
 
-  // Tidak ada data dinamis untuk saat ini
+  // Tambahkan logika nanti jika diperlukan
 }
+
+export default JurnalPresenter;

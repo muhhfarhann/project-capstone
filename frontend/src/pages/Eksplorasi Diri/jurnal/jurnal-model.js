@@ -1,3 +1,6 @@
-export default class JurnalModel {
-  // Tidak ada data dinamis sekarang
+// jurnal-model.js
+class JurnalModel {
+  // Kosong dulu sesuai permintaan
 }
+
+export default JurnalModel;

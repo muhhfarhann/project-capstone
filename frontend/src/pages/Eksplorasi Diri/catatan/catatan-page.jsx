@@ -1,18 +1,34 @@
-// catatan-page.jsx
-import { useEffect } from "react";
-import CatatanView from "./catatan-view";
+import React, { useState } from "react";
 import CatatanPresenter from "./catatan-presenter";
+import CatatanModel from "./catatan-model";
+import CatatanView from "./catatan-view";
 
-export default function CatatanPage() {
-  useEffect(() => {
-    const presenter = new CatatanPresenter({
-      renderContent: () => {
-        // Saat ini belum pakai data, tapi struktur sudah siap
-      },
-    });
+const CatatanPage = () => {
+  const [selectedMood, setSelectedMood] = useState(null);
 
-    presenter.loadContent();
-  }, []);
+  // Inisialisasi model
+  const model = new CatatanModel();
 
-  return <CatatanView />;
-}
+  // Buat handler untuk mood yang dikirim ke presenter
+  const handleMoodSelect = (mood) => {
+    setSelectedMood(mood);
+  };
+
+  const handleNextClick = () => {
+    alert(`Mood kamu hari ini: ${selectedMood}`);
+    // Di sini bisa panggil model misalnya untuk simpan data
+  };
+
+  // Presenter hanya mengelola logic dan meneruskan ke View
+  const presenter = new CatatanPresenter(model);
+
+  return (
+    <CatatanView
+      selectedMood={selectedMood}
+      onMoodSelect={handleMoodSelect}
+      onNextClick={handleNextClick}
+    />
+  );
+};
+
+export default CatatanPage;
