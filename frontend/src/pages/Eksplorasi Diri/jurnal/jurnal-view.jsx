@@ -167,9 +167,9 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
                 <p>
                   {
                     [
-                      "Hari ini rasanya berat banget...",
-                      "Hari ini biasa aja. Nggak ada hal yang terlalu bikin senang atau sedih...",
-                      "Hari ini rasanya luar biasa menyenangkan...",
+                      "Hari ini rasanya berat banget loh. Aku ngerasa gagal di presentasi tadi karena gugup dan jadi blank... lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                      "Hari ini biasa aja. Nggak ada hal yang terlalu bikin senang atau sedih... lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                      "Hari ini rasanya luar biasa menyenangkan...lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                     ][idx]
                   }
                 </p>

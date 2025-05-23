@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from "../pages/login/login-page";
 import RegisterPage from "../pages/register/register-page";
 import LandingPage from "../pages/landing page/landing-page";
+import LandingSudahPage from "../pages/landing page sudah login/landing-sudah-page";
 import Testimoni from "../pages/testimoni/testimoni-page";
 import CatatanPage from "../pages/Eksplorasi Diri/catatan/catatan-page";
 import JurnalHarian from "../pages/Eksplorasi Diri/jurnal/jurnal-page";
@@ -22,6 +23,7 @@ export default function AppRoutes() {
         {/* bentar ya ni gw nambahin route ini buat tes  */}
         <Route path="/catatan" element={<CatatanPage />} />
         <Route path="/jurnal" element={<JurnalHarian />} />
+        <Route path="/sudahlogin" element={<LandingSudahPage />} />
         {/* close */}
 
         <Route

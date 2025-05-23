@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom"; // ⬅️ Tambahkan ini
 
-export default function LandingView() {
+export default function LandingSudahView() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -84,14 +84,13 @@ export default function LandingView() {
           {/* Auth Buttons */}
           <div className="flex gap-3">
             <Link
-              to="/register"
-              className="border border-purple-700 text-purple-700 px-4 py-2 rounded-full hover:bg-purple-100 transition cursor-pointer">
-              Daftar
-            </Link>
-            <Link
-              to="/login"
-              className="bg-purple-700 text-white px-4 py-2 rounded-full hover:bg-purple-800 transition cursor-pointer">
-              Masuk
+              to="/profile"
+              className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden">
+              <img
+                src="/profile.png"
+                alt="Profile"
+                className="w-10 h-10 object-cover rounded-full"
+              />
             </Link>
           </div>
         </div>
