@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const calendarData = [
     { src: "/calendar/april.png", bulan: "April" },
     { src: "/calendar/maret.png", bulan: "Maret" },
@@ -24,12 +26,10 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
     { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
   ];
 
-  const bulanList = ["April", "Maret", "Februari", "Januari"];
-
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside className="w-20 bg-black text-white flex flex-col items-center py-6 space-y-6 rounded-xl m-4">
+      {/* Sidebar Desktop */}
+      <aside className="hidden md:flex w-20 bg-black text-white flex-col items-center py-6 space-y-6 rounded-xl m-4">
         {sidebarMenu.map((item, index) => (
           <div
             key={index}
@@ -50,8 +50,8 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
             <h1 className="text-xl font-bold">Catatan Mood</h1>
           </div>
 
-          <div className="relative">
-            <div className="flex items-center space-x-2 cursor-pointer">
+          <div className="flex items-center space-x-3">
+            <div className="hidden md:flex items-center space-x-2 cursor-pointer">
               <span className="font-semibold">Halo, Daniel!</span>
               <img
                 src="/profile.png"
@@ -59,18 +59,96 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                 className="w-8 h-8 rounded-full border border-white"
               />
             </div>
+
+            {/* Tombol menu untuk mobile */}
+            <button
+              className="md:hidden p-2"
+              onClick={() => setIsSidebarOpen(true)}>
+              <img
+                src="/icons/menu.png"
+                alt="Menu"
+                className="w-6 h-6 cursor-pointer"
+              />
+            </button>
           </div>
         </header>
 
+        {/* Sidebar Mobile */}
+        {isSidebarOpen && (
+          <div className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden">
+            <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
+              {/* Tombol Close */}
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="absolute top-4 right-4 text-xl font-bold">
+                ×
+              </button>
+
+              {/* Profil User */}
+              <div className="mt-10 mb-6 text-center">
+                <img
+                  src="/profile.png"
+                  alt="Profile"
+                  className="w-16 h-16 rounded-full mx-auto border"
+                />
+                <h2 className="mt-2 font-semibold text-lg">Halo, Daniel!</h2>
+                <div className="mt-3 flex justify-center gap-2">
+                  <button className="px-3 py-1 border rounded-full text-sm text-white bg-purple-500">
+                    Akun Saya
+                  </button>
+                  <button className="px-3 py-1 border rounded-full text-sm text-purple-500">
+                    Keluar
+                  </button>
+                </div>
+              </div>
+
+              <hr className="my-4 border-gray-300" />
+
+              {/* Menu Navigasi */}
+              <nav className="space-y-4 px-2">
+                {[
+                  {
+                    label: "Beranda",
+                    path: "/",
+                    icon: "/icons/home-mobile.png",
+                  },
+                  {
+                    label: "Catatan Mood",
+                    path: "/catatan",
+                    icon: "/icons/catatan-mobile.png",
+                  },
+                  {
+                    label: "Jurnal Harian",
+                    path: "/jurnal",
+                    icon: "/icons/jurnal-mobile.png",
+                  },
+                  {
+                    label: "Refleksi Diri",
+                    path: "/refleksi",
+                    icon: "/icons/refleksi-mobile.png",
+                  },
+                ].map((item) => (
+                  <a
+                    key={item.path}
+                    href={item.path}
+                    className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500"
+                    onClick={() => setIsSidebarOpen(false)}>
+                    <img src={item.icon} alt={item.label} className="w-5 h-5" />
+                    <span>{item.label}</span>
+                  </a>
+                ))}
+              </nav>
+            </div>
+          </div>
+        )}
+
         {/* Konten */}
         <div className="p-6 space-y-6">
-          {/* Grid: Mood Hari Ini + Mingguan */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Mood Hari Ini */}
             <section className="bg-white p-4 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-3">Mood Hari Ini</h2>
               <p className="mb-2">Hari ini kamu merasa apa?</p>
-              <div className="flex space-x-4 mb-4 ">
+              <div className="flex flex-wrap gap-3 mb-4">
                 {moodOptions.map((mood) => (
                   <button
                     key={mood.value}
@@ -88,7 +166,6 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                   </button>
                 ))}
               </div>
-
               <textarea
                 className="w-full p-3 border rounded-md"
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
@@ -102,7 +179,6 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               </div>
             </section>
 
-            {/* Mood-ku Minggu Ini */}
             <section className="bg-purple-300 p-4 rounded-xl shadow-md">
               <h2 className="text-lg font-semibold mb-3">Mood-ku Minggu Ini</h2>
               <img
@@ -113,12 +189,11 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
             </section>
           </div>
 
-          {/* Mood-ku: 4 Bulan Terakhir */}
           <section className="bg-purple-300 p-4 rounded-xl shadow-md">
             <h2 className="text-lg font-semibold mb-3">
               Mood-ku: 4 Bulan Terakhir
             </h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {calendarData.map((item) => (
                 <div
                   key={item.bulan}
