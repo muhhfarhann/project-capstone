@@ -17,11 +17,11 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
   ];
 
   const sidebarMenu = [
-    { src: "/icons/home.png", alt: "Home" },
-    { src: "/icons/catatan.png", alt: "Catatan" },
-    { src: "/icons/jurnal.png", alt: "Jurnal" },
-    { src: "/icons/refleksi.png", alt: "Refleksi Diri" },
-    { src: "/icons/rekomendasi.png", alt: "Rekomendasi" },
+    { src: "/icons/home.png", alt: "Home", path: "/" },
+    { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
+    { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
+    { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
+    { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
   ];
 
   const bulanList = ["April", "Maret", "Februari", "Januari"];
@@ -33,7 +33,9 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
         {sidebarMenu.map((item, index) => (
           <div
             key={index}
-            className="p-2 rounded-lg hover:bg-purple-300 transition duration-200 cursor-pointer">
+            className={`p-2 rounded-lg transition duration-200 cursor-pointer ${
+              item.alt === "Catatan" ? "bg-purple-300" : "hover:bg-purple-300"
+            }`}>
             <img src={item.src} alt={item.alt} className="w-8 h-8" />
           </div>
         ))}
