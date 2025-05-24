@@ -140,7 +140,7 @@ export default function LandingView() {
           bisa lebih memahami dirimu sendiri.
         </p>
         <Link
-          to="/catatan"
+          to="/login"
           className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition font-medium">
           Catat Mood-ku Hari Ini ↗
         </Link>
@@ -187,7 +187,7 @@ export default function LandingView() {
               menyimpan momen bermakna.
             </p>
             <Link
-              to="/jurnal"
+              to="/login"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
               Tulis Jurnal Sekarang ↗
             </Link>
@@ -218,7 +218,7 @@ export default function LandingView() {
               dan sembuh.
             </p>
             <Link
-              to="/refleksi"
+              to="/login"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
               Mulai Refleksi Diri ↗
             </Link>
@@ -267,7 +267,7 @@ export default function LandingView() {
               kesejahteraanmu.
             </p>
             <Link
-              to="/rekomendasi"
+              to="/login"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
               Lihat Rekomendasi-ku ↗
             </Link>

@@ -23,6 +23,8 @@ export default function AppRoutes() {
         {/* bentar ya ni gw nambahin route ini buat tes  */}
         <Route path="/catatan" element={<CatatanPage />} />
         <Route path="/jurnal" element={<JurnalHarian />} />
+        <Route path="/refleksi" element={<RefleksiDiri />} />
+        <Route path="/rekomendasi" element={<Rekomendasi />} />
         <Route path="/sudahlogin" element={<LandingSudahPage />} />
         {/* close */}
 

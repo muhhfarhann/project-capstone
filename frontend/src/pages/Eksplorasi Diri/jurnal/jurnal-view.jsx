@@ -3,11 +3,11 @@ import React, { useState } from "react";
 
 const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
   const sidebarMenu = [
-    { src: "/icons/home.png", alt: "Home" },
-    { src: "/icons/catatan.png", alt: "Catatan" },
-    { src: "/icons/jurnal.png", alt: "Jurnal" },
-    { src: "/icons/refleksi.png", alt: "Refleksi Diri" },
-    { src: "/icons/rekomendasi.png", alt: "Rekomendasi" },
+    { src: "/icons/home.png", alt: "Home", path: "/" },
+    { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
+    { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
+    { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
+    { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
   ];
 
   const emojiOptions = [
