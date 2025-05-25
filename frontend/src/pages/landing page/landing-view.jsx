@@ -15,7 +15,7 @@ export default function LandingView() {
   };
 
   return (
-    <div className="min-h-screen bg-[#c9a7ff] text-gray-900">
+    <div className="min-h-screen bg-[#B29BFC] text-gray-900">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-6 md:px-24 py-6">
         {/* Logo */}
@@ -39,7 +39,7 @@ export default function LandingView() {
             </svg>
           </button>
           {isSidebarOpen && (
-            <div className="fixed top-0 left-0 w-64 h-full bg-[#f4f0ff] shadow-lg z-50 p-6 transition-all md:hidden">
+            <div className="fixed top-0 left-0 w-64 h-full bg-[#F4F6F8] shadow-lg z-50 p-6 transition-all md:hidden">
               <button className="mb-6 cursor-pointer" onClick={toggleSidebar}>
                 ❌
               </button>
@@ -48,12 +48,12 @@ export default function LandingView() {
               <div className="flex gap-3 mb-6">
                 <Link
                   to="/register"
-                  className="border border-purple-700 text-purple-700 px-4 py-2 rounded-full text-center hover:bg-purple-100 transition w-full">
+                  className="border border-[#754EE1] text-[#754EE1] px-4 py-2 rounded-full text-center hover:bg-purple-100 transition w-full">
                   Daftar
                 </Link>
                 <Link
                   to="/login"
-                  className="bg-purple-700 text-white px-4 py-2 rounded-full text-center hover:bg-purple-800 transition w-full">
+                  className="bg-[#754EE1] text-[#f4f6f8] px-4 py-2 rounded-full text-center hover:bg-purple-800 transition w-full">
                   Masuk
                 </Link>
               </div>
@@ -224,7 +224,7 @@ export default function LandingView() {
       </div>
 
       {/* Catatan */}
-      <section className="bg-[#e8e7f3] px-4 py-20">
+      <section className="bg-[#E9E9F8] px-4 py-20">
         <div className="flex flex-col-reverse md:flex-col text-center items-center">
           {/* Teks Section */}
           <div>
@@ -257,7 +257,7 @@ export default function LandingView() {
       </section>
 
       {/* Jurnal */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative py-20">
+      <section className="bg-[#E9E9F8] min-h-screen flex items-center justify-center px-6 relative py-20">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -299,7 +299,7 @@ export default function LandingView() {
       </section>
 
       {/* Refleksi diri */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
+      <section className="bg-[#E9E9F8] min-h-screen flex items-center justify-center px-6 py-20 relative">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -341,7 +341,7 @@ export default function LandingView() {
       </section>
 
       {/* Rekomendasi */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
+      <section className="bg-[#E9E9F8] min-h-screen flex items-center justify-center px-6 py-20 relative">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -383,7 +383,7 @@ export default function LandingView() {
       </section>
 
       {/* Tentang kami */}
-      <section className="relative min-h-screen bg-[#e8e7f3] flex items-center justify-center px-6 py-16 overflow-hidden">
+      <section className="relative min-h-screen bg-[#E9E9F8] flex items-center justify-center px-6 py-16 overflow-hidden">
         {/* Background Wave */}
         <img
           src="/wave3.png"
@@ -459,7 +459,7 @@ export default function LandingView() {
       {/* Testimoni */}
       <section
         style={{
-          backgroundColor: "#e8e7f3",
+          backgroundColor: "#E9E9F8",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -472,8 +472,8 @@ export default function LandingView() {
         <div style={{ textAlign: "center", maxWidth: "700px", zIndex: 1 }}>
           <div
             style={{
-              backgroundColor: "#e6e0ff",
-              color: "#7f6bdc",
+              backgroundColor: "#E9E9F8",
+              color: "#754EE1",
               fontWeight: "bold",
               fontSize: "0.75rem",
               display: "inline-block",
@@ -490,7 +490,7 @@ export default function LandingView() {
             style={{
               fontSize: "2.25rem",
               fontWeight: "800",
-              color: "#1f1f1f",
+              color: "#1c1c1c",
               marginBottom: "1rem",
             }}>
             Apa Kata Mereka?
@@ -499,7 +499,7 @@ export default function LandingView() {
           <p
             style={{
               fontSize: "1rem",
-              color: "#4f4f4f",
+              color: "#1c1c1c",
               marginBottom: "2rem",
               lineHeight: "1.7",
             }}>
@@ -511,7 +511,7 @@ export default function LandingView() {
 
           <button
             style={{
-              backgroundColor: "#7f6bdc",
+              backgroundColor: "#754EE1",
               color: "white",
               border: "none",
               padding: "12px 28px",
@@ -538,7 +538,7 @@ export default function LandingView() {
               height: "120px",
               borderRadius: "50%",
               objectFit: "cover",
-              border: "6px solid #b983ff",
+              border: "6px solid #754EE1",
               boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
               zIndex: 1,
             }}
@@ -552,7 +552,7 @@ export default function LandingView() {
               top: "53%",
               left: "82%",
               transform: "translateX(-50%)",
-              backgroundColor: "#1f1f1f",
+              backgroundColor: "#1c1c1c",
               color: "white",
               padding: "1rem 1.2rem",
               borderRadius: "1rem",
@@ -573,7 +573,7 @@ export default function LandingView() {
                 height: "0",
                 borderLeft: "10px solid transparent",
                 borderRight: "10px solid transparent",
-                borderBottom: "12px solid #1f1f1f", // arah panah ke atas
+                borderBottom: "12px solid #1c1c1c", // arah panah ke atas
               }}></div>
 
             <p style={{ marginBottom: "0.8rem", fontStyle: "italic" }}>
@@ -586,12 +586,12 @@ export default function LandingView() {
               <strong
                 style={{
                   fontSize: "0.85rem",
-                  color: "#b983ff",
+                  color: "#B29BFC",
                 }}>
                 ANGEL NATASYA
               </strong>
               <br />
-              <span style={{ fontSize: "0.8rem", color: "#ccc" }}>
+              <span style={{ fontSize: "0.8rem", color: "#f4f6f8" }}>
                 Mahasiswa
               </span>
             </div>
