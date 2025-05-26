@@ -3,22 +3,26 @@ import cors from "cors";
 import admin from "firebase-admin";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Muat variabel lingkungan dari .env
-dotenv.config();
+// Tentukan jalur ke .env di root proyek
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+dotenv.config({ path: path.resolve(__dirname, "..", ".env") });
 
 // Inisialisasi Firebase Admin SDK menggunakan variabel lingkungan
 const serviceAccount = {
     type: process.env.FIREBASE_TYPE,
     project_id: process.env.FIREBASE_PROJECT_ID,
     private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-    private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    private_key: process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
     client_email: process.env.FIREBASE_CLIENT_EMAIL,
     client_id: process.env.FIREBASE_CLIENT_ID,
     auth_uri: process.env.FIREBASE_AUTH_URI,
     token_uri: process.env.FIREBASE_TOKEN_URI,
-    auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
-    client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL,
+    auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_URL,
+    client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_URL
 };
 
 try {
@@ -33,8 +37,16 @@ try {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// app.use(cors());
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+        const allowedOrigins = ['http://localhost:5176', 'http://localhost:5173'];
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST'],
     allowedHeaders: ['Content-Type'],
 }));
@@ -49,11 +61,38 @@ app.get("/", (req, res) => {
 });
 
 // Endpoint untuk registrasi manual
-app.post("/api/auth/register", async (req, res) => {
-    console.log('Menerima request registrasi:', req.body);
+app.post('/api/register', async (req, res) => {
+    console.log('Registrasi diterima:', req.body);
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email dan password diperlukan" });
+    }
+    try {
+        const userRecord = await admin.auth().createUser({
+            email,
+            password,
+        });
+        console.log('Berhasil membuat pengguna:', userRecord.uid);
+        res.status(201).json({ message: 'Pengguna berhasil dibuat', uid: userRecord.uid });
+    } catch (error) {
+        console.error('Error saat registrasi:', error);
+        let errorMessage = 'Gagal registrasi';
+        if (error.code === 'auth/email-already-exists') {
+            errorMessage = 'Email sudah terdaftar';
+        } else if (error.code === 'auth/invalid-email') {
+            errorMessage = 'Format email tidak valid';
+        } else if (error.code === 'auth/weak-password') {
+            errorMessage = 'Kata sandi terlalu lemah (minimal 6 karakter)';
+        }
+        res.status(400).json({ error: errorMessage });
+    }
+});
+
+// Tambahkan di server.js setelah /api/register
+app.post('/api/auth/register', async (req, res) => {
+    console.log('Registrasi diterima:', req.body);
     const { username, email, password, gender } = req.body;
     if (!username || !email || !password || !gender) {
-        console.log('Validasi gagal: Semua field wajib diisi');
         return res.status(400).json({ error: "Semua field wajib diisi" });
     }
     try {
@@ -62,21 +101,21 @@ app.post("/api/auth/register", async (req, res) => {
             password,
             displayName: username,
         });
-        console.log('Berhasil membuat pengguna di Firebase:', userRecord.uid);
+        console.log('Berhasil membuat pengguna:', userRecord.uid);
+        // Simpan data tambahan
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = { uid: userRecord.uid, username, email, gender, password: hashedPassword };
         users[userRecord.uid] = user;
-        console.log("Data pengguna disimpan:", user);
-        res.status(200).json({ user: { username, email, gender } });
+        res.status(201).json({ message: 'Pengguna berhasil dibuat', user: { username, email, gender } });
     } catch (error) {
-        console.error("Error di register:", error);
-        let errorMessage = 'Gagal registrasi.';
+        console.error('Error saat registrasi:', error);
+        let errorMessage = 'Gagal registrasi';
         if (error.code === 'auth/email-already-exists') {
-            errorMessage = 'Email sudah terdaftar.';
+            errorMessage = 'Email sudah terdaftar';
         } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Format email tidak valid.';
+            errorMessage = 'Format email tidak valid';
         } else if (error.code === 'auth/weak-password') {
-            errorMessage = 'Kata sandi terlalu lemah (minimal 6 karakter).';
+            errorMessage = 'Kata sandi terlalu lemah (minimal 6 karakter)';
         }
         res.status(400).json({ error: errorMessage });
     }
@@ -116,13 +155,15 @@ app.post("/api/auth/verify-token", async (req, res) => {
 
 // Endpoint untuk memperbarui atau menyimpan data pengguna
 app.post("/api/auth/update-user", async (req, res) => {
+    console.log('Menerima permintaan update-user:', req.body);
     const { uid, username, gender } = req.body;
     if (!uid || !username) {
+        console.log('Validasi gagal: UID dan username diperlukan');
         return res.status(400).json({ error: "UID dan username diperlukan" });
     }
     try {
-        const user = { uid, username, gender };
-        users[uid] = user; // Simpan dengan uid sebagai kunci
+        const user = { uid, username, gender: gender || '' };
+        users[uid] = user;
         console.log("Memperbarui data pengguna:", user);
         res.status(200).json({ success: true });
     } catch (error) {
@@ -132,5 +173,5 @@ app.post("/api/auth/update-user", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port: ${PORT}`);
+    console.log(`Server is running on port: http://localhost:${PORT}`);
 });
