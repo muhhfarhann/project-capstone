@@ -8,15 +8,23 @@ import bcrypt from "bcrypt";
 const serviceAccount = JSON.parse(fs.readFileSync("./serviceAccountKey.json", "utf8"));
 
 // Inisialisasi Firebase Admin SDK
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-});
+try {
+    admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+    });
+    console.log('Firebase Admin SDK berhasil diinisialisasi');
+} catch (error) {
+    console.error('Gagal inisialisasi Firebase Admin SDK:', error);
+}
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+})); app.use(express.json());
 
 // Simulasi database sementara
 const users = {};
@@ -28,22 +36,23 @@ app.get("/", (req, res) => {
 
 // Endpoint untuk registrasi manual
 app.post("/api/auth/register", async (req, res) => {
+    console.log('Menerima request registrasi:', req.body);
     const { username, email, password, gender } = req.body;
     if (!username || !email || !password || !gender) {
+        console.log('Validasi gagal: Semua field wajib diisi');
         return res.status(400).json({ error: "Semua field wajib diisi" });
     }
     try {
-        // Buat pengguna di Firebase Authentication
         const userRecord = await admin.auth().createUser({
             email,
             password,
             displayName: username,
         });
-        // Hash password untuk penyimpanan lokal (opsional)
+        console.log('Berhasil membuat pengguna di Firebase:', userRecord.uid);
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = { uid: userRecord.uid, username, email, gender, password: hashedPassword };
-        users[userRecord.uid] = user; // Simpan dengan uid sebagai kunci
-        console.log("Data pengguna:", user);
+        users[userRecord.uid] = user;
+        console.log("Data pengguna disimpan:", user);
         res.status(200).json({ user: { username, email, gender } });
     } catch (error) {
         console.error("Error di register:", error);
@@ -52,6 +61,8 @@ app.post("/api/auth/register", async (req, res) => {
             errorMessage = 'Email sudah terdaftar.';
         } else if (error.code === 'auth/invalid-email') {
             errorMessage = 'Format email tidak valid.';
+        } else if (error.code === 'auth/weak-password') {
+            errorMessage = 'Kata sandi terlalu lemah (minimal 6 karakter).';
         }
         res.status(400).json({ error: errorMessage });
     }

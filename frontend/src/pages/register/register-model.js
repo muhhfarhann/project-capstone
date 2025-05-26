@@ -2,12 +2,14 @@ import { API_BASE_URL } from '../../firebase';
 
 export const registerModel = {
   async register(username, email, password, gender) {
+    console.log('Mengirim data registrasi:', { username, email, password, gender });
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, gender }),
       });
+      console.log('Respons dari server:', response.status, response.statusText);
       const data = await response.json();
       if (response.ok) {
         return { success: true, user: data.user };
