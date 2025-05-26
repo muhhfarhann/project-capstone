@@ -15,107 +15,19 @@ export default function LandingView() {
   };
 
   return (
-    <div className="min-h-screen bg-[#c9a7ff] text-gray-900">
+    <div className="min-h-screen bg-[#B29BFC] text-gray-900">
       {/* Navbar */}
       <nav className="flex items-center justify-between px-6 md:px-24 py-6">
         {/* Logo */}
-        <img src="/logo.png" alt="Logo" className="h-10 w-auto" />
+        <img
+          src="/logo.png"
+          alt="Emojis"
+          className="h-18 w-auto mb-4 object-contain"
+        />
 
-        {/* Hamburger di mobile */}
-        <div className="md:hidden">
-          <button className="cursor-pointer" onClick={toggleSidebar}>
-            <svg
-              className="w-6 h-6 text-gray-800"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-          {isSidebarOpen && (
-            <div className="fixed top-0 left-0 w-64 h-full bg-[#f4f0ff] shadow-lg z-50 p-6 transition-all md:hidden">
-              <button className="mb-6 cursor-pointer" onClick={toggleSidebar}>
-                ❌
-              </button>
-
-              {/* Auth */}
-              <div className="flex gap-3 mb-6">
-                <Link
-                  to="/register"
-                  className="border border-purple-700 text-purple-700 px-4 py-2 rounded-full text-center hover:bg-purple-100 transition w-full">
-                  Daftar
-                </Link>
-                <Link
-                  to="/login"
-                  className="bg-purple-700 text-white px-4 py-2 rounded-full text-center hover:bg-purple-800 transition w-full">
-                  Masuk
-                </Link>
-              </div>
-
-              {/* Menu */}
-              <ul className="flex flex-col gap-4 font-medium">
-                <li>
-                  <a href="/" className="hover:text-purple-700">
-                    Beranda
-                  </a>
-                </li>
-                <li>
-                  <button
-                    onClick={toggleSubmenu}
-                    className="flex justify-between items-center w-full hover:text-purple-700">
-                    Eksplorasi Diri
-                    <span>{isSubmenuOpen ? "▲" : "▼"}</span>
-                  </button>
-                  {isSubmenuOpen && (
-                    <ul className="pl-4 mt-2 space-y-2 text-sm text-gray-700">
-                      <li>
-                        <a href="/catatan" className="hover:text-purple-700">
-                          Catatan Mood
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/jurnal" className="hover:text-purple-700">
-                          Jurnal Harian
-                        </a>
-                      </li>
-                      <li>
-                        <a href="/refleksi" className="hover:text-purple-700">
-                          Refleksi Diri
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          href="/rekomendasi"
-                          className="hover:text-purple-700">
-                          Rekomendasi
-                        </a>
-                      </li>
-                    </ul>
-                  )}
-                </li>
-                <li>
-                  <a href="/tentangkami" className="hover:text-purple-700">
-                    Tentang Kami
-                  </a>
-                </li>
-                <li>
-                  <a href="/testimoni" className="hover:text-purple-700">
-                    Testimoni
-                  </a>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
-
-        {/* Menu Desktop */}
-        <div className="hidden md:flex items-center gap-6">
+        {/* Menu + Auth */}
+        <div className="flex items-center gap-6 ml-auto relative">
+          {/* Nav Menu */}
           <ul className="flex items-center gap-6 text-base font-medium">
             <li>
               <a href="/" className="hover:text-purple-700">
@@ -224,26 +136,22 @@ export default function LandingView() {
       </div>
 
       {/* Catatan */}
-      <section className="bg-[#e8e7f3] px-4 py-20">
-        <div className="flex flex-col-reverse md:flex-col text-center items-center">
-          {/* Teks Section */}
-          <div>
-            <p className="text-sm text-purple-600 font-semibold uppercase mb-2">
-              Eksplorasi Diri
-            </p>
-            <h2 className="text-4xl font-extrabold mb-4">Catatan Mood</h2>
-            <p className="max-w-2xl mx-auto text-gray-700 mb-8">
-              Pantau suasana hatimu setiap hari melalui fitur Catatan Mood.
-              Pilih emoji yang sesuai dengan perasaanmu, tambahkan catatan
-              singkat, dan lihat pola mood-mu dari waktu ke waktu. Dengan
-              mengenali emosi, kamu bisa lebih memahami dirimu sendiri.
-            </p>
-            <Link
-              to="/login"
-              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition font-medium">
-              Catat Mood-ku Hari Ini ↗
-            </Link>
-          </div>
+      <section className="bg-[#e8e7f3] text-center px-4 py-20">
+        <p className="text-sm text-purple-600 font-semibold uppercase mb-2">
+          Eksplorasi Diri
+        </p>
+        <h2 className="text-4xl font-extrabold mb-4">Catatan Mood</h2>
+        <p className="max-w-2xl mx-auto text-gray-700 mb-8">
+          Pantau suasana hatimu setiap hari melalui fitur Catatan Mood. Pilih
+          emoji yang sesuai dengan perasaanmu, tambahkan catatan singkat, dan
+          lihat pola mood-mu dari waktu ke waktu. Dengan mengenali emosi, kamu
+          bisa lebih memahami dirimu sendiri.
+        </p>
+        <Link
+          to="/catatan"
+          className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition font-medium">
+          Catat Mood-ku Hari Ini ↗
+        </Link>
 
           {/* Emoji Row */}
           <div className="mt-10 md:mt-16 w-full overflow-hidden">
@@ -257,7 +165,7 @@ export default function LandingView() {
       </section>
 
       {/* Jurnal */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative py-20">
+      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -299,7 +207,7 @@ export default function LandingView() {
       </section>
 
       {/* Refleksi diri */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
+      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -341,7 +249,7 @@ export default function LandingView() {
       </section>
 
       {/* Rekomendasi */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
+      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -384,7 +292,7 @@ export default function LandingView() {
 
       {/* Tentang kami */}
       <section className="relative min-h-screen bg-[#e8e7f3] flex items-center justify-center px-6 py-16 overflow-hidden">
-        {/* Background Wave */}
+        {/* Gambar Wave Background */}
         <img
           src="/wave3.png"
           alt="Wave background"
@@ -459,7 +367,7 @@ export default function LandingView() {
       {/* Testimoni */}
       <section
         style={{
-          backgroundColor: "#e8e7f3",
+          backgroundColor: "#E9E9F8",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -472,8 +380,8 @@ export default function LandingView() {
         <div style={{ textAlign: "center", maxWidth: "700px", zIndex: 1 }}>
           <div
             style={{
-              backgroundColor: "#e6e0ff",
-              color: "#7f6bdc",
+              backgroundColor: "#E9E9F8",
+              color: "#754EE1",
               fontWeight: "bold",
               fontSize: "0.75rem",
               display: "inline-block",
@@ -490,7 +398,7 @@ export default function LandingView() {
             style={{
               fontSize: "2.25rem",
               fontWeight: "800",
-              color: "#1f1f1f",
+              color: "#1c1c1c",
               marginBottom: "1rem",
             }}>
             Apa Kata Mereka?
@@ -499,7 +407,7 @@ export default function LandingView() {
           <p
             style={{
               fontSize: "1rem",
-              color: "#4f4f4f",
+              color: "#1c1c1c",
               marginBottom: "2rem",
               lineHeight: "1.7",
             }}>
@@ -511,7 +419,7 @@ export default function LandingView() {
 
           <button
             style={{
-              backgroundColor: "#7f6bdc",
+              backgroundColor: "#754EE1",
               color: "white",
               border: "none",
               padding: "12px 28px",
@@ -526,55 +434,54 @@ export default function LandingView() {
         </div>
 
         {/* Avatar 1 */}
-        <div className="hidden md:block">
-          <img
-            src="/avatar/avatar1.png"
-            alt="avatar"
-            style={{
-              position: "absolute",
-              top: "40%",
-              left: "76%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "6px solid #b983ff",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
-              zIndex: 1,
-            }}
-          />
+        <img
+          src="/avatar/avatar1.png"
+          alt="avatar"
+          style={{
+            position: "absolute",
+            top: "40%",
+            left: "76%",
+            width: "120px",
+            height: "120px",
+            borderRadius: "50%",
+            objectFit: "cover",
+            border: "6px solid #b983ff",
+            boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+            zIndex: 1,
+          }}
+        />
 
-          {/* Testimoni bubble untuk Avatar 1 */}
-          {/* Testimoni bubble dengan panah mengarah ke atas */}
+        {/* Testimoni bubble untuk Avatar 1 */}
+        {/* Testimoni bubble dengan panah mengarah ke atas */}
+        <div
+          style={{
+            position: "absolute",
+            top: "53%",
+            left: "82%",
+            transform: "translateX(-50%)",
+            backgroundColor: "#1f1f1f",
+            color: "white",
+            padding: "1rem 1.2rem",
+            borderRadius: "1rem",
+            maxWidth: "300px",
+            fontSize: "0.95rem",
+            lineHeight: "1.5",
+            boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
+            zIndex: 2,
+          }}>
           <div
             style={{
+              content: "''",
               position: "absolute",
-              top: "53%",
-              left: "82%",
+              top: "-12px",
+              left: "30%",
               transform: "translateX(-50%)",
-              backgroundColor: "#1f1f1f",
-              color: "white",
-              padding: "1rem 1.2rem",
-              borderRadius: "1rem",
-              maxWidth: "300px",
-              fontSize: "0.95rem",
-              lineHeight: "1.5",
-              boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
-              zIndex: 2,
-            }}>
-            <div
-              style={{
-                content: "''",
-                position: "absolute",
-                top: "-12px",
-                left: "30%",
-                transform: "translateX(-50%)",
-                width: "0",
-                height: "0",
-                borderLeft: "10px solid transparent",
-                borderRight: "10px solid transparent",
-                borderBottom: "12px solid #1f1f1f", // arah panah ke atas
-              }}></div>
+              width: "0",
+              height: "0",
+              borderLeft: "10px solid transparent",
+              borderRight: "10px solid transparent",
+              borderBottom: "12px solid #1f1f1f", // arah panah ke atas
+            }}></div>
 
             <p style={{ marginBottom: "0.8rem", fontStyle: "italic" }}>
               "Aku suka banget fitur rekomendasinya. Mamood kasih saran yang
@@ -582,20 +489,18 @@ export default function LandingView() {
               psikolog versi ringan tapi tetap meaningful."
             </p>
 
-            <div style={{ textAlign: "right" }}>
-              <strong
-                style={{
-                  fontSize: "0.85rem",
-                  color: "#b983ff",
-                }}>
-                ANGEL NATASYA
-              </strong>
-              <br />
-              <span style={{ fontSize: "0.8rem", color: "#ccc" }}>
-                Mahasiswa
-              </span>
-            </div>
+          <div style={{ textAlign: "right" }}>
+            <strong
+              style={{
+                fontSize: "0.85rem",
+                color: "#b983ff",
+              }}>
+              ANGEL NATASYA
+            </strong>
+            <br />
+            <span style={{ fontSize: "0.8rem", color: "#ccc" }}>Mahasiswa</span>
           </div>
+        </div>
 
           {/* Avatar 2 */}
           <img

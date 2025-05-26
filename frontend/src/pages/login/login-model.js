@@ -48,7 +48,9 @@ export const loginModel = {
     } catch (error) {
       console.error('Error di socialLogin:', error);
       let errorMessage = 'Gagal login dengan sosial media.';
-      if (error.code === 'auth/popup-closed-by-user') {
+      if (error.code === 'auth/email-already-exists') {
+        errorMessage = 'Silahkan login, akun sudah ada.';
+      } else if (error.code === 'auth/popup-closed-by-user') {
         errorMessage = 'Jendela login ditutup sebelum selesai.';
       }
       return { success: false, error: errorMessage };

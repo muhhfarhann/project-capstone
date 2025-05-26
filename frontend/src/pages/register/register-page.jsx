@@ -23,10 +23,22 @@ const RegisterPage = () => {
     },
     onRegisterError: (errorMessage) => {
       setError(errorMessage);
+      if (errorMessage === 'Silahkan login, akun sudah ada.') {
+        alert('Silahkan login, akun sudah ada.');
+        navigate('/login'); // Opsional: arahkan ke halaman login
+      }
     },
   });
 
   const handleSubmit = () => {
+    if (!username || !email || !password || !gender) {
+      setError('Semua field wajib diisi');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Kata sandi harus minimal 6 karakter');
+      return;
+    }
     presenter.register(username, email, password, gender);
   };
 
@@ -40,13 +52,13 @@ const RegisterPage = () => {
     if (provider) {
       try {
         const result = await presenter.handleSocialLogin(provider);
-        if (result?.success) {
-          presenter.view.onRegisterSuccess(result.user);
-        } else if (result?.error) {
-          setError(result.error);
-        }
+        // Tidak perlu memanggil onRegisterSuccess di sini karena sudah ditangani di presenter
       } catch (error) {
         setError('Gagal login dengan sosial media');
+        if (error === 'Silahkan login, akun sudah ada.') {
+          alert('Silahkan login, akun sudah ada.');
+          navigate('/login'); // Opsional: arahkan ke halaman login
+        }
       }
     } else {
       setError('Provider tidak valid');

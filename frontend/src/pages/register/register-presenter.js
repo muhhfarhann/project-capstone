@@ -12,7 +12,11 @@ export class RegisterPresenter {
     if (result.success) {
       this.view.onRegisterSuccess(result.user);
     } else {
-      this.view.onRegisterError(result.error);
+      if (result.error === 'Email sudah terdaftar.') {
+        this.view.onRegisterError('Silahkan login, akun sudah ada.');
+      } else {
+        this.view.onRegisterError(result.error);
+      }
     }
   }
 
@@ -28,22 +32,24 @@ export class RegisterPresenter {
           '' // Gender tidak tersedia dari Google
         );
         if (updateResult.success) {
-          return {
-            success: true,
-            user: {
-              username: result.user.displayName || 'User',
-              email: result.user.email,
-              gender: ''
-            }
-          };
+          this.view.onRegisterSuccess({
+            username: result.user.displayName || 'User',
+            email: result.user.email,
+            gender: '',
+          });
         } else {
-          return { success: false, error: updateResult.error };
+          this.view.onRegisterError(updateResult.error);
+        }
+      } else {
+        if (result.error === 'Silahkan login, akun sudah ada.') {
+          this.view.onRegisterError('Silahkan login, akun sudah ada.');
+        } else {
+          this.view.onRegisterError(result.error);
         }
       }
-      return result;
     } catch (error) {
       console.error('Error di handleSocialLogin:', error);
-      return { success: false, error: error.message || 'Gagal login dengan sosial media' };
+      this.view.onRegisterError('Gagal login dengan sosial media');
     }
   }
 }
