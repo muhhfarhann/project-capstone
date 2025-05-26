@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"; // ⬅️ Tambahkan ini
+import { useState } from 'react';
+import { Link } from 'react-router-dom'; // ⬅️ Tambahkan ini
 
 export default function LandingSudahView() {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -29,7 +29,8 @@ export default function LandingSudahView() {
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -48,7 +49,8 @@ export default function LandingSudahView() {
               <div className="flex gap-3 mb-6">
                 <Link
                   to="/profile"
-                  className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden">
+                  className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden"
+                >
                   <img
                     src="/profile.png"
                     alt="Profile"
@@ -56,6 +58,8 @@ export default function LandingSudahView() {
                   />
                 </Link>
               </div>
+
+              <div className="w-[300px] h-[200px] bg-white"></div>
 
               {/* Menu */}
               <ul className="flex flex-col gap-4 font-medium">
@@ -67,9 +71,10 @@ export default function LandingSudahView() {
                 <li>
                   <button
                     onClick={toggleSubmenu}
-                    className="flex justify-between items-center w-full hover:text-purple-700">
+                    className="flex justify-between items-center w-full hover:text-purple-700"
+                  >
                     Eksplorasi Diri
-                    <span>{isSubmenuOpen ? "▲" : "▼"}</span>
+                    <span>{isSubmenuOpen ? '▲' : '▼'}</span>
                   </button>
                   {isSubmenuOpen && (
                     <ul className="pl-4 mt-2 space-y-2 text-sm text-gray-700">
@@ -91,7 +96,8 @@ export default function LandingSudahView() {
                       <li>
                         <a
                           href="/rekomendasi"
-                          className="hover:text-purple-700">
+                          className="hover:text-purple-700"
+                        >
                           Rekomendasi
                         </a>
                       </li>
@@ -124,7 +130,8 @@ export default function LandingSudahView() {
             <li className="relative">
               <button
                 onClick={toggleDropdown}
-                className="hover:text-purple-700">
+                className="hover:text-purple-700"
+              >
                 Eksplorasi Diri ▾
               </button>
               {isDropdownOpen && (
@@ -132,28 +139,32 @@ export default function LandingSudahView() {
                   <li>
                     <a
                       href="/catatan"
-                      className="block px-4 py-2 hover:bg-purple-100">
+                      className="block px-4 py-2 hover:bg-purple-100"
+                    >
                       Catatan Mood
                     </a>
                   </li>
                   <li>
                     <a
                       href="/jurnal"
-                      className="block px-4 py-2 hover:bg-purple-100">
+                      className="block px-4 py-2 hover:bg-purple-100"
+                    >
                       Jurnal Harian
                     </a>
                   </li>
                   <li>
                     <a
                       href="/refleksi"
-                      className="block px-4 py-2 hover:bg-purple-100">
+                      className="block px-4 py-2 hover:bg-purple-100"
+                    >
                       Refleksi Diri
                     </a>
                   </li>
                   <li>
                     <a
                       href="/rekomendasi"
-                      className="block px-4 py-2 hover:bg-purple-100">
+                      className="block px-4 py-2 hover:bg-purple-100"
+                    >
                       Rekomendasi
                     </a>
                   </li>
@@ -176,7 +187,8 @@ export default function LandingSudahView() {
           <div className="flex gap-3">
             <Link
               to="/profile"
-              className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden">
+              className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden"
+            >
               <img
                 src="/profile.png"
                 alt="Profile"
@@ -238,7 +250,8 @@ export default function LandingSudahView() {
             </p>
             <Link
               to="/login"
-              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition font-medium">
+              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition font-medium"
+            >
               Catat Mood-ku Hari Ini ↗
             </Link>
           </div>
@@ -289,7 +302,8 @@ export default function LandingSudahView() {
             </p>
             <Link
               to="/login"
-              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
+              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
+            >
               Tulis Jurnal Sekarang ↗
             </Link>
           </div>
@@ -331,7 +345,8 @@ export default function LandingSudahView() {
             </p>
             <Link
               to="/login"
-              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
+              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
+            >
               Mulai Refleksi Diri ↗
             </Link>
           </div>
@@ -373,7 +388,8 @@ export default function LandingSudahView() {
             </p>
             <Link
               to="/login"
-              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
+              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
+            >
               Lihat Rekomendasi-ku ↗
             </Link>
           </div>
@@ -409,25 +425,25 @@ export default function LandingSudahView() {
                 Cerita di Balik <span className="text-purple-600">Mamood</span>
               </h2>
               <p>
-                <span className="text-purple-600 font-semibold">Mamood</span>{" "}
+                <span className="text-purple-600 font-semibold">Mamood</span>{' '}
                 adalah platform pemantauan suasana hati dan stres harian yang
                 dirancang untuk membantu individu lebih sadar terhadap kondisi
                 emosionalnya.
               </p>
               <p>
-                Dengan fitur seperti{" "}
+                Dengan fitur seperti{' '}
                 <span className="text-purple-600 font-semibold">
                   pencatatan mood
                 </span>
-                ,{" "}
+                ,{' '}
                 <span className="text-purple-600 font-semibold">
                   refleksi diri
                 </span>
-                ,{" "}
+                ,{' '}
                 <span className="text-purple-600 font-semibold">
                   jurnal harian
                 </span>
-                , dan{" "}
+                , dan{' '}
                 <span className="text-purple-600 font-semibold">
                   rekomendasi
                 </span>
@@ -435,7 +451,7 @@ export default function LandingSudahView() {
                 eksplorasi diri dan peningkatan kesejahteraan mental.
               </p>
               <blockquote className="border-l-4 pl-4 italic text-gray-700 border-gray-300">
-                Proyek ini dikembangkan oleh{" "}
+                Proyek ini dikembangkan oleh{' '}
                 <span className="font-bold">Tim CC25-CF094</span> dalam tema
                 Inovasi Kesehatan, dengan pendekatan design thinking dan
                 semangat kolaboratif lintas bidang.
@@ -457,50 +473,54 @@ export default function LandingSudahView() {
       {/* Testimoni */}
       <section
         style={{
-          backgroundColor: "#e8e7f3",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "4rem 1rem",
-          position: "relative",
-          overflow: "hidden",
-        }}>
-        <div style={{ textAlign: "center", maxWidth: "700px", zIndex: 1 }}>
+          backgroundColor: '#e8e7f3',
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '4rem 1rem',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div style={{ textAlign: 'center', maxWidth: '700px', zIndex: 1 }}>
           <div
             style={{
-              backgroundColor: "#e6e0ff",
-              color: "#7f6bdc",
-              fontWeight: "bold",
-              fontSize: "0.75rem",
-              display: "inline-block",
-              padding: "6px 18px",
-              borderRadius: "9999px",
-              marginBottom: "1rem",
-              textTransform: "uppercase",
-              letterSpacing: "1px",
-            }}>
+              backgroundColor: '#e6e0ff',
+              color: '#7f6bdc',
+              fontWeight: 'bold',
+              fontSize: '0.75rem',
+              display: 'inline-block',
+              padding: '6px 18px',
+              borderRadius: '9999px',
+              marginBottom: '1rem',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+            }}
+          >
             Testimoni
           </div>
 
           <h2
             style={{
-              fontSize: "2.25rem",
-              fontWeight: "800",
-              color: "#1f1f1f",
-              marginBottom: "1rem",
-            }}>
+              fontSize: '2.25rem',
+              fontWeight: '800',
+              color: '#1f1f1f',
+              marginBottom: '1rem',
+            }}
+          >
             Apa Kata Mereka?
           </h2>
 
           <p
             style={{
-              fontSize: "1rem",
-              color: "#4f4f4f",
-              marginBottom: "2rem",
-              lineHeight: "1.7",
-            }}>
+              fontSize: '1rem',
+              color: '#4f4f4f',
+              marginBottom: '2rem',
+              lineHeight: '1.7',
+            }}
+          >
             Temukan bagaimana Mamood telah membantu banyak pengguna memahami dan
             merawat kesehatan mental mereka. Dari cerita perubahan positif
             hingga pengalaman inspiratif, testimoni ini membuktikan bahwa kamu
@@ -509,16 +529,17 @@ export default function LandingSudahView() {
 
           <button
             style={{
-              backgroundColor: "#7f6bdc",
-              color: "white",
-              border: "none",
-              padding: "12px 28px",
-              borderRadius: "9999px",
-              fontWeight: "bold",
-              fontSize: "0.95rem",
-              cursor: "pointer",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-            }}>
+              backgroundColor: '#7f6bdc',
+              color: 'white',
+              border: 'none',
+              padding: '12px 28px',
+              borderRadius: '9999px',
+              fontWeight: 'bold',
+              fontSize: '0.95rem',
+              cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+            }}
+          >
             Yuk, Kirim Testimoni! →
           </button>
         </div>
@@ -529,15 +550,15 @@ export default function LandingSudahView() {
             src="/avatar/avatar1.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "40%",
-              left: "76%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "6px solid #b983ff",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '40%',
+              left: '76%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '6px solid #b983ff',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -546,50 +567,53 @@ export default function LandingSudahView() {
           {/* Testimoni bubble dengan panah mengarah ke atas */}
           <div
             style={{
-              position: "absolute",
-              top: "53%",
-              left: "82%",
-              transform: "translateX(-50%)",
-              backgroundColor: "#1f1f1f",
-              color: "white",
-              padding: "1rem 1.2rem",
-              borderRadius: "1rem",
-              maxWidth: "300px",
-              fontSize: "0.95rem",
-              lineHeight: "1.5",
-              boxShadow: "0 6px 16px rgba(0, 0, 0, 0.15)",
+              position: 'absolute',
+              top: '53%',
+              left: '82%',
+              transform: 'translateX(-50%)',
+              backgroundColor: '#1f1f1f',
+              color: 'white',
+              padding: '1rem 1.2rem',
+              borderRadius: '1rem',
+              maxWidth: '300px',
+              fontSize: '0.95rem',
+              lineHeight: '1.5',
+              boxShadow: '0 6px 16px rgba(0, 0, 0, 0.15)',
               zIndex: 2,
-            }}>
+            }}
+          >
             <div
               style={{
                 content: "''",
-                position: "absolute",
-                top: "-12px",
-                left: "30%",
-                transform: "translateX(-50%)",
-                width: "0",
-                height: "0",
-                borderLeft: "10px solid transparent",
-                borderRight: "10px solid transparent",
-                borderBottom: "12px solid #1f1f1f", // arah panah ke atas
-              }}></div>
+                position: 'absolute',
+                top: '-12px',
+                left: '30%',
+                transform: 'translateX(-50%)',
+                width: '0',
+                height: '0',
+                borderLeft: '10px solid transparent',
+                borderRight: '10px solid transparent',
+                borderBottom: '12px solid #1f1f1f', // arah panah ke atas
+              }}
+            ></div>
 
-            <p style={{ marginBottom: "0.8rem", fontStyle: "italic" }}>
+            <p style={{ marginBottom: '0.8rem', fontStyle: 'italic' }}>
               "Aku suka banget fitur rekomendasinya. Mamood kasih saran yang
               sesuai banget sama kondisi emosiku, kayak lagi ngobrol sama
               psikolog versi ringan tapi tetap meaningful."
             </p>
 
-            <div style={{ textAlign: "right" }}>
+            <div style={{ textAlign: 'right' }}>
               <strong
                 style={{
-                  fontSize: "0.85rem",
-                  color: "#b983ff",
-                }}>
+                  fontSize: '0.85rem',
+                  color: '#b983ff',
+                }}
+              >
                 ANGEL NATASYA
               </strong>
               <br />
-              <span style={{ fontSize: "0.8rem", color: "#ccc" }}>
+              <span style={{ fontSize: '0.8rem', color: '#ccc' }}>
                 Mahasiswa
               </span>
             </div>
@@ -600,14 +624,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar2.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "5%",
-              left: "14%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '5%',
+              left: '14%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -617,14 +641,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar3.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "10%",
-              left: "84%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '10%',
+              left: '84%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -634,14 +658,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar4.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "15%",
-              left: "65%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '15%',
+              left: '65%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -651,14 +675,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar5.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "8%",
-              left: "40%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '8%',
+              left: '40%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -668,14 +692,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar6.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "25%",
-              left: "25%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '25%',
+              left: '25%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -685,14 +709,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar7.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "35%",
-              left: "7%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '35%',
+              left: '7%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -702,14 +726,14 @@ export default function LandingSudahView() {
             src="/avatar/avatar8.png"
             alt="avatar"
             style={{
-              position: "absolute",
-              top: "58%",
-              left: "20%",
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              boxShadow: "0 4px 12px rgba(185,131,255,0.3)",
+              position: 'absolute',
+              top: '58%',
+              left: '20%',
+              width: '120px',
+              height: '120px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              boxShadow: '0 4px 12px rgba(185,131,255,0.3)',
               zIndex: 1,
             }}
           />
@@ -719,10 +743,10 @@ export default function LandingSudahView() {
             src="/wave2.png"
             alt="footer wave"
             style={{
-              position: "absolute",
-              bottom: "0",
-              left: "0",
-              width: "100%",
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              width: '100%',
               zIndex: 0,
             }}
           />
@@ -746,13 +770,15 @@ export default function LandingSudahView() {
               <a
                 href="https://github.com"
                 target="_blank"
-                rel="noopener noreferrer">
+                rel="noopener noreferrer"
+              >
                 <img src="/logo-github.png" alt="GitHub" className="w-6 h-6" />
               </a>
               <a
                 href="https://discord.com"
                 target="_blank"
-                rel="noopener noreferrer">
+                rel="noopener noreferrer"
+              >
                 <img
                   src="/logo-discord.png"
                   alt="Discord"
@@ -762,7 +788,8 @@ export default function LandingSudahView() {
               <a
                 href="https://youtube.com"
                 target="_blank"
-                rel="noopener noreferrer">
+                rel="noopener noreferrer"
+              >
                 <img
                   src="/logo-youtube.png"
                   alt="YouTube"
@@ -809,7 +836,8 @@ export default function LandingSudahView() {
                   <svg
                     className="w-4 h-4 mr-2 mt-0.5"
                     fill="currentColor"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
                   </svg>
                   +62 895-326-57069
@@ -818,7 +846,8 @@ export default function LandingSudahView() {
                   <svg
                     className="w-4 h-4 mr-2 mt-0.5"
                     fill="currentColor"
-                    viewBox="0 0 24 24">
+                    viewBox="0 0 24 24"
+                  >
                     <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h12v2H6zm0 4h12v2H6z" />
                   </svg>
                   support@mamoodapp.com

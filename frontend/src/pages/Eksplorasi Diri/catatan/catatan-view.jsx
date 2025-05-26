@@ -1,45 +1,28 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import Aside from '../../../components/Eksplorasi Diri/General/Aside';
 
 const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const calendarData = [
-    { src: "/calendar/april.png", bulan: "April" },
-    { src: "/calendar/maret.png", bulan: "Maret" },
-    { src: "/calendar/februari.png", bulan: "Februari" },
-    { src: "/calendar/januari.png", bulan: "Januari" },
+    { src: '/calendar/april.png', bulan: 'April' },
+    { src: '/calendar/maret.png', bulan: 'Maret' },
+    { src: '/calendar/februari.png', bulan: 'Februari' },
+    { src: '/calendar/januari.png', bulan: 'Januari' },
   ];
 
   const moodOptions = [
-    { src: "/emoji/very-sad.png", value: "very_sad" },
-    { src: "/emoji/sad.png", value: "sad" },
-    { src: "/emoji/happy.png", value: "happy" },
-    { src: "/emoji/very-happy.png", value: "very_happy" },
-    { src: "/emoji/angry.png", value: "angry" },
-  ];
-
-  const sidebarMenu = [
-    { src: "/icons/home.png", alt: "Home", path: "/" },
-    { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
-    { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
-    { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
-    { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
+    { src: '/emoji/very-sad.png', value: 'very_sad' },
+    { src: '/emoji/sad.png', value: 'sad' },
+    { src: '/emoji/happy.png', value: 'happy' },
+    { src: '/emoji/very-happy.png', value: 'very_happy' },
+    { src: '/emoji/angry.png', value: 'angry' },
   ];
 
   return (
     <div className="flex h-screen">
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex w-20 bg-black text-white flex-col items-center py-6 space-y-6 rounded-xl m-4">
-        {sidebarMenu.map((item, index) => (
-          <div
-            key={index}
-            className={`p-2 rounded-lg transition duration-200 cursor-pointer ${
-              item.alt === "Catatan" ? "bg-purple-300" : "hover:bg-purple-300"
-            }`}>
-            <img src={item.src} alt={item.alt} className="w-8 h-8" />
-          </div>
-        ))}
-      </aside>
+      <Aside />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col bg-[#f0f0ff] overflow-y-auto">
@@ -63,7 +46,8 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
             {/* Tombol menu untuk mobile */}
             <button
               className="md:hidden p-2"
-              onClick={() => setIsSidebarOpen(true)}>
+              onClick={() => setIsSidebarOpen(true)}
+            >
               <img
                 src="/icons/menu.png"
                 alt="Menu"
@@ -80,7 +64,8 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               {/* Tombol Close */}
               <button
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-xl font-bold">
+                className="absolute top-4 right-4 text-xl font-bold"
+              >
                 ×
               </button>
 
@@ -108,31 +93,32 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               <nav className="space-y-4 px-2">
                 {[
                   {
-                    label: "Beranda",
-                    path: "/",
-                    icon: "/icons/home-mobile.png",
+                    label: 'Beranda',
+                    path: '/',
+                    icon: '/icons/home-mobile.png',
                   },
                   {
-                    label: "Catatan Mood",
-                    path: "/catatan",
-                    icon: "/icons/catatan-mobile.png",
+                    label: 'Catatan Mood',
+                    path: '/catatan',
+                    icon: '/icons/catatan-mobile.png',
                   },
                   {
-                    label: "Jurnal Harian",
-                    path: "/jurnal",
-                    icon: "/icons/jurnal-mobile.png",
+                    label: 'Jurnal Harian',
+                    path: '/jurnal',
+                    icon: '/icons/jurnal-mobile.png',
                   },
                   {
-                    label: "Refleksi Diri",
-                    path: "/refleksi",
-                    icon: "/icons/refleksi-mobile.png",
+                    label: 'Refleksi Diri',
+                    path: '/refleksi',
+                    icon: '/icons/refleksi-mobile.png',
                   },
                 ].map((item) => (
                   <a
                     key={item.path}
                     href={item.path}
                     className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500"
-                    onClick={() => setIsSidebarOpen(false)}>
+                    onClick={() => setIsSidebarOpen(false)}
+                  >
                     <img src={item.icon} alt={item.label} className="w-5 h-5" />
                     <span>{item.label}</span>
                   </a>
@@ -155,9 +141,10 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                     onClick={() => onMoodSelect(mood.value)}
                     className={`p-1 rounded-full cursor-pointer ${
                       selectedMood === mood.value
-                        ? "bg-purple-200 ring-2 ring-purple-400"
-                        : "hover:bg-gray-100"
-                    }`}>
+                        ? 'bg-purple-200 ring-2 ring-purple-400'
+                        : 'hover:bg-gray-100'
+                    }`}
+                  >
                     <img
                       src={mood.src}
                       alt={mood.value}
@@ -169,11 +156,13 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               <textarea
                 className="w-full p-3 border rounded-md"
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
-                rows={3}></textarea>
+                rows={3}
+              ></textarea>
               <div className="flex justify-end mt-3">
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md cursor-pointer"
-                  onClick={onNextClick}>
+                  onClick={onNextClick}
+                >
                   Selanjutnya
                 </button>
               </div>
@@ -197,7 +186,8 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               {calendarData.map((item) => (
                 <div
                   key={item.bulan}
-                  className="bg-[#f9f9f9] border rounded-md p-2 text-center shadow">
+                  className="bg-[#f9f9f9] border rounded-md p-2 text-center shadow"
+                >
                   <h3 className="font-semibold mb-1">{item.bulan} 2025</h3>
                   <img
                     src={item.src}
