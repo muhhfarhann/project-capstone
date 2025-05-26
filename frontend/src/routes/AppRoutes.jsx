@@ -8,8 +8,27 @@ import JurnalHarian from '../pages/Eksplorasi Diri/jurnal/jurnal-page';
 import RefleksiDiri from '../pages/Eksplorasi Diri/refleksi/refleksi-page';
 import Rekomendasi from '../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page';
 import PrivateRoute from '../utils/PrivateRoute';
+import { useEffect } from 'react';
 
 export default function AppRoutes() {
+  useEffect(() => {
+    const handlePopstate = () => {
+      // Periksa apakah rute saat ini adalah '/'
+      if (window.location.pathname === '/') {
+        console.log('Rute / tercapai, menghapus localStorage');
+        localStorage.removeItem('user');
+      }
+    };
+
+    // Tambahkan event listener untuk mendeteksi perubahan riwayat (tombol back/forward)
+    window.addEventListener('popstate', handlePopstate);
+
+    // Bersihkan event listener saat komponen unmount
+    return () => {
+      window.removeEventListener('popstate', handlePopstate);
+    };
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>

@@ -2,7 +2,7 @@
 import { API_BASE_URL } from '../../firebase';
 
 export const registerModel = {
-  async register(username, email, gender) {
+  async register(username, email, password, gender) { // Tambahkan password di sini
     console.log('Mengirim register:', { username, email, password, gender });
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
