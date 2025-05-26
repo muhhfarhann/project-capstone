@@ -177,13 +177,14 @@ export default function LandingSudahView() {
           {/* Auth Buttons */}
           <div className="flex gap-3">
             <Link
-              to="/profile"
-              className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden">
-              <img
-                src="/profile.png"
-                alt="Profile"
-                className="w-10 h-10 object-cover rounded-full"
-              />
+              to="/register"
+              className="border border-purple-700 text-purple-700 rounded-full px-4 py-2 hover:bg-purple-100 transition font-medium">
+              Daftar
+            </Link>
+            <Link
+              to="/login"
+              className="bg-purple-700 text-white rounded-full px-4 py-2 hover:bg-purple-800 transition font-medium">
+              Masuk
             </Link>
           </div>
         </div>
