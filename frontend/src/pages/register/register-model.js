@@ -1,13 +1,16 @@
+// frontend/src/models/register-model.js
 import { API_BASE_URL } from '../../firebase';
 
 export const registerModel = {
-  async register(username, email, password, gender) {
+  async register(username, email, gender) {
+    console.log('Mengirim register:', { username, email, password, gender });
     try {
       const response = await fetch(`${API_BASE_URL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password, gender }),
       });
+      console.log('Respons dari server:', response.status, response.statusText);
       const data = await response.json();
       if (response.ok) {
         return { success: true, user: data.user };
@@ -50,6 +53,7 @@ export const registerModel = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid, username, gender }),
       });
+      console.log('Respons dari update-user:', response.status, response.statusText);
       const data = await response.json();
       if (response.ok) {
         return { success: true };
