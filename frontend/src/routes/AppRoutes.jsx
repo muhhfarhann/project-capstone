@@ -1,16 +1,13 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "../pages/login/login-page";
-import RegisterPage from "../pages/register/register-page";
-import LandingPage from "../pages/landing page/landing-page";
-import LandingSudahPage from "../pages/landing page sudah login/landing-sudah-page";
-import Testimoni from "../pages/testimoni/testimoni-page";
-import CatatanPage from "../pages/Eksplorasi Diri/catatan/catatan-page";
-import JurnalHarian from "../pages/Eksplorasi Diri/jurnal/jurnal-page";
-import RefleksiDiri from "../pages/Eksplorasi Diri/refleksi/refleksi-page";
-import Rekomendasi from "../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page";
-import TentangKamiPage from "../pages/tentangkami/tentangkami-page";
-import HomePage from "../pages/home/home-page";
-import PrivateRoute from "../utils/PrivateRoute";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from '../pages/login/login-page';
+import RegisterPage from '../pages/register/register-page';
+import LandingPage from '../pages/landing page/landing-page';
+import LandingSudahPage from '../pages/landing page sudah login/landing-sudah-page';
+import CatatanPage from '../pages/Eksplorasi Diri/catatan/catatan-page';
+import JurnalHarian from '../pages/Eksplorasi Diri/jurnal/jurnal-page';
+import RefleksiDiri from '../pages/Eksplorasi Diri/refleksi/refleksi-page';
+import Rekomendasi from '../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page';
+import PrivateRoute from '../utils/PrivateRoute';
 
 export default function AppRoutes() {
   return (
@@ -29,18 +26,10 @@ export default function AppRoutes() {
         {/* close */}
 
         <Route
-          path="/testimoni"
-          element={
-            <PrivateRoute>
-              <Testimoni />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/catatan"
           element={
             <PrivateRoute>
-              {" "}
+              {' '}
               <CatatanPage />
             </PrivateRoute>
           }
@@ -49,7 +38,7 @@ export default function AppRoutes() {
           path="/jurnal"
           element={
             <PrivateRoute>
-              {" "}
+              {' '}
               <JurnalHarian />
             </PrivateRoute>
           }
@@ -71,18 +60,10 @@ export default function AppRoutes() {
           }
         />
         <Route
-          path="/tentangkami"
-          element={
-            <PrivateRoute>
-              <TentangKamiPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/home"
           element={
             <PrivateRoute>
-              <HomePage />
+              <LandingSudahPage />
             </PrivateRoute>
           }
         />
