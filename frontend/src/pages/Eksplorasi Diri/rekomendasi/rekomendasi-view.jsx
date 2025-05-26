@@ -1,61 +1,62 @@
-import React from "react";
+import React from 'react';
+import Aside from '../../../components/Eksplorasi Diri/General/Aside';
 
 const RekomendasiView = () => {
-  const sidebarMenu = [
-    { src: "/icons/home.png", alt: "Home", path: "/" },
-    { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
-    { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
-    { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
-    { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
-  ];
+  // const sidebarMenu = [
+  //   { src: "/icons/home.png", alt: "Home", path: "/" },
+  //   { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
+  //   { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
+  //   { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
+  //   { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
+  // ];
 
   const rekomendasiList = [
     {
-      kategori: "ARTIKEL",
-      judul: "Mengapa Menulis Jurnal Membantu Kesehatan Mental",
+      kategori: 'ARTIKEL',
+      judul: 'Mengapa Menulis Jurnal Membantu Kesehatan Mental',
       deskripsi:
-        "Artikel berbasis penelitian yang menjelaskan dampak positif journaling terhadap kesehatan emosional.",
-      bgColor: "bg-red-100",
-      icon: "/icons/artikel.png",
+        'Artikel berbasis penelitian yang menjelaskan dampak positif journaling terhadap kesehatan emosional.',
+      bgColor: 'bg-red-100',
+      icon: '/icons/artikel.png',
     },
     {
-      kategori: "MUSIK",
-      judul: "Calm Mind – Instrumental LoFi",
+      kategori: 'MUSIK',
+      judul: 'Calm Mind – Instrumental LoFi',
       deskripsi:
-        "Musik LoFi berdurasi 1 jam untuk membantu menenangkan pikiran dan meningkatkan fokus saat mengalami kecemasan ringan.",
-      bgColor: "bg-blue-100",
-      icon: "/icons/music.png",
+        'Musik LoFi berdurasi 1 jam untuk membantu menenangkan pikiran dan meningkatkan fokus saat mengalami kecemasan ringan.',
+      bgColor: 'bg-blue-100',
+      icon: '/icons/music.png',
     },
     {
-      kategori: "AKTIVITAS",
-      judul: "Latihan Pernapasan 4–7–8",
+      kategori: 'AKTIVITAS',
+      judul: 'Latihan Pernapasan 4–7–8',
       deskripsi:
-        "Teknik pernapasan terbukti secara klinis menurunkan stres dan detak jantung dalam 2 menit.",
-      bgColor: "bg-yellow-100 border border-yellow-400",
-      icon: "/icons/aktivitas.png",
+        'Teknik pernapasan terbukti secara klinis menurunkan stres dan detak jantung dalam 2 menit.',
+      bgColor: 'bg-yellow-100 border border-yellow-400',
+      icon: '/icons/aktivitas.png',
     },
     {
-      kategori: "VIDEO",
-      judul: "5 Menit Meditasi Pagi – Guided Mindfulness",
+      kategori: 'VIDEO',
+      judul: '5 Menit Meditasi Pagi – Guided Mindfulness',
       deskripsi:
-        "Video meditasi terpandu pendek untuk memulai hari dengan kesadaran dan ketenangan batin.",
-      bgColor: "bg-green-100",
-      icon: "/icons/video.png",
+        'Video meditasi terpandu pendek untuk memulai hari dengan kesadaran dan ketenangan batin.',
+      bgColor: 'bg-green-100',
+      icon: '/icons/video.png',
     },
     {
-      kategori: "ARTIKEL",
-      judul: "Efek Musik Terhadap Kesehatan Mental",
+      kategori: 'ARTIKEL',
+      judul: 'Efek Musik Terhadap Kesehatan Mental',
       deskripsi:
-        "Ulasan dari jurnal psikologi tentang bagaimana musik tertentu dapat mengurangi gejala depresi dan kecemasan.",
-      bgColor: "bg-pink-100",
-      icon: "/icons/artikel.png",
+        'Ulasan dari jurnal psikologi tentang bagaimana musik tertentu dapat mengurangi gejala depresi dan kecemasan.',
+      bgColor: 'bg-pink-100',
+      icon: '/icons/artikel.png',
     },
   ];
 
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <aside className="w-20 bg-black text-white flex flex-col items-center py-6 space-y-6 rounded-xl m-4">
+      {/* <aside className="w-20 bg-black text-white flex flex-col items-center py-6 space-y-6 rounded-xl m-4">
         {sidebarMenu.map((item, index) => (
           <a
             key={index}
@@ -68,7 +69,9 @@ const RekomendasiView = () => {
             <img src={item.src} alt={item.alt} className="w-8 h-8" />
           </a>
         ))}
-      </aside>
+      </aside> */}
+
+      <Aside />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col bg-[#f0f0ff] overflow-y-auto">
@@ -107,7 +110,8 @@ const RekomendasiView = () => {
             {rekomendasiList.map((item, idx) => (
               <div
                 key={idx}
-                className={`${item.bgColor} p-5 rounded-xl shadow-md flex items-start space-x-4`}>
+                className={`${item.bgColor} p-5 rounded-xl shadow-md flex items-start space-x-4`}
+              >
                 <img src={item.icon} alt="icon" className="w-8 h-8 mt-1" />
                 <div>
                   <p className="text-xs font-bold">{item.kategori}</p>
