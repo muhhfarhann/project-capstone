@@ -1,15 +1,8 @@
 import React, { useState } from "react";
+import Aside from "../../../components/Eksplorasi Diri/General/Aside";
 
 const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const sidebarMenu = [
-    { src: "/icons/home.png", alt: "Home", path: "/" },
-    { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
-    { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
-    { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
-    { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
-  ];
 
   const pertanyaanList = [
     "Saya merasa dapat mengelola stres yang saya alami dengan cukup baik.",
@@ -22,20 +15,7 @@ const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
   return (
     <div className="flex h-screen">
       {/* Sidebar Desktop */}
-      <aside className="hidden md:flex w-20 bg-black text-white flex-col items-center py-6 space-y-6 rounded-xl m-4">
-        {sidebarMenu.map((item, index) => (
-          <a
-            href={item.path}
-            key={index}
-            className={`p-2 rounded-lg transition duration-200 cursor-pointer ${
-              item.alt === "Refleksi Diri"
-                ? "bg-purple-300"
-                : "hover:bg-purple-300"
-            }`}>
-            <img src={item.src} alt={item.alt} className="w-8 h-8" />
-          </a>
-        ))}
-      </aside>
+      <Aside />
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col bg-[#f0f0ff] overflow-y-auto">
