@@ -17,14 +17,6 @@ export default function AppRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* bentar ya ni gw nambahin route ini buat tes  */}
-        <Route path="/catatan" element={<CatatanPage />} />
-        <Route path="/jurnal" element={<JurnalHarian />} />
-        <Route path="/refleksi" element={<RefleksiDiri />} />
-        <Route path="/rekomendasi" element={<Rekomendasi />} />
-        <Route path="/sudahlogin" element={<LandingSudahPage />} />
-        {/* close */}
-
         <Route
           path="/catatan"
           element={
