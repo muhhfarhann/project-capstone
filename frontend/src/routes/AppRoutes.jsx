@@ -1,31 +1,31 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LoginPage from "../pages/login/login-page";
-import RegisterPage from "../pages/register/register-page";
-import LandingPage from "../pages/landing page/landing-page";
-import LandingSudahPage from "../pages/landing page sudah login/landing-sudah-page";
-import CatatanPage from "../pages/Eksplorasi Diri/catatan/catatan-page";
-import JurnalHarian from "../pages/Eksplorasi Diri/jurnal/jurnal-page";
-import RefleksiDiri from "../pages/Eksplorasi Diri/refleksi/refleksi-page";
-import Rekomendasi from "../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page";
-import PrivateRoute from "../utils/PrivateRoute";
-import { useEffect } from "react";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import LoginPage from '../pages/login/login-page';
+import RegisterPage from '../pages/register/register-page';
+import LandingPage from '../pages/landing page/landing-page';
+import LandingSudahPage from '../pages/landing page sudah login/landing-sudah-page';
+import CatatanPage from '../pages/Eksplorasi Diri/catatan/catatan-page';
+import JurnalHarian from '../pages/Eksplorasi Diri/jurnal/jurnal-page';
+import RefleksiDiri from '../pages/Eksplorasi Diri/refleksi/refleksi-page';
+import Rekomendasi from '../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page';
+import PrivateRoute from '../utils/PrivateRoute';
+import { useEffect } from 'react';
 
 export default function AppRoutes() {
   useEffect(() => {
     const handlePopstate = () => {
       // Periksa apakah rute saat ini adalah '/'
-      if (window.location.pathname === "/") {
-        console.log("Rute / tercapai, menghapus localStorage");
-        localStorage.removeItem("user");
+      if (window.location.pathname === '/') {
+        console.log('Rute / tercapai, menghapus localStorage');
+        localStorage.removeItem('user');
       }
     };
 
     // Tambahkan event listener untuk mendeteksi perubahan riwayat (tombol back/forward)
-    window.addEventListener("popstate", handlePopstate);
+    window.addEventListener('popstate', handlePopstate);
 
     // Bersihkan event listener saat komponen unmount
     return () => {
-      window.removeEventListener("popstate", handlePopstate);
+      window.removeEventListener('popstate', handlePopstate);
     };
   }, []);
 
@@ -40,7 +40,7 @@ export default function AppRoutes() {
           path="/catatan"
           element={
             <PrivateRoute>
-              {" "}
+              {' '}
               <CatatanPage />
             </PrivateRoute>
           }
@@ -49,7 +49,6 @@ export default function AppRoutes() {
           path="/jurnal"
           element={
             <PrivateRoute>
-              {" "}
               <JurnalHarian />
             </PrivateRoute>
           }

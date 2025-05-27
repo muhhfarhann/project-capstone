@@ -21,6 +21,7 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
   ];
 
   useEffect(() => {
+    localStorage.clear();
     console.log(JSON.parse(localStorage.getItem('moodEntries')));
     console.log(JSON.parse(localStorage.getItem('user')));
   }, []);
