@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Aside from '../../../components/Eksplorasi Diri/General/Aside';
 
 const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [journalText, setJournalText] = useState(''); // State untuk menyimpan teks dari textarea
 
   const calendarData = [
     { src: '/calendar/april.png', bulan: 'April' },
@@ -18,6 +19,46 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
     { src: '/emoji/very-happy.png', value: 'very_happy' },
     { src: '/emoji/angry.png', value: 'angry' },
   ];
+
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem('moodEntries')));
+    console.log(JSON.parse(localStorage.getItem('user')));
+  }, []);
+
+  // Fungsi untuk menyimpan data ke localStorage
+  const handleSaveToLocalStorage = () => {
+    if (!selectedMood || !journalText) {
+      alert('Silakan pilih mood dan isi jurnal terlebih dahulu!');
+      return;
+    }
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const currentDate = new Date().toISOString(); // Timestamp untuk entri
+    const moodEntry = {
+      userId: user.uid,
+      date: currentDate,
+      emoji: selectedMood, // Nilai string dari emoji (very_sad, sad, dll.)
+      journal: journalText, // Teks dari textarea
+    };
+
+    // Ambil data yang sudah ada di localStorage (jika ada)
+    const existingEntries =
+      JSON.parse(localStorage.getItem('moodEntries')) || [];
+    // Tambahkan entri baru
+    existingEntries.push(moodEntry);
+    // Simpan kembali ke localStorage
+    localStorage.setItem('moodEntries', JSON.stringify(existingEntries));
+    alert('Data mood berhasil disimpan!');
+  };
+
+  // Fungsi untuk reset setelah klik "Selanjutnya"
+  const handleNextClickWithReset = () => {
+    handleSaveToLocalStorage();
+    setJournalText(''); // Kosongkan textarea
+    onMoodSelect(null); // Reset pilihan emoji
+    onNextClick(); // Panggil fungsi onNextClick dari props
+  };
 
   return (
     <div className="flex min-h-screen">
@@ -171,11 +212,13 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                 className="w-full p-2 md:p-3 border rounded-md text-sm md:text-base"
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
                 rows={3}
+                value={journalText}
+                onChange={(e) => setJournalText(e.target.value)}
               ></textarea>
               <div className="flex justify-end mt-3">
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-1 md:px-5 md:py-2 rounded-md cursor-pointer text-sm md:text-base"
-                  onClick={onNextClick}
+                  onClick={handleNextClickWithReset}
                 >
                   Selanjutnya
                 </button>
@@ -202,14 +245,14 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               {calendarData.map((item, index) => (
                 <div
                   key={item.bulan}
-                  className="bg-white border rounded-md p-2 text-center shadow"
+                  className="bg-white rounded-md p-2 text-center shadow-xl"
                 >
                   <div className="flex justify-between items-center mb-2">
                     <h3 className="font-semibold text-sm md:text-base">
                       {item.bulan} 2025
                     </h3>
                     <img
-                      src="/sun-icon.png"
+                      src={moodOptions[index].src}
                       alt="Sun"
                       className="w-5 h-5 md:w-6 md:h-6"
                     />
