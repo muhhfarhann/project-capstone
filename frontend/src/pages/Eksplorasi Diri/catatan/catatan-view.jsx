@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Aside from '../../../components/Eksplorasi Diri/General/Aside';
 
 const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [journalText, setJournalText] = useState(''); // State untuk menyimpan teks dari textarea
+  const [moodHistory, setMoodHistory] = useState([]); // State untuk menyimpan riwayat mood
 
   const calendarData = [
     { src: '/calendar/april.png', bulan: 'April' },
@@ -20,45 +21,84 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
     { src: '/emoji/angry.png', value: 'angry' },
   ];
 
+  // Ambil riwayat mood dari backend saat komponen dimuat
   useEffect(() => {
-    localStorage.clear();
-    console.log(JSON.parse(localStorage.getItem('moodEntries')));
-    console.log(JSON.parse(localStorage.getItem('user')));
+    const fetchMoodHistory = async () => {
+      try {
+        const response = await fetch('http://localhost:5001/api/mood/history');
+        const data = await response.json();
+        setMoodHistory(data);
+      } catch (error) {
+        console.error('Error fetching mood history:', error);
+      }
+    };
+    fetchMoodHistory();
   }, []);
 
-  // Fungsi untuk menyimpan data ke localStorage
-  const handleSaveToLocalStorage = () => {
+  // Fungsi untuk menyimpan data ke database
+  const handleSaveToDatabase = async () => {
     if (!selectedMood || !journalText) {
       alert('Silakan pilih mood dan isi jurnal terlebih dahulu!');
-      return;
+      return false;
     }
 
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    const currentDate = new Date().toISOString(); // Timestamp untuk entri
+    const currentDate = new Date().toISOString();
     const moodEntry = {
-      userId: user.uid,
       date: currentDate,
-      emoji: selectedMood, // Nilai string dari emoji (very_sad, sad, dll.)
-      journal: journalText, // Teks dari textarea
+      mood: selectedMood,
+      journal: journalText,
     };
 
-    // Ambil data yang sudah ada di localStorage (jika ada)
-    const existingEntries =
-      JSON.parse(localStorage.getItem('moodEntries')) || [];
-    // Tambahkan entri baru
-    existingEntries.push(moodEntry);
-    // Simpan kembali ke localStorage
-    localStorage.setItem('moodEntries', JSON.stringify(existingEntries));
-    alert('Data mood berhasil disimpan!');
+    try {
+      const response = await fetch('http://localhost:5000/api/mood', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(moodEntry),
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert('Data mood berhasil disimpan ke database!');
+        // Update riwayat mood setelah menyimpan
+        setMoodHistory([...moodHistory, moodEntry]);
+        return true;
+      } else {
+        alert(`Gagal menyimpan data: ${result.error}`);
+        return false;
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Terjadi kesalahan saat menyimpan data.');
+      return false;
+    }
   };
 
   // Fungsi untuk reset setelah klik "Selanjutnya"
-  const handleNextClickWithReset = () => {
-    handleSaveToLocalStorage();
-    setJournalText(''); // Kosongkan textarea
-    onMoodSelect(null); // Reset pilihan emoji
-    onNextClick(); // Panggil fungsi onNextClick dari props
+  const handleNextClickWithReset = async () => {
+    const success = await handleSaveToDatabase();
+    if (success) {
+      setJournalText(''); // Kosongkan textarea
+      onMoodSelect(null); // Reset pilihan emoji
+      onNextClick(); // Panggil fungsi onNextClick dari props
+    }
+  };
+
+  // Fungsi untuk menentukan warna berdasarkan mood
+  const getMoodColor = (mood) => {
+    switch (mood) {
+      case 'very_sad':
+      case 'sad':
+        return 'bg-red-200';
+      case 'happy':
+      case 'very_happy':
+        return 'bg-green-200';
+      case 'angry':
+        return 'bg-yellow-200';
+      default:
+        return 'bg-gray-200';
+    }
   };
 
   return (
@@ -243,92 +283,68 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
               Mood-ku: 4 Bulan Terakhir
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {calendarData.map((item, index) => (
-                <div
-                  key={item.bulan}
-                  className="bg-white rounded-md p-2 text-center shadow-xl"
-                >
-                  <div className="flex justify-between items-center mb-2">
-                    <h3 className="font-semibold text-sm md:text-base">
-                      {item.bulan} 2025
-                    </h3>
-                    <img
-                      src={moodOptions[index].src}
-                      alt="Sun"
-                      className="w-5 h-5 md:w-6 md:h-6"
-                    />
+              {calendarData.map((item, index) => {
+                // Filter mood history berdasarkan bulan
+                const monthIndex = calendarData.length - 1 - index; // Januari = 0, Februari = 1, dst.
+                const filteredMoodHistory = moodHistory.filter((entry) => {
+                  const entryDate = new Date(entry.date);
+                  return entryDate.getMonth() === monthIndex + 1; // Sesuaikan dengan bulan (1-4 untuk Jan-Apr 2025)
+                });
+
+                return (
+                  <div
+                    key={item.bulan}
+                    className="bg-white rounded-md p-2 text-center shadow-lg"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <h3 className="font-semibold text-sm md:text-base">
+                        {item.bulan} 2025
+                      </h3>
+                      <img
+                        src={moodOptions[index].src}
+                        alt="Sun"
+                        className="w-5 h-5 md:w-6 md:h-6"
+                      />
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 text-xs md:text-sm">
+                      <div className="font-medium">Sen</div>
+                      <div className="font-medium">Sel</div>
+                      <div className="font-medium">Rab</div>
+                      <div className="font-medium">Kam</div>
+                      <div className="font-medium">Jum</div>
+                      <div className="font-medium">Sab</div>
+                      <div className="font-medium">Min</div>
+                      {[...Array(35)].map((_, dayIndex) => {
+                        const day = dayIndex + 1;
+                        const date = new Date(2025, monthIndex + 1, day);
+                        if (date.getMonth() !== monthIndex + 1)
+                          return <div key={dayIndex}></div>;
+
+                        const moodEntry = filteredMoodHistory.find((entry) => {
+                          const entryDate = new Date(entry.date);
+                          return (
+                            entryDate.getDate() === day &&
+                            entryDate.getMonth() === monthIndex + 1
+                          );
+                        });
+
+                        return (
+                          <div
+                            key={dayIndex}
+                            className={`p-1 ${
+                              moodEntry
+                                ? getMoodColor(moodEntry.mood)
+                                : 'bg-gray-200'
+                            }`}
+                          >
+                            {day}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-7 gap-1 text-xs md:text-sm">
-                    <div className="font-medium">Sen</div>
-                    <div className="font-medium">Sel</div>
-                    <div className="font-medium">Rab</div>
-                    <div className="font-medium">Kam</div>
-                    <div className="font-medium">Jum</div>
-                    <div className="font-medium">Sab</div>
-                    <div className="font-medium">Min</div>
-                    {/* Minggu 1: Kuning */}
-                    {index === 0 && (
-                      <>
-                        <div className="bg-yellow-200 p-1">1</div>
-                        <div className="bg-yellow-200 p-1">2</div>
-                        <div className="bg-yellow-200 p-1">3</div>
-                        <div className="bg-yellow-200 p-1">4</div>
-                        <div className="bg-yellow-200 p-1">5</div>
-                        <div className="bg-yellow-200 p-1">6</div>
-                        <div className="bg-yellow-200 p-1">7</div>
-                      </>
-                    )}
-                    {/* Minggu 2: Biru */}
-                    {index === 1 && (
-                      <>
-                        <div className="bg-blue-200 p-1">8</div>
-                        <div className="bg-blue-200 p-1">9</div>
-                        <div className="bg-blue-200 p-1">10</div>
-                        <div className="bg-blue-200 p-1">11</div>
-                        <div className="bg-blue-200 p-1">12</div>
-                        <div className="bg-blue-200 p-1">13</div>
-                        <div className="bg-blue-200 p-1">14</div>
-                      </>
-                    )}
-                    {/* Minggu 3: Merah */}
-                    {index === 2 && (
-                      <>
-                        <div className="bg-red-200 p-1">15</div>
-                        <div className="bg-red-200 p-1">16</div>
-                        <div className="bg-red-200 p-1">17</div>
-                        <div className="bg-red-200 p-1">18</div>
-                        <div className="bg-red-200 p-1">19</div>
-                        <div className="bg-red-200 p-1">20</div>
-                        <div className="bg-red-200 p-1">21</div>
-                      </>
-                    )}
-                    {/* Minggu 4: Hijau */}
-                    {index === 3 && (
-                      <>
-                        <div className="bg-green-200 p-1">22</div>
-                        <div className="bg-green-200 p-1">23</div>
-                        <div className="bg-green-200 p-1">24</div>
-                        <div className="bg-green-200 p-1">25</div>
-                        <div className="bg-green-200 p-1">26</div>
-                        <div className="bg-green-200 p-1">27</div>
-                        <div className="bg-green-200 p-1">28</div>
-                      </>
-                    )}
-                    {/* Tambahan untuk bulan yang lebih pendek (opsional) */}
-                    {index === 3 && (
-                      <>
-                        <div className="bg-green-200 p-1">29</div>
-                        <div className="bg-green-200 p-1">30</div>
-                        <div className="bg-green-200 p-1"></div>
-                        <div className="bg-green-200 p-1"></div>
-                        <div className="bg-green-200 p-1"></div>
-                        <div className="bg-green-200 p-1"></div>
-                        <div className="bg-green-200 p-1"></div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </section>
         </div>
