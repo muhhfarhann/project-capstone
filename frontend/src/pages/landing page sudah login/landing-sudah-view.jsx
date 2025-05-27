@@ -249,7 +249,7 @@ export default function LandingSudahView() {
               mengenali emosi, kamu bisa lebih memahami dirimu sendiri.
             </p>
             <Link
-              to="/login"
+              to="/catatan"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition font-medium"
             >
               Catat Mood-ku Hari Ini ↗
@@ -301,7 +301,7 @@ export default function LandingSudahView() {
               menyimpan momen bermakna.
             </p>
             <Link
-              to="/login"
+              to="/jurnal"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
             >
               Tulis Jurnal Sekarang ↗
@@ -344,7 +344,7 @@ export default function LandingSudahView() {
               dan sembuh.
             </p>
             <Link
-              to="/login"
+              to="/refleksi"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
             >
               Mulai Refleksi Diri ↗
@@ -387,7 +387,7 @@ export default function LandingSudahView() {
               kesejahteraanmu.
             </p>
             <Link
-              to="/login"
+              to="/rekomendasi"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
             >
               Lihat Rekomendasi-ku ↗
