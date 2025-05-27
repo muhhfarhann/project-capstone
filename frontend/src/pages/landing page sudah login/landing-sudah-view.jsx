@@ -204,7 +204,8 @@ export default function LandingSudahView() {
         {/* Text */}
         <div className="max-w-xl">
           <h1 className="text-3xl md:text-5xl font-extrabold mb-6">
-            Lagi Ngerasa Apa? <br /> Ceritain di Mamood!
+            <span className="block mb-4">Lagi Ngerasa Apa?</span>
+            <span className="block">Ceritain di Mamood!</span>
           </h1>
           <p className="text-base md:text-lg leading-relaxed text-gray-800">
             Mamood siap jadi teman kamu buat pantau suasana hati setiap hari.
@@ -390,7 +391,7 @@ export default function LandingSudahView() {
               to="/rekomendasi"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition"
             >
-              Lihat Rekomendasi-ku ↗
+              Rekomendasi-ku ↗
             </Link>
           </div>
         </div>
