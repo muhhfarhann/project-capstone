@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Aside from '../../../components/Eksplorasi Diri/General/Aside';
+import Chart from 'chart.js/auto';
 
-const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [journalText, setJournalText] = useState(''); // State untuk menyimpan teks dari textarea
-  const [moodHistory, setMoodHistory] = useState([]); // State untuk menyimpan riwayat mood
+const CatatanView = ({
+  selectedMood,
+  onMoodSelect,
+  onNextClick,
+  updateMoodHistory,
+  showSuccess,
+  showError,
+  resetForm,
+  setAuthenticated,
+  isAuthenticated,
+  moodHistory,
+  journalText, // Add journalText prop
+  setJournalText, // Add setJournalText prop
+}) => {
+  const chartRef = useRef(null);
+  const chartInstance = useRef(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Add missing state
 
   const calendarData = [
     { src: '/calendar/april.png', bulan: 'April' },
@@ -14,107 +28,95 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
   ];
 
   const moodOptions = [
-    { src: '/emoji/very-sad.png', value: 'very_sad' },
-    { src: '/emoji/sad.png', value: 'sad' },
-    { src: '/emoji/happy.png', value: 'happy' },
-    { src: '/emoji/very-happy.png', value: 'very_happy' },
-    { src: '/emoji/angry.png', value: 'angry' },
+    { src: '/emoji/very-sad.png', value: 'sadness' },
+    { src: '/emoji/sad.png', value: 'sadness' },
+    { src: '/emoji/happy.png', value: 'joy' },
+    { src: '/emoji/very-happy.png', value: 'joy' },
+    { src: '/emoji/angry.png', value: 'anger' },
   ];
 
-  // Ambil riwayat mood dari backend saat komponen dimuat
-  useEffect(() => {
-    const fetchMoodHistory = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/api/mood/history');
-        const data = await response.json();
-        setMoodHistory(data);
-      } catch (error) {
-        console.error('Error fetching mood history:', error);
-      }
-    };
-    fetchMoodHistory();
-  }, []);
-
-  // Fungsi untuk menyimpan data ke database
-  const handleSaveToDatabase = async () => {
-    if (!selectedMood || !journalText) {
-      alert('Silakan pilih mood dan isi jurnal terlebih dahulu!');
-      return false;
-    }
-
-    const currentDate = new Date().toISOString();
-    const moodEntry = {
-      date: currentDate,
-      mood: selectedMood,
-      journal: journalText,
-    };
-
-    try {
-      const response = await fetch('http://localhost:5000/api/mood', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(moodEntry),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert('Data mood berhasil disimpan ke database!');
-        // Update riwayat mood setelah menyimpan
-        setMoodHistory([...moodHistory, moodEntry]);
-        return true;
-      } else {
-        alert(`Gagal menyimpan data: ${result.error}`);
-        return false;
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      alert('Terjadi kesalahan saat menyimpan data.');
-      return false;
-    }
-  };
-
-  // Fungsi untuk reset setelah klik "Selanjutnya"
-  const handleNextClickWithReset = async () => {
-    const success = await handleSaveToDatabase();
-    if (success) {
-      setJournalText(''); // Kosongkan textarea
-      onMoodSelect(null); // Reset pilihan emoji
-      onNextClick(); // Panggil fungsi onNextClick dari props
-    }
-  };
-
-  // Fungsi untuk menentukan warna berdasarkan mood
   const getMoodColor = (mood) => {
     switch (mood) {
-      case 'very_sad':
-      case 'sad':
+      case 'sadness':
         return 'bg-red-200';
-      case 'happy':
-      case 'very_happy':
+      case 'joy':
         return 'bg-green-200';
-      case 'angry':
+      case 'anger':
         return 'bg-yellow-200';
+      case 'fear':
+        return 'bg-purple-200';
+      case 'love':
+        return 'bg-pink-200';
       default:
         return 'bg-gray-200';
     }
   };
 
+  // Inisialisasi atau perbarui grafik saat moodHistory berubah
+  useEffect(() => {
+    if (chartInstance.current) {
+      chartInstance.current.destroy();
+    }
+
+    const ctx = chartRef.current.getContext('2d');
+    const currentDate = new Date();
+    const startOfWeek = new Date(currentDate);
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Mulai dari Senin
+
+    const weeklyMoodData = [];
+    const weeklyLabels = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(startOfWeek);
+      date.setDate(startOfWeek.getDate() + i);
+      weeklyLabels.push(date.toLocaleDateString('id-ID', { weekday: 'short' }));
+      const entry = moodHistory.find((m) => {
+        const entryDate = new Date(m.date);
+        return entryDate.toDateString() === date.toDateString();
+      });
+      weeklyMoodData.push(entry ? 1 : 0); // 1 untuk ada mood, 0 untuk tidak ada
+    }
+
+    chartInstance.current = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: weeklyLabels,
+        datasets: [
+          {
+            label: 'Mood Tercatat',
+            data: weeklyMoodData,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 1,
+            ticks: {
+              callback: (value) => (value === 1 ? 'Ya' : 'Tidak'),
+            },
+          },
+        },
+      },
+    });
+
+    return () => {
+      if (chartInstance.current) chartInstance.current.destroy();
+    };
+  }, [moodHistory]);
+
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar Desktop */}
       <Aside className="hidden md:block" />
-
-      {/* Main Content */}
       <div className="flex-1 flex flex-col bg-[#f0f0ff] overflow-y-auto">
-        {/* Header */}
         <header className="bg-purple-300 px-4 py-3 md:px-6 md:py-4 flex justify-between items-center rounded-xl mx-2 md:mx-4 mt-2 md:mt-4 shadow-md">
           <div className="flex items-center space-x-2 md:space-x-3">
             <img src="/logo.png" alt="Logo" className="w-6 h-6 md:w-8 md:h-8" />
             <h1 className="text-lg md:text-xl font-bold">Catatan Mood</h1>
           </div>
-
           <div className="flex items-center space-x-2 md:space-x-3">
             <div className="hidden md:flex items-center space-x-2 cursor-pointer">
               <span className="font-semibold text-sm md:text-base">
@@ -126,8 +128,6 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                 className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white"
               />
             </div>
-
-            {/* Tombol menu untuk mobile */}
             <button
               className="md:hidden p-2"
               onClick={() => setIsSidebarOpen(true)}
@@ -140,20 +140,15 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
             </button>
           </div>
         </header>
-
-        {/* Sidebar Mobile */}
         {isSidebarOpen && (
           <div className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden">
             <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
-              {/* Tombol Close */}
               <button
                 onClick={() => setIsSidebarOpen(false)}
                 className="absolute top-4 right-4 text-lg md:text-xl font-bold"
               >
                 ×
               </button>
-
-              {/* Profil User */}
               <div className="mt-10 mb-6 text-center">
                 <img
                   src="/profile.png"
@@ -172,10 +167,7 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                   </button>
                 </div>
               </div>
-
               <hr className="my-4 border-gray-300" />
-
-              {/* Menu Navigasi */}
               <nav className="space-y-4 px-2">
                 {[
                   {
@@ -217,8 +209,6 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
             </div>
           </div>
         )}
-
-        {/* Konten */}
         <div className="p-4 md:p-6 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <section className="bg-white p-4 rounded-xl shadow-md">
@@ -229,16 +219,16 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                 Hari ini kamu merasa apa?
               </p>
               <div className="flex flex-wrap gap-2 md:gap-3 mb-4">
-                {/* Emoji image */}
-                {moodOptions.map((mood) => (
+                {moodOptions.map((mood, index) => (
                   <button
-                    key={mood.value}
+                    key={index}
                     onClick={() => onMoodSelect(mood.value)}
                     className={`p-1 rounded-full cursor-pointer ${
                       selectedMood === mood.value
                         ? 'bg-purple-200 ring-2 ring-purple-400'
                         : 'hover:bg-gray-100'
                     }`}
+                    disabled={selectedMood && selectedMood !== mood.value}
                   >
                     <img
                       src={mood.src}
@@ -248,60 +238,61 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                   </button>
                 ))}
               </div>
-              {/* Text jurnal */}
               <textarea
                 className="w-full p-2 md:p-3 border rounded-md text-sm md:text-base"
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
                 rows={3}
-                value={journalText}
-                onChange={(e) => setJournalText(e.target.value)}
+                value={journalText} // Use journalText prop
+                onChange={(e) => setJournalText(e.target.value)} // Use setJournalText prop
               ></textarea>
               <div className="flex justify-end mt-3">
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-1 md:px-5 md:py-2 rounded-md cursor-pointer text-sm md:text-base"
-                  onClick={handleNextClickWithReset}
+                  onClick={onNextClick}
+                  disabled={
+                    !selectedMood || !journalText.trim() || !isAuthenticated
+                  }
                 >
                   Selanjutnya
                 </button>
               </div>
             </section>
-
             <section className="bg-purple-300 p-4 rounded-xl shadow-md">
               <h2 className="text-base md:text-lg font-semibold mb-3">
                 Mood-ku Minggu Ini
               </h2>
-              <img
-                src="/chart-week.png"
-                alt="Chart Mingguan"
-                className="w-full h-48 md:h-64 object-contain"
-              />
+              <div className="w-full h-48 md:h-64">
+                <canvas ref={chartRef} id="moodChart"></canvas>
+              </div>
             </section>
           </div>
-
           <section className="bg-purple-300 p-4 rounded-xl shadow-md">
             <h2 className="text-base md:text-lg font-semibold mb-3">
               Mood-ku: 4 Bulan Terakhir
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {calendarData.map((item, index) => {
-                // Filter mood history berdasarkan bulan
-                const monthIndex = calendarData.length - 1 - index; // Januari = 0, Februari = 1, dst.
+                const monthIndex = calendarData.length - 1 - index;
+                const currentDate = new Date();
                 const filteredMoodHistory = moodHistory.filter((entry) => {
                   const entryDate = new Date(entry.date);
-                  return entryDate.getMonth() === monthIndex + 1; // Sesuaikan dengan bulan (1-4 untuk Jan-Apr 2025)
+                  return (
+                    entryDate.getMonth() === monthIndex + 1 &&
+                    entryDate.getFullYear() === currentDate.getFullYear()
+                  );
                 });
 
                 return (
                   <div
                     key={item.bulan}
-                    className="bg-white rounded-md p-2 text-center shadow-lg"
+                    className="bg-white border rounded-md p-2 text-center shadow"
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-semibold text-sm md:text-base">
-                        {item.bulan} 2025
+                        {item.bulan} {currentDate.getFullYear()}
                       </h3>
                       <img
-                        src={moodOptions[index].src}
+                        src="/sun-icon.png"
                         alt="Sun"
                         className="w-5 h-5 md:w-6 md:h-6"
                       />
@@ -316,7 +307,11 @@ const CatatanView = ({ onMoodSelect, selectedMood, onNextClick }) => {
                       <div className="font-medium">Min</div>
                       {[...Array(35)].map((_, dayIndex) => {
                         const day = dayIndex + 1;
-                        const date = new Date(2025, monthIndex + 1, day);
+                        const date = new Date(
+                          currentDate.getFullYear(),
+                          monthIndex + 1,
+                          day,
+                        );
                         if (date.getMonth() !== monthIndex + 1)
                           return <div key={dayIndex}></div>;
 
