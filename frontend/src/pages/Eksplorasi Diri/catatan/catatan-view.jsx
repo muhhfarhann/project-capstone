@@ -13,12 +13,12 @@ const CatatanView = ({
   setAuthenticated,
   isAuthenticated,
   moodHistory,
-  journalText, // Add journalText prop
-  setJournalText, // Add setJournalText prop
+  journalText,
+  setJournalText,
 }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Add missing state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const calendarData = [
     { src: '/calendar/april.png', bulan: 'April' },
@@ -27,21 +27,24 @@ const CatatanView = ({
     { src: '/calendar/januari.png', bulan: 'Januari' },
   ];
 
+  // Perbarui moodOptions dengan kategori unik
   const moodOptions = [
-    { src: '/emoji/very-sad.png', value: 'sadness' },
-    { src: '/emoji/sad.png', value: 'sadness' },
-    { src: '/emoji/happy.png', value: 'joy' },
-    { src: '/emoji/very-happy.png', value: 'joy' },
-    { src: '/emoji/angry.png', value: 'anger' },
+    { src: '/emoji/very-sad.png', value: 'very-sad' },
+    { src: '/emoji/sad.png', value: 'sad' },
+    { src: '/emoji/happy.png', value: 'happy' },
+    { src: '/emoji/very-happy.png', value: 'very-happy' },
+    { src: '/emoji/angry.png', value: 'angry' },
   ];
 
   const getMoodColor = (mood) => {
     switch (mood) {
-      case 'sadness':
+      case 'very-sad':
+      case 'sad':
         return 'bg-red-200';
-      case 'joy':
+      case 'happy':
+      case 'very-happy':
         return 'bg-green-200';
-      case 'anger':
+      case 'angry':
         return 'bg-yellow-200';
       case 'fear':
         return 'bg-purple-200';
@@ -52,7 +55,6 @@ const CatatanView = ({
     }
   };
 
-  // Inisialisasi atau perbarui grafik saat moodHistory berubah
   useEffect(() => {
     if (chartInstance.current) {
       chartInstance.current.destroy();
@@ -63,41 +65,132 @@ const CatatanView = ({
     const startOfWeek = new Date(currentDate);
     startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Mulai dari Senin
 
-    const weeklyMoodData = [];
     const weeklyLabels = [];
+    const weeklyMoodData = [];
+    const emojiImages = [];
+
+    const moodToValue = (mood) => {
+      switch (mood) {
+        case 'very-sad':
+          return 1;
+        case 'sad':
+          return 1.5;
+        case 'happy':
+          return 2.5;
+        case 'very-happy':
+          return 3;
+        case 'angry':
+          return 2;
+        default:
+          return 0;
+      }
+    };
+
+    // Fungsi untuk mendapatkan emoji berdasarkan mood
+    const getEmojiForMood = (mood) => {
+      const matchingOption = moodOptions.find(
+        (option) => option.value === mood,
+      );
+      return matchingOption ? matchingOption.src : null;
+    };
+
+    // Siapkan data untuk chart
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + i);
       weeklyLabels.push(date.toLocaleDateString('id-ID', { weekday: 'short' }));
-      const entry = moodHistory.find((m) => {
+
+      const entriesForDay = moodHistory.filter((m) => {
         const entryDate = new Date(m.date);
         return entryDate.toDateString() === date.toDateString();
       });
-      weeklyMoodData.push(entry ? 1 : 0); // 1 untuk ada mood, 0 untuk tidak ada
+
+      // Ambil entri terakhir berdasarkan timestamp
+      const entry =
+        entriesForDay.length > 0
+          ? entriesForDay.reduce((latest, current) =>
+              new Date(latest.date) > new Date(current.date) ? latest : current,
+            )
+          : null;
+      const moodValue = entry ? moodToValue(entry.mood) : 0;
+      weeklyMoodData.push(moodValue);
+
+      // Siapkan gambar emoji untuk titik
+      if (entry) {
+        const emojiSrc = getEmojiForMood(entry.mood);
+        if (emojiSrc) {
+          const img = new Image();
+          img.src = emojiSrc;
+          img.width = 20; // Sesuaikan ukuran emoji
+          img.height = 20;
+          emojiImages.push(img);
+        } else {
+          emojiImages.push(null);
+        }
+      } else {
+        emojiImages.push(null);
+      }
     }
 
     chartInstance.current = new Chart(ctx, {
-      type: 'bar',
+      type: 'line',
       data: {
         labels: weeklyLabels,
         datasets: [
           {
-            label: 'Mood Tercatat',
+            label: 'Mood Mingguan',
             data: weeklyMoodData,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
+            borderColor: '#8B5CF6', // Ungu sesuai tema
+            pointStyle: emojiImages, // Gunakan gambar emoji sebagai titik
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 10, // Radius untuk menampung gambar emoji
+            fill: false,
+            tension: 0.3,
           },
         ],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const value = context.raw;
+                let moodLabel = 'Tidak ada mood';
+                if (value === 1) moodLabel = 'Very Sad';
+                else if (value === 1.5) moodLabel = 'Sad';
+                else if (value === 2) moodLabel = 'Angry';
+                else if (value === 2.5) moodLabel = 'Happy';
+                else if (value === 3) moodLabel = 'Very Happy';
+                return `Mood: ${moodLabel}`;
+              },
+            },
+          },
+        },
         scales: {
           y: {
             beginAtZero: true,
-            max: 1,
+            max: 3.5,
             ticks: {
-              callback: (value) => (value === 1 ? 'Ya' : 'Tidak'),
+              stepSize: 0.5,
+              callback: (value) => {
+                if (value === 1) return 'Very Sad';
+                if (value === 1.5) return 'Sad';
+                if (value === 2) return 'Angry';
+                if (value === 2.5) return 'Happy';
+                if (value === 3) return 'Very Happy';
+                return '';
+              },
+              color: '#4B5563',
             },
+            grid: { display: false },
+          },
+          x: {
+            ticks: { color: '#4B5563' },
+            grid: { display: false },
           },
         },
       },
@@ -242,8 +335,8 @@ const CatatanView = ({
                 className="w-full p-2 md:p-3 border rounded-md text-sm md:text-base"
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
                 rows={3}
-                value={journalText} // Use journalText prop
-                onChange={(e) => setJournalText(e.target.value)} // Use setJournalText prop
+                value={journalText}
+                onChange={(e) => setJournalText(e.target.value)}
               ></textarea>
               <div className="flex justify-end mt-3">
                 <button
@@ -263,6 +356,14 @@ const CatatanView = ({
               </h2>
               <div className="w-full h-48 md:h-64">
                 <canvas ref={chartRef} id="moodChart"></canvas>
+              </div>
+              <div className="mt-2 text-sm text-gray-700">
+                <p>
+                  Grafik ini menunjukkan tren mood harian Anda selama seminggu.
+                  Emoji pada grafik mewakili mood terakhir yang Anda catat pada
+                  hari tersebut (misalnya, "Very Sad", "Happy"). Jika tidak ada
+                  emoji, berarti Anda belum mencatat mood pada hari tersebut.
+                </p>
               </div>
             </section>
           </div>
