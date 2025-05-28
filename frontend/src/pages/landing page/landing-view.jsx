@@ -45,8 +45,21 @@ export default function LandingSudahView() {
                 ❌
               </button>
 
-              {/* Auth */}
               <div className="flex gap-3 mb-6">
+                <Link
+                  to="/register"
+                  className="border border-purple-700 text-purple-700 rounded-full px-4 py-2 hover:bg-purple-100 transition font-medium">
+                  Daftar
+                </Link>
+                <Link
+                  to="/login"
+                  className="bg-purple-700 text-white rounded-full px-4 py-2 hover:bg-purple-800 transition font-medium">
+                  Masuk
+                </Link>
+              </div>
+
+              {/* Auth */}
+              {/* <div className="flex gap-3 mb-6">
                 <Link
                   to="/profile"
                   className="border border-purple-700 rounded-full hover:bg-purple-100 transition cursor-pointer overflow-hidden">
@@ -56,9 +69,7 @@ export default function LandingSudahView() {
                     className="w-10 h-10 object-cover rounded-full"
                   />
                 </Link>
-              </div>
-
-              <div className="w-[300px] h-[200px] bg-white"></div>
+              </div> */}
 
               {/* Menu */}
               <ul className="flex flex-col gap-4 font-medium">
