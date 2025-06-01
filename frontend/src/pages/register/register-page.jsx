@@ -32,15 +32,25 @@ const RegisterPage = () => {
   });
 
   const handleSubmit = () => {
-    if (!username || !email || !password || !gender) {
+    const trimmedUsername = username.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    const trimmedGender = gender.trim();
+
+    if (
+      !trimmedUsername ||
+      !trimmedEmail ||
+      !trimmedPassword ||
+      !trimmedGender
+    ) {
       setError('Semua field wajib diisi');
       return;
     }
-    if (password.length < 6) {
+    if (trimmedPassword.length < 6) {
       setError('Kata sandi harus minimal 6 karakter');
       return;
     }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       setError('Format email tidak valid');
       return;
     }
@@ -53,13 +63,18 @@ const RegisterPage = () => {
       'cowo',
       'cewe',
     ];
-    if (!validGenders.includes(gender.toLowerCase())) {
+    if (!validGenders.includes(trimmedGender.toLowerCase())) {
       setError(
         'Jenis kelamin harus salah satu dari: male, female, laki-laki, perempuan, laki, cowo, cewe',
       );
       return;
     }
-    presenter.register(username, email, password, gender);
+    presenter.register(
+      trimmedUsername,
+      trimmedEmail,
+      trimmedPassword,
+      trimmedGender,
+    );
   };
 
   const handleSocialLogin = async (providerName) => {

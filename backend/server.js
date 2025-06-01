@@ -32,21 +32,28 @@ try {
     credential: admin.credential.cert(serviceAccount),
   });
   console.log("Firebase Admin SDK berhasil diinisialisasi");
+  // Uji koneksi ke Firebase
+  admin.auth().listUsers(1).then(() => {
+    console.log("Koneksi ke Firebase Authentication berhasil");
+  }).catch(error => {
+    console.error("Gagal terhubung ke Firebase Authentication:", error.message, error.stack);
+  });
 } catch (error) {
-  console.error("Gagal inisialisasi Firebase Admin SDK:", error);
+  console.error("Gagal inisialisasi Firebase Admin SDK:", error.message, error.stack);
+  process.exit(1);
 }
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// app.use(cors());
 app.use(
   cors({
     origin: (origin, callback) => {
-      const allowedOrigins = ["http://localhost:5176", "http://localhost:5173"];
+      const allowedOrigins = ["http://localhost:5176", "http://localhost:5173", "http://localhost:5174"];
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
+        console.log("CORS error: Origin tidak diizinkan:", origin);
         callback(new Error("Not allowed by CORS"));
       }
     },
@@ -66,7 +73,7 @@ app.get("/", (req, res) => {
 
 // Endpoint untuk registrasi manual
 app.post("/api/register", async (req, res) => {
-  console.log("Registrasi diterima:", req.body);
+  console.log("Registrasi diterima:", JSON.stringify(req.body, null, 2));
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: "Email dan password diperlukan" });
@@ -77,11 +84,9 @@ app.post("/api/register", async (req, res) => {
       password,
     });
     console.log("Berhasil membuat pengguna:", userRecord.uid);
-    res
-      .status(201)
-      .json({ message: "Pengguna berhasil dibuat", uid: userRecord.uid });
+    res.status(201).json({ message: "Pengguna berhasil dibuat", uid: userRecord.uid });
   } catch (error) {
-    console.error("Error saat registrasi:", error);
+    console.error("Error saat registrasi:", error.message, error.stack);
     let errorMessage = "Gagal registrasi";
     if (error.code === "auth/email-already-exists") {
       errorMessage = "Email sudah terdaftar";
@@ -89,18 +94,36 @@ app.post("/api/register", async (req, res) => {
       errorMessage = "Format email tidak valid";
     } else if (error.code === "auth/weak-password") {
       errorMessage = "Kata sandi terlalu lemah (minimal 6 karakter)";
+    } else if (error.code === "auth/invalid-credential") {
+      errorMessage = "Kredensial Firebase tidak valid";
+    } else if (error.code === "auth/operation-not-allowed") {
+      errorMessage = "Operasi tidak diizinkan di Firebase Authentication";
     }
-    res.status(400).json({ error: errorMessage });
+    res.status(400).json({ error: errorMessage, details: error.message });
   }
 });
 
-// Tambahkan di server.js setelah /api/register
+// Endpoint untuk registrasi dengan semua field
 app.post("/api/auth/register", async (req, res) => {
-  console.log("Registrasi diterima:", req.body);
+  console.log("Registrasi diterima (raw body):", JSON.stringify(req.body, null, 2));
   const { username, email, password, gender } = req.body;
-  if (!username || !email || !password || !gender) {
-    return res.status(400).json({ error: "Semua field wajib diisi" });
+
+  console.log("Field yang diparsing:", JSON.stringify({ username, email, password, gender }, null, 2));
+
+  if (
+    !username ||
+    !email ||
+    !password ||
+    !gender ||
+    username.trim() === "" ||
+    email.trim() === "" ||
+    password.trim() === "" ||
+    gender.trim() === ""
+  ) {
+    console.log("Validasi gagal: Ada field yang hilang atau kosong");
+    return res.status(400).json({ error: "Semua field wajib diisi dan tidak boleh kosong" });
   }
+
   try {
     const userRecord = await admin.auth().createUser({
       email,
@@ -108,7 +131,6 @@ app.post("/api/auth/register", async (req, res) => {
       displayName: username,
     });
     console.log("Berhasil membuat pengguna:", userRecord.uid);
-    // Simpan data tambahan
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = {
       uid: userRecord.uid,
@@ -118,14 +140,12 @@ app.post("/api/auth/register", async (req, res) => {
       password: hashedPassword,
     };
     users[userRecord.uid] = user;
-    res
-      .status(201)
-      .json({
-        message: "Pengguna berhasil dibuat",
-        user: { username, email, gender },
-      });
+    res.status(201).json({
+      message: "Pengguna berhasil dibuat",
+      user: { username, email, gender },
+    });
   } catch (error) {
-    console.error("Error saat registrasi:", error);
+    console.error("Error saat registrasi:", error.message, error.stack);
     let errorMessage = "Gagal registrasi";
     if (error.code === "auth/email-already-exists") {
       errorMessage = "Email sudah terdaftar";
@@ -133,8 +153,12 @@ app.post("/api/auth/register", async (req, res) => {
       errorMessage = "Format email tidak valid";
     } else if (error.code === "auth/weak-password") {
       errorMessage = "Kata sandi terlalu lemah (minimal 6 karakter)";
+    } else if (error.code === "auth/invalid-credential") {
+      errorMessage = "Kredensial Firebase tidak valid";
+    } else if (error.code === "auth/operation-not-allowed") {
+      errorMessage = "Operasi tidak diizinkan di Firebase Authentication";
     }
-    res.status(400).json({ error: errorMessage });
+    res.status(400).json({ error: errorMessage, details: error.message });
   }
 });
 
@@ -150,8 +174,8 @@ app.post("/api/auth/login", async (req, res) => {
     const user = users[uid] || { uid, username: "User", gender: "" };
     res.status(200).json({ success: true, user });
   } catch (error) {
-    console.error("Error di login:", error);
-    res.status(401).json({ error: "Token tidak valid" });
+    console.error("Error di login:", error.message, error.stack);
+    res.status(401).json({ error: "Token tidak valid", details: error.message });
   }
 });
 
@@ -165,14 +189,14 @@ app.post("/api/auth/verify-token", async (req, res) => {
     const decodedToken = await admin.auth().verifyIdToken(token);
     res.status(200).json({ success: true, uid: decodedToken.uid });
   } catch (error) {
-    console.error("Error di verify-token:", error);
-    res.status(401).json({ error: "Token tidak valid" });
+    console.error("Error di verify-token:", error.message, error.stack);
+    res.status(401).json({ error: "Token tidak valid", details: error.message });
   }
 });
 
 // Endpoint untuk memperbarui atau menyimpan data pengguna
 app.post("/api/auth/update-user", async (req, res) => {
-  console.log("Menerima permintaan update-user:", req.body);
+  console.log("Menerima permintaan update-user:", JSON.stringify(req.body, null, 2));
   const { uid, username, gender } = req.body;
   if (!uid || !username) {
     console.log("Validasi gagal: UID dan username diperlukan");
@@ -184,8 +208,24 @@ app.post("/api/auth/update-user", async (req, res) => {
     console.log("Memperbarui data pengguna:", user);
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error("Error di update-user:", error);
-    res.status(500).json({ error: "Gagal memperbarui data pengguna" });
+    console.error("Error di update-user:", error.message, error.stack);
+    res.status(500).json({ error: "Gagal memperbarui data pengguna", details: error.message });
+  }
+});
+
+// Endpoint sementara untuk uji Firebase
+app.post("/api/auth/test-firebase", async (req, res) => {
+  try {
+    const userRecord = await admin.auth().createUser({
+      email: "test@example.com",
+      password: "12345678",
+      displayName: "TestUser",
+    });
+    console.log("Berhasil membuat pengguna test:", userRecord.uid);
+    res.status(201).json({ message: "Test user created", uid: userRecord.uid });
+  } catch (error) {
+    console.error("Firebase test error:", error.message, error.stack);
+    res.status(400).json({ error: "Gagal membuat pengguna test", details: error.message });
   }
 });
 

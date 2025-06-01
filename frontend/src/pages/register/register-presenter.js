@@ -7,7 +7,7 @@ export class RegisterPresenter {
   }
 
   async register(username, email, password, gender) {
-    console.log('Memulai registrasi manual:', { username, email, gender });
+    console.log('Memulai registrasi manual:', JSON.stringify({ username, email, gender }, null, 2));
     const result = await registerModel.register(username, email, password, gender);
     if (result.success) {
       this.view.onRegisterSuccess(result.user);
@@ -25,11 +25,10 @@ export class RegisterPresenter {
       console.log('Memulai autentikasi sosial dengan provider:', provider.providerId);
       const result = await loginModel.socialLogin(provider);
       if (result.success) {
-        // Simpan data tambahan ke backend
         const updateResult = await registerModel.updateUserData(
           result.user.uid,
           result.user.displayName || 'User',
-          '' // Gender tidak tersedia dari Google
+          ''
         );
         if (updateResult.success) {
           this.view.onRegisterSuccess({
@@ -48,7 +47,7 @@ export class RegisterPresenter {
         }
       }
     } catch (error) {
-      console.error('Error di handleSocialLogin:', error);
+      console.error('Error di handleSocialLogin:', error.message, error.stack);
       this.view.onRegisterError('Gagal login dengan sosial media');
     }
   }
