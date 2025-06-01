@@ -15,46 +15,110 @@ const CatatanView = ({
   setAuthenticated,
   isAuthenticated,
   moodHistory,
-  journalText, // Add journalText prop
-  setJournalText, // Add setJournalText prop
+  journalText,
+  setJournalText,
 }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Add missing state
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const calendarData = [
-    { src: "/calendar/april.png", bulan: "April" },
-    { src: "/calendar/maret.png", bulan: "Maret" },
-    { src: "/calendar/februari.png", bulan: "Februari" },
-    { src: "/calendar/januari.png", bulan: "Januari" },
+  // Deklarasi userTimezoneOffset untuk WIB (UTC+7)
+  const userTimezoneOffset = 7 * 60; // Offset dalam menit
+
+  // Dinamisasi calendarData untuk 4 bulan ke belakang dari tanggal saat ini
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth(); // 0-11, Mei = 4
+  const currentYear = currentDate.getFullYear(); // 2025
+
+  const months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
 
+  // Buat array untuk 4 bulan ke belakang (Februari 2025 - Mei 2025)
+  const calendarData = Array.from({ length: 4 }, (_, i) => {
+    const monthIndex = (currentMonth - i + 12) % 12; // Mundur dari bulan saat ini
+    const yearAdjustment = currentMonth - i < 0 ? -1 : 0; // Kurangi tahun jika bulan < 0
+    return {
+      bulan: months[monthIndex],
+      src: `/calendar/${months[monthIndex].toLowerCase()}.png`,
+      year: currentYear + yearAdjustment,
+      monthIndex: monthIndex,
+    };
+  }).reverse(); // Balik urutan agar Februari ke Mei
+
   const moodOptions = [
-    { src: "/emoji/very-sad.png", value: "sadness" },
-    { src: "/emoji/sad.png", value: "sadness" },
-    { src: "/emoji/happy.png", value: "joy" },
-    { src: "/emoji/very-happy.png", value: "joy" },
-    { src: "/emoji/angry.png", value: "anger" },
+    { src: "/emoji/very-sad.png", value: "very-sad" },
+    { src: "/emoji/sad.png", value: "sad" },
+    { src: "/emoji/happy.png", value: "happy" },
+    { src: "/emoji/very-happy.png", value: "very-happy" },
+    { src: "/emoji/angry.png", value: "angry" },
   ];
 
   const getMoodColor = (mood) => {
     switch (mood) {
-      case "sadness":
-        return "bg-red-200";
+      case "very-sad":
+        return "#FF6098";
+      case "sad":
+        return "#28B4FF";
+      case "happy":
       case "joy":
-        return "bg-green-200";
-      case "anger":
-        return "bg-yellow-200";
-      case "fear":
-        return "bg-purple-200";
-      case "love":
-        return "bg-pink-200";
+        return "#FAD967";
+      case "very-happy":
+        return "#39EF21";
+      case "angry":
+        return "#FF3D3D";
       default:
-        return "bg-gray-200";
+        return "#D1D5DB";
     }
   };
 
-  // Inisialisasi atau perbarui grafik saat moodHistory berubah
+  // Fungsi untuk mendapatkan emoji berdasarkan entri terbaru di bulan tertentu
+  const getMostFrequentMoodEmoji = (filteredMoodHistory) => {
+    console.log("Full moodHistory:", moodHistory);
+    if (!filteredMoodHistory || filteredMoodHistory.length === 0) {
+      console.log("No entries in filteredMoodHistory:", filteredMoodHistory);
+      return "/logo.png";
+    }
+
+    const sortedEntries = filteredMoodHistory.sort(
+      (a, b) => new Date(b.date) - new Date(a.date)
+    );
+
+    const latestEntry = sortedEntries[0];
+    let mostFrequentMood = latestEntry.mood;
+
+    if (mostFrequentMood === "joy") mostFrequentMood = "happy";
+
+    console.log(
+      "Latest Entry:",
+      latestEntry,
+      "Most Frequent Mood:",
+      mostFrequentMood
+    );
+
+    const matchingOption = moodOptions.find(
+      (option) => option.value === mostFrequentMood
+    );
+    if (matchingOption) {
+      console.log("Matching Emoji:", matchingOption.src);
+      return matchingOption.src;
+    }
+
+    console.log("Falling back to default /logo.png");
+    return "/logo.png";
+  };
+
   useEffect(() => {
     if (chartInstance.current) {
       chartInstance.current.destroy();
@@ -63,43 +127,135 @@ const CatatanView = ({
     const ctx = chartRef.current.getContext("2d");
     const currentDate = new Date();
     const startOfWeek = new Date(currentDate);
-    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Mulai dari Senin
+    startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
 
-    const weeklyMoodData = [];
     const weeklyLabels = [];
+    const weeklyMoodData = [];
+    const emojiImages = [];
+
+    const moodToValue = (mood) => {
+      switch (mood) {
+        case "very-sad":
+          return 1;
+        case "sad":
+          return 1.5;
+        case "angry":
+          return 2;
+        case "happy":
+        case "joy":
+          return 2.5;
+        case "very-happy":
+          return 3;
+        default:
+          return 0;
+      }
+    };
+
+    const getEmojiForMood = (mood) => {
+      let adjustedMood = mood;
+      if (mood === "joy") adjustedMood = "happy";
+      const matchingOption = moodOptions.find(
+        (option) => option.value === adjustedMood
+      );
+      return matchingOption ? matchingOption.src : null;
+    };
+
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + i);
+
       weeklyLabels.push(date.toLocaleDateString("id-ID", { weekday: "short" }));
-      const entry = moodHistory.find((m) => {
+
+      const entriesForDay = moodHistory.filter((m) => {
         const entryDate = new Date(m.date);
         return entryDate.toDateString() === date.toDateString();
       });
-      weeklyMoodData.push(entry ? 1 : 0); // 1 untuk ada mood, 0 untuk tidak ada
+
+      const entry =
+        entriesForDay.length > 0
+          ? entriesForDay.reduce((latest, current) =>
+              new Date(latest.date) > new Date(current.date) ? latest : current
+            )
+          : null;
+      const moodValue = entry ? moodToValue(entry.mood) : 0;
+      weeklyMoodData.push(moodValue);
+
+      if (entry) {
+        const emojiSrc = getEmojiForMood(entry.mood);
+        if (emojiSrc) {
+          const img = new Image();
+          img.src = emojiSrc;
+          img.width = 20;
+          img.height = 20;
+          emojiImages.push(img);
+        } else {
+          emojiImages.push(null);
+        }
+      } else {
+        emojiImages.push(null);
+      }
     }
 
     chartInstance.current = new Chart(ctx, {
-      type: "bar",
+      type: "line",
+
       data: {
         labels: weeklyLabels,
         datasets: [
           {
-            label: "Mood Tercatat",
+            label: "Mood Mingguan",
             data: weeklyMoodData,
-            backgroundColor: "rgba(75, 192, 192, 0.2)",
-            borderColor: "rgba(75, 192, 192, 1)",
-            borderWidth: 1,
+            borderColor: "#8B5CF6",
+            pointStyle: emojiImages,
+            pointBorderColor: "#FFFFFF",
+            pointBorderWidth: 2,
+            pointRadius: 10,
+            fill: false,
+            tension: 0.3,
           },
         ],
       },
       options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: (context) => {
+                const value = context.raw;
+                let moodLabel = "Tidak ada mood";
+                if (value === 1) moodLabel = "Very Sad";
+                else if (value === 1.5) moodLabel = "Sad";
+                else if (value === 2) moodLabel = "Angry";
+                else if (value === 2.5) moodLabel = "Happy";
+                else if (value === 3) moodLabel = "Very Happy";
+                return `Mood: ${moodLabel}`;
+              },
+            },
+          },
+        },
         scales: {
           y: {
             beginAtZero: true,
-            max: 1,
+            max: 3.5,
             ticks: {
-              callback: (value) => (value === 1 ? "Ya" : "Tidak"),
+              stepSize: 0.5,
+              callback: (value) => {
+                if (value === 1) return "Very Sad";
+                if (value === 1.5) return "Sad";
+                if (value === 2) return "Angry";
+                if (value === 2.5) return "Happy";
+                if (value === 3) return "Very Happy";
+                return "";
+              },
+              color: "#4B5563",
             },
+            grid: { display: false },
+          },
+          x: {
+            ticks: { color: "#4B5563" },
+            grid: { display: false },
           },
         },
       },
@@ -210,8 +366,7 @@ const CatatanView = ({
                       selectedMood === mood.value
                         ? "bg-purple-200 ring-2 ring-purple-400"
                         : "hover:bg-gray-100"
-                    }`}
-                    disabled={selectedMood && selectedMood !== mood.value}>
+                    }`}>
                     <img
                       src={mood.src}
                       alt={mood.value}
@@ -224,16 +379,13 @@ const CatatanView = ({
                 className="w-full p-2 md:p-3 border rounded-md text-sm md:text-base"
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
                 rows={3}
-                value={journalText} // Use journalText prop
-                onChange={(e) => setJournalText(e.target.value)} // Use setJournalText prop
-              ></textarea>
+                value={journalText}
+                onChange={(e) => setJournalText(e.target.value)}></textarea>
               <div className="flex justify-end mt-3">
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-1 md:px-5 md:py-2 rounded-md cursor-pointer text-sm md:text-base"
                   onClick={onNextClick}
-                  disabled={
-                    !selectedMood || !journalText.trim() || !isAuthenticated
-                  }>
+                  disabled={!journalText.trim() || !isAuthenticated}>
                   Selanjutnya
                 </button>
               </div>
@@ -245,6 +397,14 @@ const CatatanView = ({
               <div className="w-full h-48 md:h-64">
                 <canvas ref={chartRef} id="moodChart"></canvas>
               </div>
+              <div className="mt-2 text-sm text-gray-700">
+                <p>
+                  Grafik ini menunjukkan tren mood harian Anda selama seminggu.
+                  Emoji pada grafik mewakili mood terakhir yang Anda catat pada
+                  hari tersebut (misalnya, "Very Sad", "Happy"). Jika tidak ada
+                  emoji, berarti Anda belum mencatat mood pada hari tersebut.
+                </p>
+              </div>
             </section>
           </div>
           <section className="bg-purple-300 p-4 rounded-xl shadow-md">
@@ -252,16 +412,20 @@ const CatatanView = ({
               Mood-ku: 4 Bulan Terakhir
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-              {calendarData.map((item, index) => {
-                const monthIndex = calendarData.length - 1 - index;
-                const currentDate = new Date();
-                const filteredMoodHistory = moodHistory.filter((entry) => {
-                  const entryDate = new Date(entry.date);
-                  return (
-                    entryDate.getMonth() === monthIndex + 1 &&
-                    entryDate.getFullYear() === currentDate.getFullYear()
-                  );
-                });
+              {calendarData.map((item) => {
+                // Hitung hari pertama bulan dan jumlah hari dalam bulan
+                const firstDayOfMonth = new Date(
+                  item.year,
+                  item.monthIndex,
+                  1
+                ).getDay();
+                const daysInMonth = new Date(
+                  item.year,
+                  item.monthIndex + 1,
+                  0
+                ).getDate();
+                const totalSlots =
+                  Math.ceil((firstDayOfMonth + daysInMonth) / 7) * 7;
 
                 return (
                   <div
@@ -269,11 +433,22 @@ const CatatanView = ({
                     className="bg-white border rounded-md p-2 text-center shadow">
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-semibold text-sm md:text-base">
-                        {item.bulan} {currentDate.getFullYear()}
+                        {item.bulan} {item.year}
                       </h3>
                       <img
-                        src="/sun-icon.png"
-                        alt="Sun"
+                        src={getMostFrequentMoodEmoji(
+                          moodHistory.filter((entry) => {
+                            const entryDate = new Date(entry.date);
+                            entryDate.setMinutes(
+                              entryDate.getMinutes() + userTimezoneOffset
+                            );
+                            return (
+                              entryDate.getMonth() === item.monthIndex &&
+                              entryDate.getFullYear() === item.year
+                            );
+                          })
+                        )}
+                        alt="Most Frequent Mood"
                         className="w-5 h-5 md:w-6 md:h-6"
                       />
                     </div>
@@ -285,32 +460,50 @@ const CatatanView = ({
                       <div className="font-medium">Jum</div>
                       <div className="font-medium">Sab</div>
                       <div className="font-medium">Min</div>
-                      {[...Array(35)].map((_, dayIndex) => {
-                        const day = dayIndex + 1;
-                        const date = new Date(
-                          currentDate.getFullYear(),
-                          monthIndex + 1,
-                          day
-                        );
-                        if (date.getMonth() !== monthIndex + 1)
-                          return <div key={dayIndex}></div>;
 
-                        const moodEntry = filteredMoodHistory.find((entry) => {
-                          const entryDate = new Date(entry.date);
-                          return (
-                            entryDate.getDate() === day &&
-                            entryDate.getMonth() === monthIndex + 1
-                          );
-                        });
+                      {[...Array(totalSlots)].map((_, slotIndex) => {
+                        const dayPosition =
+                          slotIndex -
+                          (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1);
+                        const day =
+                          dayPosition > 0 && dayPosition <= daysInMonth
+                            ? dayPosition
+                            : null;
+
+                        if (!day) return <div key={slotIndex}></div>;
+
+                        // Ambil entri terbaru untuk tanggal spesifik dari seluruh moodHistory
+                        const entriesForDay = moodHistory
+                          .filter((entry) => {
+                            const entryDate = new Date(entry.date);
+                            entryDate.setMinutes(
+                              entryDate.getMinutes() + userTimezoneOffset
+                            );
+                            const entryDay = entryDate.getDate();
+                            const entryMonth = entryDate.getMonth();
+                            const entryYear = entryDate.getFullYear();
+                            console.log(
+                              `Checking day ${day}: Entry Date: ${entryDate}, Day: ${entryDay}, Month: ${entryMonth}, Year: ${entryYear}`
+                            );
+                            return (
+                              entryDay === day &&
+                              entryMonth === item.monthIndex &&
+                              entryYear === item.year
+                            );
+                          })
+                          .sort((a, b) => new Date(b.date) - new Date(a.date)); // Urutkan terbaru
+
+                        const moodEntry =
+                          entriesForDay.length > 0 ? entriesForDay[0] : null;
+                        const moodColor = moodEntry
+                          ? getMoodColor(moodEntry.mood)
+                          : "#D1D5DB";
 
                         return (
                           <div
-                            key={dayIndex}
-                            className={`p-1 ${
-                              moodEntry
-                                ? getMoodColor(moodEntry.mood)
-                                : "bg-gray-200"
-                            }`}>
+                            key={slotIndex}
+                            className="p-1"
+                            style={{ backgroundColor: moodColor }}>
                             {day}
                           </div>
                         );
