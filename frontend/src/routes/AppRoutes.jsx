@@ -6,7 +6,7 @@ import LandingSudahPage from "../pages/landing page sudah login/landing-sudah-pa
 import CatatanPage from "../pages/Eksplorasi Diri/catatan/catatan-page";
 import JurnalHarian from "../pages/Eksplorasi Diri/jurnal/jurnal-page";
 import RefleksiDiri from "../pages/Eksplorasi Diri/refleksi/refleksi-page";
-import Rekomendasi from "../pages/Eksplorasi Diri/rekomendasi/rekomendasi-page";
+
 import PrivateRoute from "../utils/PrivateRoute";
 import { useEffect } from "react";
 
@@ -61,14 +61,7 @@ export default function AppRoutes() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/rekomendasi"
-          element={
-            <PrivateRoute>
-              <Rekomendasi />
-            </PrivateRoute>
-          }
-        />
+
         <Route
           path="/home"
           element={

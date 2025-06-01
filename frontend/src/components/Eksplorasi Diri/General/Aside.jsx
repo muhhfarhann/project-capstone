@@ -8,7 +8,6 @@ export default function Aside() {
     { src: "/icons/catatan.png", alt: "Catatan", path: "/catatan" },
     { src: "/icons/jurnal.png", alt: "Jurnal", path: "/jurnal" },
     { src: "/icons/refleksi.png", alt: "Refleksi Diri", path: "/refleksi" },
-    { src: "/icons/rekomendasi.png", alt: "Rekomendasi", path: "/rekomendasi" },
   ];
 
   useEffect(() => {
