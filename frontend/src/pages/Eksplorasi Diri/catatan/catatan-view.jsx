@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Aside from '../../../components/Eksplorasi Diri/General/Aside';
-import Chart from 'chart.js/auto';
+import React, { useState, useEffect, useRef } from "react";
+import Aside from "../../../components/Eksplorasi Diri/General/Aside";
+import Profile from "../../../components/Eksplorasi Diri/General/profile";
+import ProfileWeb from "../../../components/Eksplorasi Diri/General/profile-web";
+import Chart from "chart.js/auto";
 
 const CatatanView = ({
   selectedMood,
@@ -29,18 +31,18 @@ const CatatanView = ({
   const currentYear = currentDate.getFullYear(); // 2025
 
   const months = [
-    'Januari',
-    'Februari',
-    'Maret',
-    'April',
-    'Mei',
-    'Juni',
-    'Juli',
-    'Agustus',
-    'September',
-    'Oktober',
-    'November',
-    'Desember',
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
   ];
 
   // Buat array untuk 4 bulan ke belakang (Februari 2025 - Mei 2025)
@@ -56,65 +58,65 @@ const CatatanView = ({
   }).reverse(); // Balik urutan agar Februari ke Mei
 
   const moodOptions = [
-    { src: '/emoji/very-sad.png', value: 'very-sad' },
-    { src: '/emoji/sad.png', value: 'sad' },
-    { src: '/emoji/happy.png', value: 'happy' },
-    { src: '/emoji/very-happy.png', value: 'very-happy' },
-    { src: '/emoji/angry.png', value: 'angry' },
+    { src: "/emoji/very-sad.png", value: "very-sad" },
+    { src: "/emoji/sad.png", value: "sad" },
+    { src: "/emoji/happy.png", value: "happy" },
+    { src: "/emoji/very-happy.png", value: "very-happy" },
+    { src: "/emoji/angry.png", value: "angry" },
   ];
 
   const getMoodColor = (mood) => {
     switch (mood) {
-      case 'very-sad':
-        return '#FF6098';
-      case 'sad':
-        return '#28B4FF';
-      case 'happy':
-      case 'joy':
-        return '#FAD967';
-      case 'very-happy':
-        return '#39EF21';
-      case 'angry':
-        return '#FF3D3D';
+      case "very-sad":
+        return "#FF6098";
+      case "sad":
+        return "#28B4FF";
+      case "happy":
+      case "joy":
+        return "#FAD967";
+      case "very-happy":
+        return "#39EF21";
+      case "angry":
+        return "#FF3D3D";
       default:
-        return '#D1D5DB';
+        return "#D1D5DB";
     }
   };
 
   // Fungsi untuk mendapatkan emoji berdasarkan entri terbaru di bulan tertentu
   const getMostFrequentMoodEmoji = (filteredMoodHistory) => {
-    console.log('Full moodHistory:', moodHistory);
+    console.log("Full moodHistory:", moodHistory);
     if (!filteredMoodHistory || filteredMoodHistory.length === 0) {
-      console.log('No entries in filteredMoodHistory:', filteredMoodHistory);
-      return '/logo.png';
+      console.log("No entries in filteredMoodHistory:", filteredMoodHistory);
+      return "/logo.png";
     }
 
     const sortedEntries = filteredMoodHistory.sort(
-      (a, b) => new Date(b.date) - new Date(a.date),
+      (a, b) => new Date(b.date) - new Date(a.date)
     );
 
     const latestEntry = sortedEntries[0];
     let mostFrequentMood = latestEntry.mood;
 
-    if (mostFrequentMood === 'joy') mostFrequentMood = 'happy';
+    if (mostFrequentMood === "joy") mostFrequentMood = "happy";
 
     console.log(
-      'Latest Entry:',
+      "Latest Entry:",
       latestEntry,
-      'Most Frequent Mood:',
-      mostFrequentMood,
+      "Most Frequent Mood:",
+      mostFrequentMood
     );
 
     const matchingOption = moodOptions.find(
-      (option) => option.value === mostFrequentMood,
+      (option) => option.value === mostFrequentMood
     );
     if (matchingOption) {
-      console.log('Matching Emoji:', matchingOption.src);
+      console.log("Matching Emoji:", matchingOption.src);
       return matchingOption.src;
     }
 
-    console.log('Falling back to default /logo.png');
-    return '/logo.png';
+    console.log("Falling back to default /logo.png");
+    return "/logo.png";
   };
 
   useEffect(() => {
@@ -122,7 +124,7 @@ const CatatanView = ({
       chartInstance.current.destroy();
     }
 
-    const ctx = chartRef.current.getContext('2d');
+    const ctx = chartRef.current.getContext("2d");
     const currentDate = new Date();
     const startOfWeek = new Date(currentDate);
     startOfWeek.setDate(currentDate.getDate() - currentDate.getDay());
@@ -133,16 +135,16 @@ const CatatanView = ({
 
     const moodToValue = (mood) => {
       switch (mood) {
-        case 'very-sad':
+        case "very-sad":
           return 1;
-        case 'sad':
+        case "sad":
           return 1.5;
-        case 'angry':
+        case "angry":
           return 2;
-        case 'happy':
-        case 'joy':
+        case "happy":
+        case "joy":
           return 2.5;
-        case 'very-happy':
+        case "very-happy":
           return 3;
         default:
           return 0;
@@ -151,9 +153,9 @@ const CatatanView = ({
 
     const getEmojiForMood = (mood) => {
       let adjustedMood = mood;
-      if (mood === 'joy') adjustedMood = 'happy';
+      if (mood === "joy") adjustedMood = "happy";
       const matchingOption = moodOptions.find(
-        (option) => option.value === adjustedMood,
+        (option) => option.value === adjustedMood
       );
       return matchingOption ? matchingOption.src : null;
     };
@@ -161,7 +163,8 @@ const CatatanView = ({
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + i);
-      weeklyLabels.push(date.toLocaleDateString('id-ID', { weekday: 'short' }));
+
+      weeklyLabels.push(date.toLocaleDateString("id-ID", { weekday: "short" }));
 
       const entriesForDay = moodHistory.filter((m) => {
         const entryDate = new Date(m.date);
@@ -171,7 +174,7 @@ const CatatanView = ({
       const entry =
         entriesForDay.length > 0
           ? entriesForDay.reduce((latest, current) =>
-              new Date(latest.date) > new Date(current.date) ? latest : current,
+              new Date(latest.date) > new Date(current.date) ? latest : current
             )
           : null;
       const moodValue = entry ? moodToValue(entry.mood) : 0;
@@ -194,16 +197,17 @@ const CatatanView = ({
     }
 
     chartInstance.current = new Chart(ctx, {
-      type: 'line',
+      type: "line",
+
       data: {
         labels: weeklyLabels,
         datasets: [
           {
-            label: 'Mood Mingguan',
+            label: "Mood Mingguan",
             data: weeklyMoodData,
-            borderColor: '#8B5CF6',
+            borderColor: "#8B5CF6",
             pointStyle: emojiImages,
-            pointBorderColor: '#FFFFFF',
+            pointBorderColor: "#FFFFFF",
             pointBorderWidth: 2,
             pointRadius: 10,
             fill: false,
@@ -220,12 +224,12 @@ const CatatanView = ({
             callbacks: {
               label: (context) => {
                 const value = context.raw;
-                let moodLabel = 'Tidak ada mood';
-                if (value === 1) moodLabel = 'Very Sad';
-                else if (value === 1.5) moodLabel = 'Sad';
-                else if (value === 2) moodLabel = 'Angry';
-                else if (value === 2.5) moodLabel = 'Happy';
-                else if (value === 3) moodLabel = 'Very Happy';
+                let moodLabel = "Tidak ada mood";
+                if (value === 1) moodLabel = "Very Sad";
+                else if (value === 1.5) moodLabel = "Sad";
+                else if (value === 2) moodLabel = "Angry";
+                else if (value === 2.5) moodLabel = "Happy";
+                else if (value === 3) moodLabel = "Very Happy";
                 return `Mood: ${moodLabel}`;
               },
             },
@@ -238,19 +242,19 @@ const CatatanView = ({
             ticks: {
               stepSize: 0.5,
               callback: (value) => {
-                if (value === 1) return 'Very Sad';
-                if (value === 1.5) return 'Sad';
-                if (value === 2) return 'Angry';
-                if (value === 2.5) return 'Happy';
-                if (value === 3) return 'Very Happy';
-                return '';
+                if (value === 1) return "Very Sad";
+                if (value === 1.5) return "Sad";
+                if (value === 2) return "Angry";
+                if (value === 2.5) return "Happy";
+                if (value === 3) return "Very Happy";
+                return "";
               },
-              color: '#4B5563',
+              color: "#4B5563",
             },
             grid: { display: false },
           },
           x: {
-            ticks: { color: '#4B5563' },
+            ticks: { color: "#4B5563" },
             grid: { display: false },
           },
         },
@@ -272,20 +276,10 @@ const CatatanView = ({
             <h1 className="text-lg md:text-xl font-bold">Catatan Mood</h1>
           </div>
           <div className="flex items-center space-x-2 md:space-x-3">
-            <div className="hidden md:flex items-center space-x-2 cursor-pointer">
-              <span className="font-semibold text-sm md:text-base">
-                Halo, Daniel!
-              </span>
-              <img
-                src="/profile.png"
-                alt="Profile"
-                className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white"
-              />
-            </div>
+            <ProfileWeb />
             <button
               className="md:hidden p-2"
-              onClick={() => setIsSidebarOpen(true)}
-            >
+              onClick={() => setIsSidebarOpen(true)}>
               <img
                 src="/icons/menu.png"
                 alt="Menu"
@@ -299,8 +293,7 @@ const CatatanView = ({
             <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
               <button
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-lg md:text-xl font-bold"
-              >
+                className="absolute top-4 right-4 text-lg md:text-xl font-bold cursor-pointer">
                 ×
               </button>
               <div className="mt-10 mb-6 text-center">
@@ -312,45 +305,37 @@ const CatatanView = ({
                 <h2 className="mt-2 font-semibold text-base md:text-lg">
                   Halo, Daniel!
                 </h2>
-                <div className="mt-3 flex justify-center gap-2">
-                  <button className="px-3 py-1 border rounded-full text-xs md:text-sm text-white bg-purple-500">
-                    Akun Saya
-                  </button>
-                  <button className="px-3 py-1 border rounded-full text-xs md:text-sm text-purple-500">
-                    Keluar
-                  </button>
-                </div>
+                <Profile />
               </div>
               <hr className="my-4 border-gray-300" />
               <nav className="space-y-4 px-2">
                 {[
                   {
-                    label: 'Beranda',
-                    path: '/',
-                    icon: '/icons/home-mobile.png',
+                    label: "Beranda",
+                    path: "/",
+                    icon: "/icons/home-mobile.png",
                   },
                   {
-                    label: 'Catatan Mood',
-                    path: '/catatan',
-                    icon: '/icons/catatan-mobile.png',
+                    label: "Catatan Mood",
+                    path: "/catatan",
+                    icon: "/icons/catatan-mobile.png",
                   },
                   {
-                    label: 'Jurnal Harian',
-                    path: '/jurnal',
-                    icon: '/icons/jurnal-mobile.png',
+                    label: "Jurnal Harian",
+                    path: "/jurnal",
+                    icon: "/icons/jurnal-mobile.png",
                   },
                   {
-                    label: 'Refleksi Diri',
-                    path: '/refleksi',
-                    icon: '/icons/refleksi-mobile.png',
+                    label: "Refleksi Diri",
+                    path: "/refleksi",
+                    icon: "/icons/refleksi-mobile.png",
                   },
                 ].map((item) => (
                   <a
                     key={item.path}
                     href={item.path}
                     className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500 text-sm md:text-base"
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
+                    onClick={() => setIsSidebarOpen(false)}>
                     <img
                       src={item.icon}
                       alt={item.label}
@@ -379,10 +364,9 @@ const CatatanView = ({
                     onClick={() => onMoodSelect(mood.value)}
                     className={`p-1 rounded-full cursor-pointer ${
                       selectedMood === mood.value
-                        ? 'bg-purple-200 ring-2 ring-purple-400'
-                        : 'hover:bg-gray-100'
-                    }`}
-                  >
+                        ? "bg-purple-200 ring-2 ring-purple-400"
+                        : "hover:bg-gray-100"
+                    }`}>
                     <img
                       src={mood.src}
                       alt={mood.value}
@@ -396,14 +380,12 @@ const CatatanView = ({
                 placeholder="Tuliskan cerita singkat tentang harimu sebagai pembuka sebelum melanjutkan ke jurnal harian..."
                 rows={3}
                 value={journalText}
-                onChange={(e) => setJournalText(e.target.value)}
-              ></textarea>
+                onChange={(e) => setJournalText(e.target.value)}></textarea>
               <div className="flex justify-end mt-3">
                 <button
                   className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-1 md:px-5 md:py-2 rounded-md cursor-pointer text-sm md:text-base"
                   onClick={onNextClick}
-                  disabled={!journalText.trim() || !isAuthenticated}
-                >
+                  disabled={!journalText.trim() || !isAuthenticated}>
                   Selanjutnya
                 </button>
               </div>
@@ -435,12 +417,12 @@ const CatatanView = ({
                 const firstDayOfMonth = new Date(
                   item.year,
                   item.monthIndex,
-                  1,
+                  1
                 ).getDay();
                 const daysInMonth = new Date(
                   item.year,
                   item.monthIndex + 1,
-                  0,
+                  0
                 ).getDate();
                 const totalSlots =
                   Math.ceil((firstDayOfMonth + daysInMonth) / 7) * 7;
@@ -448,8 +430,7 @@ const CatatanView = ({
                 return (
                   <div
                     key={item.bulan}
-                    className="bg-white border rounded-md p-2 text-center shadow"
-                  >
+                    className="bg-white border rounded-md p-2 text-center shadow">
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-semibold text-sm md:text-base">
                         {item.bulan} {item.year}
@@ -459,13 +440,13 @@ const CatatanView = ({
                           moodHistory.filter((entry) => {
                             const entryDate = new Date(entry.date);
                             entryDate.setMinutes(
-                              entryDate.getMinutes() + userTimezoneOffset,
+                              entryDate.getMinutes() + userTimezoneOffset
                             );
                             return (
                               entryDate.getMonth() === item.monthIndex &&
                               entryDate.getFullYear() === item.year
                             );
-                          }),
+                          })
                         )}
                         alt="Most Frequent Mood"
                         className="w-5 h-5 md:w-6 md:h-6"
@@ -479,6 +460,7 @@ const CatatanView = ({
                       <div className="font-medium">Jum</div>
                       <div className="font-medium">Sab</div>
                       <div className="font-medium">Min</div>
+
                       {[...Array(totalSlots)].map((_, slotIndex) => {
                         const dayPosition =
                           slotIndex -
@@ -495,13 +477,13 @@ const CatatanView = ({
                           .filter((entry) => {
                             const entryDate = new Date(entry.date);
                             entryDate.setMinutes(
-                              entryDate.getMinutes() + userTimezoneOffset,
+                              entryDate.getMinutes() + userTimezoneOffset
                             );
                             const entryDay = entryDate.getDate();
                             const entryMonth = entryDate.getMonth();
                             const entryYear = entryDate.getFullYear();
                             console.log(
-                              `Checking day ${day}: Entry Date: ${entryDate}, Day: ${entryDay}, Month: ${entryMonth}, Year: ${entryYear}`,
+                              `Checking day ${day}: Entry Date: ${entryDate}, Day: ${entryDay}, Month: ${entryMonth}, Year: ${entryYear}`
                             );
                             return (
                               entryDay === day &&
@@ -515,14 +497,13 @@ const CatatanView = ({
                           entriesForDay.length > 0 ? entriesForDay[0] : null;
                         const moodColor = moodEntry
                           ? getMoodColor(moodEntry.mood)
-                          : '#D1D5DB';
+                          : "#D1D5DB";
 
                         return (
                           <div
                             key={slotIndex}
                             className="p-1"
-                            style={{ backgroundColor: moodColor }}
-                          >
+                            style={{ backgroundColor: moodColor }}>
                             {day}
                           </div>
                         );

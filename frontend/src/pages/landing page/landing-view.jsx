@@ -102,13 +102,6 @@ export default function LandingSudahView() {
                           Refleksi Diri
                         </a>
                       </li>
-                      <li>
-                        <a
-                          href="/rekomendasi"
-                          className="hover:text-purple-700">
-                          Rekomendasi
-                        </a>
-                      </li>
                     </ul>
                   )}
                 </li>
@@ -162,13 +155,6 @@ export default function LandingSudahView() {
                       href="/refleksi"
                       className="block px-4 py-2 hover:bg-purple-100">
                       Refleksi Diri
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="/rekomendasi"
-                      className="block px-4 py-2 hover:bg-purple-100">
-                      Rekomendasi
                     </a>
                   </li>
                 </ul>
@@ -350,48 +336,6 @@ export default function LandingSudahView() {
               to="/login"
               className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
               Mulai Refleksi Diri ↗
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Rekomendasi */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
-        {/* Background Wave Image */}
-        <img
-          src="/wave3.png"
-          alt="Background Wave"
-          className="absolute inset-0 w-full h-full object-cover z-0 rotate-0"
-        />
-
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
-          {/* Gambar - mobile atas, desktop kanan */}
-          <div className="flex justify-center order-1 md:order-2">
-            <img
-              src="/rekomendasi-desktop.png"
-              alt="Mockup Komputer Rekomendasi"
-              className="w-[80%] md:w-full h-auto"
-            />
-          </div>
-
-          {/* Teks - mobile bawah, desktop kiri */}
-          <div className="text-center md:text-left px-4 order-2 md:order-1">
-            <p className="uppercase text-purple-600 font-semibold tracking-widest mb-2">
-              Eksplorasi Diri
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-              Rekomendasi
-            </h2>
-            <p className="text-gray-800 mb-6 leading-relaxed">
-              Berdasarkan mood dan catatan, rekomendasi ini akan memberikan
-              saran positif seperti afirmasi, aktivitas ringan, atau konten yang
-              bisa membantumu merasa lebih baik. Semua dibuat untuk
-              kesejahteraanmu.
-            </p>
-            <Link
-              to="/login"
-              className="inline-block bg-purple-600 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-700 transition">
-              Lihat Rekomendasi-ku ↗
             </Link>
           </div>
         </div>
