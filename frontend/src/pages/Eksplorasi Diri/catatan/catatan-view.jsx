@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
-import Aside from '../../../components/Eksplorasi Diri/General/Aside';
-import Chart from 'chart.js/auto';
+import React, { useState, useEffect, useRef } from "react";
+import Aside from "../../../components/Eksplorasi Diri/General/Aside";
+import Profile from "../../../components/Eksplorasi Diri/General/profile";
+import ProfileWeb from "../../../components/Eksplorasi Diri/General/profile-web";
+import Chart from "chart.js/auto";
 
 const CatatanView = ({
   selectedMood,
@@ -21,34 +23,34 @@ const CatatanView = ({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Add missing state
 
   const calendarData = [
-    { src: '/calendar/april.png', bulan: 'April' },
-    { src: '/calendar/maret.png', bulan: 'Maret' },
-    { src: '/calendar/februari.png', bulan: 'Februari' },
-    { src: '/calendar/januari.png', bulan: 'Januari' },
+    { src: "/calendar/april.png", bulan: "April" },
+    { src: "/calendar/maret.png", bulan: "Maret" },
+    { src: "/calendar/februari.png", bulan: "Februari" },
+    { src: "/calendar/januari.png", bulan: "Januari" },
   ];
 
   const moodOptions = [
-    { src: '/emoji/very-sad.png', value: 'sadness' },
-    { src: '/emoji/sad.png', value: 'sadness' },
-    { src: '/emoji/happy.png', value: 'joy' },
-    { src: '/emoji/very-happy.png', value: 'joy' },
-    { src: '/emoji/angry.png', value: 'anger' },
+    { src: "/emoji/very-sad.png", value: "sadness" },
+    { src: "/emoji/sad.png", value: "sadness" },
+    { src: "/emoji/happy.png", value: "joy" },
+    { src: "/emoji/very-happy.png", value: "joy" },
+    { src: "/emoji/angry.png", value: "anger" },
   ];
 
   const getMoodColor = (mood) => {
     switch (mood) {
-      case 'sadness':
-        return 'bg-red-200';
-      case 'joy':
-        return 'bg-green-200';
-      case 'anger':
-        return 'bg-yellow-200';
-      case 'fear':
-        return 'bg-purple-200';
-      case 'love':
-        return 'bg-pink-200';
+      case "sadness":
+        return "bg-red-200";
+      case "joy":
+        return "bg-green-200";
+      case "anger":
+        return "bg-yellow-200";
+      case "fear":
+        return "bg-purple-200";
+      case "love":
+        return "bg-pink-200";
       default:
-        return 'bg-gray-200';
+        return "bg-gray-200";
     }
   };
 
@@ -58,7 +60,7 @@ const CatatanView = ({
       chartInstance.current.destroy();
     }
 
-    const ctx = chartRef.current.getContext('2d');
+    const ctx = chartRef.current.getContext("2d");
     const currentDate = new Date();
     const startOfWeek = new Date(currentDate);
     startOfWeek.setDate(currentDate.getDate() - currentDate.getDay()); // Mulai dari Senin
@@ -68,7 +70,7 @@ const CatatanView = ({
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeek);
       date.setDate(startOfWeek.getDate() + i);
-      weeklyLabels.push(date.toLocaleDateString('id-ID', { weekday: 'short' }));
+      weeklyLabels.push(date.toLocaleDateString("id-ID", { weekday: "short" }));
       const entry = moodHistory.find((m) => {
         const entryDate = new Date(m.date);
         return entryDate.toDateString() === date.toDateString();
@@ -77,15 +79,15 @@ const CatatanView = ({
     }
 
     chartInstance.current = new Chart(ctx, {
-      type: 'bar',
+      type: "bar",
       data: {
         labels: weeklyLabels,
         datasets: [
           {
-            label: 'Mood Tercatat',
+            label: "Mood Tercatat",
             data: weeklyMoodData,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-            borderColor: 'rgba(75, 192, 192, 1)',
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
             borderWidth: 1,
           },
         ],
@@ -96,7 +98,7 @@ const CatatanView = ({
             beginAtZero: true,
             max: 1,
             ticks: {
-              callback: (value) => (value === 1 ? 'Ya' : 'Tidak'),
+              callback: (value) => (value === 1 ? "Ya" : "Tidak"),
             },
           },
         },
@@ -118,20 +120,10 @@ const CatatanView = ({
             <h1 className="text-lg md:text-xl font-bold">Catatan Mood</h1>
           </div>
           <div className="flex items-center space-x-2 md:space-x-3">
-            <div className="hidden md:flex items-center space-x-2 cursor-pointer">
-              <span className="font-semibold text-sm md:text-base">
-                Halo, Daniel!
-              </span>
-              <img
-                src="/profile.png"
-                alt="Profile"
-                className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white"
-              />
-            </div>
+            <ProfileWeb />
             <button
               className="md:hidden p-2"
-              onClick={() => setIsSidebarOpen(true)}
-            >
+              onClick={() => setIsSidebarOpen(true)}>
               <img
                 src="/icons/menu.png"
                 alt="Menu"
@@ -145,8 +137,7 @@ const CatatanView = ({
             <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
               <button
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-lg md:text-xl font-bold"
-              >
+                className="absolute top-4 right-4 text-lg md:text-xl font-bold cursor-pointer">
                 ×
               </button>
               <div className="mt-10 mb-6 text-center">
@@ -158,45 +149,37 @@ const CatatanView = ({
                 <h2 className="mt-2 font-semibold text-base md:text-lg">
                   Halo, Daniel!
                 </h2>
-                <div className="mt-3 flex justify-center gap-2">
-                  <button className="px-3 py-1 border rounded-full text-xs md:text-sm text-white bg-purple-500">
-                    Akun Saya
-                  </button>
-                  <button className="px-3 py-1 border rounded-full text-xs md:text-sm text-purple-500">
-                    Keluar
-                  </button>
-                </div>
+                <Profile />
               </div>
               <hr className="my-4 border-gray-300" />
               <nav className="space-y-4 px-2">
                 {[
                   {
-                    label: 'Beranda',
-                    path: '/',
-                    icon: '/icons/home-mobile.png',
+                    label: "Beranda",
+                    path: "/",
+                    icon: "/icons/home-mobile.png",
                   },
                   {
-                    label: 'Catatan Mood',
-                    path: '/catatan',
-                    icon: '/icons/catatan-mobile.png',
+                    label: "Catatan Mood",
+                    path: "/catatan",
+                    icon: "/icons/catatan-mobile.png",
                   },
                   {
-                    label: 'Jurnal Harian',
-                    path: '/jurnal',
-                    icon: '/icons/jurnal-mobile.png',
+                    label: "Jurnal Harian",
+                    path: "/jurnal",
+                    icon: "/icons/jurnal-mobile.png",
                   },
                   {
-                    label: 'Refleksi Diri',
-                    path: '/refleksi',
-                    icon: '/icons/refleksi-mobile.png',
+                    label: "Refleksi Diri",
+                    path: "/refleksi",
+                    icon: "/icons/refleksi-mobile.png",
                   },
                 ].map((item) => (
                   <a
                     key={item.path}
                     href={item.path}
                     className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500 text-sm md:text-base"
-                    onClick={() => setIsSidebarOpen(false)}
-                  >
+                    onClick={() => setIsSidebarOpen(false)}>
                     <img
                       src={item.icon}
                       alt={item.label}
@@ -225,11 +208,10 @@ const CatatanView = ({
                     onClick={() => onMoodSelect(mood.value)}
                     className={`p-1 rounded-full cursor-pointer ${
                       selectedMood === mood.value
-                        ? 'bg-purple-200 ring-2 ring-purple-400'
-                        : 'hover:bg-gray-100'
+                        ? "bg-purple-200 ring-2 ring-purple-400"
+                        : "hover:bg-gray-100"
                     }`}
-                    disabled={selectedMood && selectedMood !== mood.value}
-                  >
+                    disabled={selectedMood && selectedMood !== mood.value}>
                     <img
                       src={mood.src}
                       alt={mood.value}
@@ -251,8 +233,7 @@ const CatatanView = ({
                   onClick={onNextClick}
                   disabled={
                     !selectedMood || !journalText.trim() || !isAuthenticated
-                  }
-                >
+                  }>
                   Selanjutnya
                 </button>
               </div>
@@ -285,8 +266,7 @@ const CatatanView = ({
                 return (
                   <div
                     key={item.bulan}
-                    className="bg-white border rounded-md p-2 text-center shadow"
-                  >
+                    className="bg-white border rounded-md p-2 text-center shadow">
                     <div className="flex justify-between items-center mb-2">
                       <h3 className="font-semibold text-sm md:text-base">
                         {item.bulan} {currentDate.getFullYear()}
@@ -310,7 +290,7 @@ const CatatanView = ({
                         const date = new Date(
                           currentDate.getFullYear(),
                           monthIndex + 1,
-                          day,
+                          day
                         );
                         if (date.getMonth() !== monthIndex + 1)
                           return <div key={dayIndex}></div>;
@@ -329,9 +309,8 @@ const CatatanView = ({
                             className={`p-1 ${
                               moodEntry
                                 ? getMoodColor(moodEntry.mood)
-                                : 'bg-gray-200'
-                            }`}
-                          >
+                                : "bg-gray-200"
+                            }`}>
                             {day}
                           </div>
                         );

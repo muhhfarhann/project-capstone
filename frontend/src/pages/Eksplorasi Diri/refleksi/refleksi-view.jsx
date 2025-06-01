@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Aside from "../../../components/Eksplorasi Diri/General/Aside";
+import Profile from "../../../components/Eksplorasi Diri/General/profile";
+import ProfileWeb from "../../../components/Eksplorasi Diri/General/profile-web";
 
 const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -27,14 +29,7 @@ const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
           </div>
 
           <div className="flex items-center space-x-3">
-            <div className="hidden md:flex items-center space-x-2">
-              <span className="font-semibold">Halo, Daniel!</span>
-              <img
-                src="/profile.png"
-                alt="Profile"
-                className="w-8 h-8 rounded-full border"
-              />
-            </div>
+            <ProfileWeb />
             <button
               className="md:hidden p-2"
               onClick={() => setIsSidebarOpen(true)}>
@@ -53,7 +48,7 @@ const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
             <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
               <button
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-xl font-bold">
+                className="absolute top-4 right-4 text-xl font-bold cursor-pointer">
                 ×
               </button>
 
@@ -64,14 +59,7 @@ const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
                   className="w-16 h-16 rounded-full mx-auto border"
                 />
                 <h2 className="mt-2 font-semibold text-lg">Halo, Daniel!</h2>
-                <div className="mt-3 flex justify-center gap-2">
-                  <button className="px-3 py-1 border rounded-full text-sm text-white bg-purple-500">
-                    Akun Saya
-                  </button>
-                  <button className="px-3 py-1 border rounded-full text-sm text-purple-500">
-                    Keluar
-                  </button>
-                </div>
+                <Profile />
               </div>
 
               <hr className="my-4 border-gray-300" />
@@ -147,7 +135,7 @@ const RefleksiView = ({ jawaban = [], onPilihJawaban, onSubmit }) => {
           <div className="bg-purple-200 rounded-xl p-5 h-fit space-y-4 shadow-md">
             <button
               onClick={onSubmit}
-              className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md w-full">
+              className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md w-full cursor-pointer">
               Lihat Hasil
             </button>
 
