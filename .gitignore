@@ -1,6 +1,5 @@
 # File sensitif
 backend/serviceAccountKey.json
-.env
 
 # Direktori dependensi
 node_modules/
