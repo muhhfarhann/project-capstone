@@ -1,27 +1,49 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../firebase';
 
 const WebProfileComponent = () => {
-  // State for dropdown and modal
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  // Toggle dropdown
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
 
-  // Open and close modal
   const openProfileModal = () => {
     setIsProfileModalOpen(true);
-    setIsProfileOpen(false); // Close dropdown when opening modal
+    setIsProfileOpen(false);
   };
+
   const closeProfileModal = () => setIsProfileModalOpen(false);
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.success) {
+      alert('Berhasil logout');
+      navigate('/login');
+    } else {
+      alert('Gagal logout: ' + result.error);
+    }
+  };
+
+  if (!user) return null; // Jangan render jika tidak ada data pengguna
 
   return (
     <div className="relative flex gap-3">
       <div
         className="hidden md:flex items-center space-x-2 cursor-pointer"
-        onClick={toggleProfile}>
+        onClick={toggleProfile}
+      >
         <span className="font-semibold text-sm md:text-base">
-          Halo, Daniel!
+          Halo, {user.username || 'User'}!
         </span>
         <img
           src="/profile.png"
@@ -35,12 +57,16 @@ const WebProfileComponent = () => {
           <li>
             <button
               onClick={openProfileModal}
-              className="w-full text-left block px-4 py-2 hover:bg-purple-100 cursor-pointer">
+              className="w-full text-left block px-4 py-2 hover:bg-purple-100 cursor-pointer"
+            >
               Profil Saya
             </button>
           </li>
           <li>
-            <button className="w-full text-left block px-4 py-2 hover:bg-purple-100 cursor-pointer">
+            <button
+              onClick={handleLogout}
+              className="w-full text-left block px-4 py-2 hover:bg-purple-100 cursor-pointer"
+            >
               Keluar
             </button>
           </li>
@@ -52,7 +78,8 @@ const WebProfileComponent = () => {
           <div className="bg-white p-6 rounded-xl max-w-md w-full relative">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 cursor-pointer"
-              onClick={closeProfileModal}>
+              onClick={closeProfileModal}
+            >
               ✕
             </button>
             <h2 className="text-xl font-semibold mb-4 text-center">
@@ -74,15 +101,21 @@ const WebProfileComponent = () => {
               </div>
               <div className="w-full space-y-3 mt-4">
                 <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                  <span className="flex-1 text-gray-800">Daniel</span>
+                  <span className="flex-1 text-gray-800">
+                    {user.username || 'User'}
+                  </span>
                   <span className="text-gray-500">👤</span>
                 </div>
                 <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                  <span className="flex-1 text-gray-800">
-                    danielalexander@gmail.com
-                  </span>
+                  <span className="flex-1 text-gray-800">{user.email}</span>
                   <span className="text-gray-500">✉️</span>
                 </div>
+                {user.gender && (
+                  <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
+                    <span className="flex-1 text-gray-800">{user.gender}</span>
+                    <span className="text-gray-500">⚥</span>
+                  </div>
+                )}
               </div>
               <button className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 cursor-pointer">
                 Edit

@@ -1,23 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../firebase';
 
 const ProfileModalComponent = () => {
-  // State to manage modal visibility
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
-  // Functions to open and close modal
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem('user'));
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
   const openProfileModal = () => setIsProfileModalOpen(true);
   const closeProfileModal = () => setIsProfileModalOpen(false);
+
+  const handleLogout = async () => {
+    const result = await logout();
+    if (result.success) {
+      alert('Berhasil logout');
+      navigate('/login');
+    } else {
+      alert('Gagal logout: ' + result.error);
+    }
+  };
+
+  if (!user) return null;
 
   return (
     <div>
       <div className="mt-3 flex justify-center gap-2">
         <button
           onClick={openProfileModal}
-          className="px-3 py-1 border rounded-full text-xs md:text-sm text-white bg-purple-500 cursor-pointer">
+          className="px-3 py-1 border rounded-full text-xs md:text-sm text-white bg-purple-500 cursor-pointer"
+        >
           Akun Saya
         </button>
-
-        <button className="px-3 py-1 border rounded-full text-xs md:text-sm text-purple-500 cursor-pointer">
+        <button
+          onClick={handleLogout}
+          className="px-3 py-1 border rounded-full text-xs md:text-sm text-purple-500 cursor-pointer"
+        >
           Keluar
         </button>
       </div>
@@ -27,7 +51,8 @@ const ProfileModalComponent = () => {
           <div className="bg-white p-4 sm:p-6 rounded-xl w-11/12 sm:max-w-md relative max-h-[90vh] overflow-y-auto">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 cursor-pointer"
-              onClick={closeProfileModal}>
+              onClick={closeProfileModal}
+            >
               ✕
             </button>
             <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center">
@@ -50,16 +75,24 @@ const ProfileModalComponent = () => {
               <div className="w-full space-y-3 mt-4">
                 <div className="flex items-center bg-gray-100 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
                   <span className="flex-1 text-gray-800 text-sm sm:text-base">
-                    Daniel
+                    {user.username || 'User'}
                   </span>
                   <span className="text-gray-500">👤</span>
                 </div>
-                <div className="flex items-center bg-gray-100 rounded-full px-3 py-1.5 sm:pxIPAddress:4 sm:py-2">
+                <div className="flex items-center bg-gray-100 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
                   <span className="flex-1 text-gray-800 text-sm sm:text-base">
-                    danielalexander@gmail.com
+                    {user.email}
                   </span>
                   <span className="text-gray-500">✉️</span>
                 </div>
+                {user.gender && (
+                  <div className="flex items-center bg-gray-100 rounded-full px-3 py-1.5 sm:px-4 sm:py-2">
+                    <span className="flex-1 text-gray-800 text-sm sm:text-base">
+                      {user.gender}
+                    </span>
+                    <span className="text-gray-500">⚥</span>
+                  </div>
+                )}
               </div>
               <button className="mt-4 bg-purple-600 text-white px-4 py-1.5 sm:px-6 sm:py-2 rounded-full hover:bg-purple-700 text-sm sm:text-base cursor-pointer">
                 Edit

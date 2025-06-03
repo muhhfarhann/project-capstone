@@ -1,24 +1,61 @@
-import React, { useState } from "react";
-import Aside from "../../../components/Eksplorasi Diri/General/Aside";
-import Profile from "../../../components/Eksplorasi Diri/General/profile";
-import ProfileWeb from "../../../components/Eksplorasi Diri/General/profile-web";
+import React, { useState, useEffect } from 'react';
+import Aside from '../../../components/Eksplorasi Diri/General/Aside';
+import Profile from '../../../components/Eksplorasi Diri/General/profile';
+import ProfileWeb from '../../../components/Eksplorasi Diri/General/profile-web';
+import JurnalPresenter from './jurnal-presnter';
+import JurnalModel from './jurnal-model';
 
-const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
+const JurnalView = () => {
   const [selectedEmoji, setSelectedEmoji] = useState({
-    src: "/emoji/happy.png",
-    value: "happy",
+    src: '/emoji/happy.png',
+    value: 'happy',
   });
   const [showEmojiDropdown, setShowEmojiDropdown] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("2025-05-17");
+  const [selectedDate, setSelectedDate] = useState('2025-05-17');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [jurnalHariIni, setJurnalHariIni] = useState('');
+  const [mood, setMood] = useState(null);
+  const [confidence, setConfidence] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+
+  const model = new JurnalModel();
+  const presenter = new JurnalPresenter(model, {
+    updateMood: (newMood, newConfidence) => {
+      setMood(newMood);
+      setConfidence(newConfidence);
+    },
+    clearInput: () => setJurnalHariIni(''),
+    showSuccess: (message) => setSuccess(message),
+    showError: (message) => setError(message),
+  });
 
   const emojiOptions = [
-    { src: "/emoji/very-sad.png", value: "very_sad" },
-    { src: "/emoji/sad.png", value: "sad" },
-    { src: "/emoji/happy.png", value: "happy" },
-    { src: "/emoji/very-happy.png", value: "very_happy" },
-    { src: "/emoji/angry.png", value: "angry" },
+    { src: '/emoji/very-sad.png', value: 'very_sad' },
+    { src: '/emoji/sad.png', value: 'sad' },
+    { src: '/emoji/happy.png', value: 'happy' },
+    { src: '/emoji/very-happy.png', value: 'very_happy' },
+    { src: '/emoji/angry.png', value: 'angry' },
   ];
+
+  const handleInputChange = (e) => {
+    setJurnalHariIni(e.target.value);
+  };
+
+  const handleSubmit = () => {
+    presenter.handleSubmit(jurnalHariIni, selectedEmoji);
+  };
+
+  useEffect(() => {
+    if (success) {
+      const timer = setTimeout(() => setSuccess(null), 3000);
+      return () => clearTimeout(timer);
+    }
+    if (error) {
+      const timer = setTimeout(() => setError(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [success, error]);
 
   return (
     <div className="flex h-screen">
@@ -36,10 +73,10 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
 
           <div className="flex items-center space-x-4">
             <ProfileWeb />
-
             <button
               className="md:hidden p-2"
-              onClick={() => setIsSidebarOpen(true)}>
+              onClick={() => setIsSidebarOpen(true)}
+            >
               <img
                 src="/icons/menu.png"
                 alt="Menu"
@@ -55,7 +92,8 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
             <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
               <button
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-xl font-bold cursor-pointer">
+                className="absolute top-4 right-4 text-xl font-bold cursor-pointer"
+              >
                 ×
               </button>
 
@@ -77,31 +115,32 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
               <nav className="space-y-4 px-2">
                 {[
                   {
-                    label: "Beranda",
-                    path: "/",
-                    icon: "/icons/home-mobile.png",
+                    label: 'Beranda',
+                    path: '/',
+                    icon: '/icons/home-mobile.png',
                   },
                   {
-                    label: "Catatan Mood",
-                    path: "/catatan",
-                    icon: "/icons/catatan-mobile.png",
+                    label: 'Catatan Mood',
+                    path: '/catatan',
+                    icon: '/icons/catatan-mobile.png',
                   },
                   {
-                    label: "Jurnal Harian",
-                    path: "/jurnal",
-                    icon: "/icons/jurnal-mobile.png",
+                    label: 'Jurnal Harian',
+                    path: '/jurnal',
+                    icon: '/icons/jurnal-mobile.png',
                   },
                   {
-                    label: "Refleksi Diri",
-                    path: "/refleksi",
-                    icon: "/icons/refleksi-mobile.png",
+                    label: 'Refleksi Diri',
+                    path: '/refleksi',
+                    icon: '/icons/refleksi-mobile.png',
                   },
                 ].map((item) => (
                   <a
                     key={item.path}
                     href={item.path}
                     className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500"
-                    onClick={() => setIsSidebarOpen(false)}>
+                    onClick={() => setIsSidebarOpen(false)}
+                  >
                     <img src={item.icon} alt={item.label} className="w-5 h-5" />
                     <span>{item.label}</span>
                   </a>
@@ -123,24 +162,68 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
                 placeholder="Hari ini belum ada cerita. Apa pun yang kamu rasakan, kamu bisa mulai menuliskannya di sini."
                 className="w-full h-32 border rounded-md p-3"
                 value={jurnalHariIni}
-                onChange={onInputChange}></textarea>
+                onChange={handleInputChange}
+              ></textarea>
+              <div className="relative mt-3">
+                <button
+                  className="flex items-center gap-2 border rounded-md p-2"
+                  onClick={() => setShowEmojiDropdown(!showEmojiDropdown)}
+                >
+                  <img
+                    src={selectedEmoji.src}
+                    alt="Emoji Terpilih"
+                    className="w-5 h-5"
+                  />
+                  <span>{selectedEmoji.value.replace('_', ' ')}</span>
+                </button>
+                {showEmojiDropdown && (
+                  <div className="absolute bg-white border rounded-md shadow-md mt-1 p-2">
+                    {emojiOptions.map((emoji) => (
+                      <button
+                        key={emoji.value}
+                        className="flex items-center gap-2 p-2 hover:bg-gray-100 w-full"
+                        onClick={() => {
+                          setSelectedEmoji(emoji);
+                          setShowEmojiDropdown(false);
+                        }}
+                      >
+                        <img
+                          src={emoji.src}
+                          alt={emoji.value}
+                          className="w-5 h-5"
+                        />
+                        <span>{emoji.value.replace('_', ' ')}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
               <div className="flex justify-end mt-3">
                 <button
-                  onClick={onSubmit}
-                  className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md cursor-pointer">
+                  onClick={handleSubmit}
+                  className="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md cursor-pointer"
+                >
                   Selanjutnya
                 </button>
               </div>
+              {mood && (
+                <div className="mt-3 text-sm">
+                  <p>Mood Terdeteksi: {mood.replace('_', ' ')}</p>
+                  <p>Tingkat Keyakinan: {(confidence * 100).toFixed(2)}%</p>
+                </div>
+              )}
+              {success && <div className="mt-3 text-green-500">{success}</div>}
+              {error && <div className="mt-3 text-red-500">{error}</div>}
             </section>
 
             <section className="bg-purple-300 p-4 rounded-xl shadow">
               <h2 className="text-md font-semibold mb-2">
-                Detail Jurnal Tanggal{" "}
-                {new Date(selectedDate).toLocaleDateString("id-ID")}
+                Detail Jurnal Tanggal{' '}
+                {new Date(selectedDate).toLocaleDateString('id-ID')}
               </h2>
               <div className="bg-white p-4 rounded-md shadow space-y-2 text-sm">
                 <p className="font-medium flex items-center gap-2">
-                  📅 {new Date(selectedDate).toLocaleDateString("id-ID")}
+                  📅 {new Date(selectedDate).toLocaleDateString('id-ID')}
                   <img src={selectedEmoji.src} alt="Mood" className="w-5 h-5" />
                 </p>
                 <p>
@@ -160,7 +243,8 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
             {[...Array(3)].map((_, idx) => (
               <div
                 key={idx}
-                className="bg-white p-3 rounded-lg shadow space-y-1 text-sm">
+                className="bg-white p-3 rounded-lg shadow space-y-1 text-sm"
+              >
                 <p className="font-medium">
                   📅 17 Mei 2025
                   <img
@@ -172,9 +256,9 @@ const JurnalView = ({ jurnalHariIni, onInputChange, onSubmit }) => {
                 <p>
                   {
                     [
-                      "Hari ini rasanya berat banget loh. Aku ngerasa gagal di presentasi tadi karena gugup dan jadi blank...",
-                      "Hari ini biasa aja. Nggak ada hal yang terlalu bikin senang atau sedih...",
-                      "Hari ini rasanya luar biasa menyenangkan...",
+                      'Hari ini rasanya berat banget loh. Aku ngerasa gagal di presentasi tadi karena gugup dan jadi blank...',
+                      'Hari ini biasa aja. Nggak ada hal yang terlalu bikin senang atau sedih...',
+                      'Hari ini rasanya luar biasa menyenangkan...',
                     ][idx]
                   }
                 </p>

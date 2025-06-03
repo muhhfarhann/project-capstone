@@ -57,8 +57,8 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type"],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 app.use(express.json());
@@ -179,6 +179,12 @@ app.post("/api/auth/login", async (req, res) => {
   }
 });
 
+app.post("/api/auth/logout", (req, res) => {
+  // Logout dilakukan di sisi client, endpoint ini hanya untuk konfirmasi
+  console.log("User logged out");
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+});
+
 // Endpoint untuk verifikasi token Firebase
 app.post("/api/auth/verify-token", async (req, res) => {
   const { token } = req.body;
@@ -226,6 +232,20 @@ app.post("/api/auth/test-firebase", async (req, res) => {
   } catch (error) {
     console.error("Firebase test error:", error.message, error.stack);
     res.status(400).json({ error: "Gagal membuat pengguna test", details: error.message });
+  }
+});
+
+app.get("/api/auth/user/:uid", async (req, res) => {
+  const { uid } = req.params;
+  try {
+    const user = users[uid];
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.status(200).json({ success: true, user: { uid, username: user.username, email: user.email, gender: user.gender } });
+  } catch (error) {
+    console.error("Error fetching user data:", error.message, error.stack);
+    res.status(500).json({ error: "Failed to fetch user data", details: error.message });
   }
 });
 
