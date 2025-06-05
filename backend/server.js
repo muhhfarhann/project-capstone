@@ -45,6 +45,7 @@ try {
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const db = admin.firestore();
 
 app.use(
   cors({
@@ -246,6 +247,50 @@ app.get("/api/auth/user/:uid", async (req, res) => {
   } catch (error) {
     console.error("Error fetching user data:", error.message, error.stack);
     res.status(500).json({ error: "Failed to fetch user data", details: error.message });
+  }
+});
+
+// Endpoint untuk menyimpan hasil refleksi
+app.post("/api/self-reflection/save", async (req, res) => {
+  const { userId, rawScore, scaledScore, category, answers } = req.body;
+  if (!userId || rawScore == null || scaledScore == null || !category) {
+    return res.status(400).json({ error: "userId, rawScore, scaledScore, dan category diperlukan" });
+  }
+  try {
+    const reflectionData = {
+      userId,
+      date: admin.firestore.Timestamp.now(),
+      rawScore,
+      scaledScore,
+      category,
+      answers: answers || [],
+    };
+    const docRef = await db.collection("self_reflections").add(reflectionData);
+    console.log("Reflection saved with ID:", docRef.id);
+    res.status(201).json({ success: true, reflectionId: docRef.id });
+  } catch (error) {
+    console.error("Error saving reflection:", error.message, error.stack);
+    res.status(500).json({ error: "Gagal menyimpan refleksi", details: error.message });
+  }
+});
+
+// Endpoint untuk mengambil riwayat refleksi pengguna
+app.get("/api/self-reflection/history/:userId", async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const snapshot = await db.collection("self_reflections")
+      .where("userId", "==", userId)
+      .orderBy("date", "desc")
+      .get();
+    const reflections = snapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      date: doc.data().date.toDate().toISOString(),
+    }));
+    res.status(200).json({ success: true, reflections });
+  } catch (error) {
+    console.error("Error fetching reflection history:", error.message, error.stack);
+    res.status(500).json({ error: "Gagal mengambil riwayat refleksi", details: error.message });
   }
 });
 

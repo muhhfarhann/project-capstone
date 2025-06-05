@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 // Inisialisasi Firebase
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+export const db = getFirestore(app);
 const auth = getAuth(app);
 
 // Fungsi untuk menyimpan catatan mood (terkait dengan pengguna yang login)
@@ -24,12 +24,13 @@ export const saveMoodEntry = async (mood, journal) => {
         const user = auth.currentUser;
         if (!user) throw new Error('User not authenticated');
 
-        const currentDate = new Date().toISOString();
+        const currentDate = new Date();
         const moodEntry = {
-            userId: user.uid, // Menyimpan berdasarkan UID pengguna
-            date: currentDate,
+            userId: user.uid,
+            date: currentDate.toISOString(),
             mood: mood,
             journal: journal.trim(),
+            timezone: 'Asia/Jakarta', // Tambahkan zona waktu untuk referensi
         };
 
         const docRef = await addDoc(collection(db, 'mood_entries'), moodEntry);
