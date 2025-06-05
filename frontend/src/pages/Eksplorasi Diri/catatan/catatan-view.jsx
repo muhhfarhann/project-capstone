@@ -10,6 +10,7 @@ import {
   getDay,
   subMonths,
 } from 'date-fns';
+import { toZonedTime } from 'date-fns-tz';
 import id from 'date-fns/locale/id';
 
 const CatatanView = ({
@@ -29,13 +30,15 @@ const CatatanView = ({
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(
+    toZonedTime(new Date(), 'Asia/Jakarta'),
+  );
 
-  // Perbarui currentDate setiap menit untuk real-time
+  // Perbarui currentDate setiap menit
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentDate(new Date());
-    }, 60000); // Update setiap 60 detik
+      setCurrentDate(toZonedTime(new Date(), 'Asia/Jakarta'));
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -54,7 +57,7 @@ const CatatanView = ({
     'Desember',
   ];
 
-  // Dinamisasi calendarData untuk 4 bulan ke belakang
+  // Definisi calendarData
   const calendarData = Array.from({ length: 4 }, (_, i) => {
     const monthDate = subMonths(currentDate, i);
     const monthIndex = monthDate.getMonth();
@@ -113,13 +116,14 @@ const CatatanView = ({
     return matchingOption ? matchingOption.src : '/logo.png';
   };
 
+  // Grafik Mingguan
   useEffect(() => {
     if (chartInstance.current) {
       chartInstance.current.destroy();
     }
 
     const ctx = chartRef.current.getContext('2d');
-    const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 }); // Senin sebagai awal minggu
+    const startOfWeekDate = startOfWeek(currentDate, { weekStartsOn: 1 });
     const weeklyLabels = [];
     const weeklyMoodData = [];
     const emojiImages = [];
@@ -154,18 +158,12 @@ const CatatanView = ({
     for (let i = 0; i < 7; i++) {
       const date = new Date(startOfWeekDate);
       date.setDate(startOfWeekDate.getDate() + i);
-      const zonedDate = new Date(
-        date.toLocaleString('en-US', { timeZone: 'Asia/Jakarta' }),
-      );
+      const zonedDate = toZonedTime(date, 'Asia/Jakarta');
 
       weeklyLabels.push(format(zonedDate, 'EEEEEE', { locale: id }));
 
       const entriesForDay = moodHistory.filter((m) => {
-        const entryDate = new Date(
-          new Date(m.date).toLocaleString('en-US', {
-            timeZone: 'Asia/Jakarta',
-          }),
-        );
+        const entryDate = toZonedTime(new Date(m.date), 'Asia/Jakarta');
         return (
           entryDate.getDate() === zonedDate.getDate() &&
           entryDate.getMonth() === zonedDate.getMonth() &&
@@ -421,7 +419,19 @@ const CatatanView = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {calendarData.map((item) => {
                 const firstDayOfMonth = getDay(
-                  new Date(item.year, item.monthIndex, 1),
+                  toZonedTime(
+                    new Date(item.year, item.monthIndex, 1),
+                    'Asia/Jakarta',
+                  ),
+                  { weekStartsOn: 1, locale: id },
+                );
+                console.log(
+                  `Bulan: ${
+                    item.bulan
+                  }, First Day: ${firstDayOfMonth}, Date: ${toZonedTime(
+                    new Date(item.year, item.monthIndex, 1),
+                    'Asia/Jakarta',
+                  )}`,
                 );
                 const daysInMonth = getDaysInMonth(
                   new Date(item.year, item.monthIndex),
@@ -441,10 +451,9 @@ const CatatanView = ({
                       <img
                         src={getMostFrequentMoodEmoji(
                           moodHistory.filter((entry) => {
-                            const entryDate = new Date(
-                              new Date(entry.date).toLocaleString('en-US', {
-                                timeZone: 'Asia/Jakarta',
-                              }),
+                            const entryDate = toZonedTime(
+                              new Date(entry.date),
+                              'Asia/Jakarta',
                             );
                             return (
                               entryDate.getMonth() === item.monthIndex &&
@@ -457,14 +466,13 @@ const CatatanView = ({
                       />
                     </div>
                     <div className="grid grid-cols-7 gap-1 text-xs md:text-sm">
+                      <div className="font-medium">Min</div>
                       <div className="font-medium">Sen</div>
                       <div className="font-medium">Sel</div>
                       <div className="font-medium">Rab</div>
                       <div className="font-medium">Kam</div>
                       <div className="font-medium">Jum</div>
                       <div className="font-medium">Sab</div>
-                      <div className="font-medium">Min</div>
-
                       {[...Array(totalSlots)].map((_, slotIndex) => {
                         const dayPosition =
                           slotIndex -
@@ -476,23 +484,28 @@ const CatatanView = ({
 
                         if (!day) return <div key={slotIndex}></div>;
 
-                        const entriesForDay = moodHistory
-                          .filter((entry) => {
-                            const entryDate = new Date(
-                              new Date(entry.date).toLocaleString('en-US', {
-                                timeZone: 'Asia/Jakarta',
-                              }),
-                            );
-                            return (
-                              entryDate.getDate() === day &&
-                              entryDate.getMonth() === item.monthIndex &&
-                              entryDate.getFullYear() === item.year
-                            );
-                          })
-                          .sort((a, b) => new Date(b.date) - new Date(a.date));
+                        const entriesForDay = moodHistory.filter((m) => {
+                          const entryDate = toZonedTime(
+                            new Date(m.date),
+                            'Asia/Jakarta',
+                          );
+                          const targetDate = toZonedTime(
+                            new Date(item.year, item.monthIndex, day),
+                            'Asia/Jakarta',
+                          );
+                          return (
+                            entryDate.getDate() === targetDate.getDate() &&
+                            entryDate.getMonth() === targetDate.getMonth() &&
+                            entryDate.getFullYear() === targetDate.getFullYear()
+                          );
+                        });
 
                         const moodEntry =
-                          entriesForDay.length > 0 ? entriesForDay[0] : null;
+                          entriesForDay.length > 0
+                            ? entriesForDay.sort(
+                                (a, b) => new Date(b.date) - new Date(a.date),
+                              )[0]
+                            : null;
                         const moodColor = moodEntry
                           ? getMoodColor(moodEntry.mood)
                           : '#D1D5DB';

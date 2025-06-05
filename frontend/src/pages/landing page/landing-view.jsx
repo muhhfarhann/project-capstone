@@ -131,7 +131,7 @@ export default function LandingSudahView() {
             <li className="relative">
               <button
                 onClick={toggleDropdown}
-                className="hover:text-purple-700">
+                className="hover:text-purple-700 cursor-pointer">
                 Eksplorasi Diri ▾
               </button>
               {isDropdownOpen && (
