@@ -1,9 +1,9 @@
-# UrKins
+# Mamood
 
-<p>Your Skin, Your Solution.</p>
+<p>Pahami Emosimu, Kenali Dirimu.</p>
 
-<h2>Introduction 👋</h2>
-<p>Hi everyone! We are from C242-PS177, nice to meet you:  </p>
+<h2>Kenalan Yuk 👋</h2>
+<p>Halo semua! Kami dari tim CC25-CF094, tim di balik aplikasi Mamood. Senang banget bisa ketemu kalian! Ini dia kami:</p>
 <table align="center">
       <thead>
         <tr>
@@ -78,11 +78,11 @@
       </tbody>
     </table>
 
-<h2>Themes Project 🌐</h2>
-<p>Health</p>
+<h2>Tema Proyek Kami 🌐</h2>
+<p>Inovasi Kesehatan</p>
 
 <h2>Tools/IDE/Library/Resources ⚙️</h2>
-<p>Our Tools, IDE, Library and Resources, based on our team's knowledge,</p>
+<p>Ini dia beberapa tools, library, dan resources yang kami pakai buat ngebangun Mamood:</p>
 <table align="center">
     <thead>
         <tr>
@@ -146,18 +146,19 @@
     </tbody>
 </table>
 
-<h2>Preview App 📱</h2>
+<h2>Tampilan Aplikasi 🌐</h2>
 <div>
 <img src="https://github.com/AGUN1505/mokap/blob/main/mokap.jpg" width="22%">
 <img src="https://github.com/AGUN1505/mokap/blob/main/mokap%201.png" width="22%">
 <img src="https://github.com/AGUN1505/mokap/blob/main/mokap%207.png" width="22%">
 <img src="https://github.com/AGUN1505/mokap/blob/main/mokap%205.png" width="22%">
 </div>
-<h2>Mobile Development Resource 📱</h2>
-<p>see more: <a href="https://github.com/Bangkit-C242-PS177/MD">Urkins Mobile Development</a> </p>
 
-<h2>Cloud Computing Resource ☁️</h2>
-<p>see more: <a href="https://github.com/Bangkit-C242-PS177/CC">Urkins Cloud Computing</a></p>
+<h2> Repositori Proyek Kami 📁</h2>
+<p>Mau lihat kode di balik layar? Langsung aja mampir ke Github kami!</p>
 
-<h2>Machine Learning Resource 🧠</h2>
-<p>see more: <a href="https://github.com/Bangkit-C242-PS177/ML">Urkins Machine Learning</a></p>
+<h3>Frontend & Backend<h3>
+<p>see more: <a href="">Aplikasi Mamood</a></p>
+
+<h3>Machine Learning</h3>
+<p>see more: <a href="">Machine Learning Mamood</a></p>
