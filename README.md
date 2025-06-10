@@ -2,6 +2,7 @@
 
 <p>Pahami Emosimu, Kenali Dirimu.</p>
 
+<br>
 <h2>Kenalan Yuk 👋</h2>
 <p>Halo semua! Kami dari tim CC25-CF094, tim di balik aplikasi Mamood. Senang banget bisa ketemu kalian! Ini dia kami:</p>
 <table align="center">
@@ -78,9 +79,11 @@
       </tbody>
     </table>
 
+<br>
 <h2>Tema Proyek Kami 🌐</h2>
 <p>Inovasi Kesehatan</p>
 
+<br>
 <h2>Tools/IDE/Library/Resources ⚙️</h2>
 <p>Ini dia beberapa tools, library, dan resources yang kami pakai buat ngebangun Mamood:</p>
 <table align="center">
@@ -110,42 +113,10 @@
             <td>Python</td>
         </tr>
         <tr>
-            <td rowspan="5">Mobile Development</td>
-            <td>Git/GitHub</td>
-            <td rowspan="5">-</td>
-        </tr>
-        <tr>            
-            <td>Android Studio</td>
-        </tr>
-        <tr>            
-            <td>Retrofit</td>
-        </tr>
-        <tr>            
-            <td>Zulu JDK</td>
-        </tr>
-        <tr>            
-            <td>Kotlin</td>
-        </tr>
-        <tr>
-            <td rowspan="6">Cloud Computing</td>
-            <td>Git/GitHub</td>
-            <td rowspan="6">-</td>
-        </tr>
-        <tr>            
-            <td>Visual Studio Code</td>
-        </tr>
-        <tr>            
-            <td>Postman</td>
-        </tr>
-        <tr>            
-            <td>Google Cloud Platform</td>
-        </tr>
-        <tr>            
-            <td>Flask Framework</td>
-        </tr>
     </tbody>
 </table>
 
+<br>
 <h2>Tampilan Aplikasi 🌐</h2>
 <div>
 <img src="https://github.com/AGUN1505/mokap/blob/main/mokap.jpg" width="22%">
@@ -154,11 +125,8 @@
 <img src="https://github.com/AGUN1505/mokap/blob/main/mokap%205.png" width="22%">
 </div>
 
+<br>
 <h2> Repositori Proyek Kami 📁</h2>
 <p>Mau lihat kode di balik layar? Langsung aja mampir ke Github kami!</p>
-
-<h3>Frontend & Backend<h3>
-<p>see more: <a href="">Aplikasi Mamood</a></p>
-
-<h3>Machine Learning</h3>
-<p>see more: <a href="">Machine Learning Mamood</a></p>
+<p></p><b>Frontend & Backend:</b> <a href="">FEBE Mamood</a></p>
+<p></p><b>Machine Learning:</b> <a href="">ML Mamood</a></p>
