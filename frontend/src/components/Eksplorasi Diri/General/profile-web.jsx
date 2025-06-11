@@ -1,18 +1,35 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../../firebase';
+import {
+  auth,
+  storage,
+  uploadProfilePhoto,
+  deleteProfilePhoto,
+  getProfilePhoto,
+  updateProfile,
+} from '../../../firebase';
 
 const WebProfileComponent = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState({ message: '', type: '' });
+  const [newDisplayName, setNewDisplayName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) {
-      setUser(storedUser);
-    }
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      setLoading(false);
+      if (user) {
+        const profileData = await getProfilePhoto(user.uid);
+        setUser({ ...user, photoURL: profileData.photoURL });
+        setNewDisplayName(user.displayName || '');
+      } else {
+        setUser(null);
+      }
+    });
+    return unsubscribe;
   }, []);
 
   const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
@@ -27,14 +44,94 @@ const WebProfileComponent = () => {
   const handleLogout = async () => {
     const result = await logout();
     if (result.success) {
-      alert('Berhasil logout');
+      setNotification({ message: 'Berhasil logout', type: 'success' });
       navigate('/login');
     } else {
-      alert('Gagal logout: ' + result.error);
+      setNotification({
+        message: 'Gagal logout: ' + result.error,
+        type: 'error',
+      });
     }
+    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
   };
 
-  if (!user) return null; // Jangan render jika tidak ada data pengguna
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file && auth.currentUser) {
+      setLoading(true);
+      try {
+        const photoURL = await uploadProfilePhoto(file, auth.currentUser.uid);
+        await updateProfile(auth.currentUser.uid, { photoURL });
+        setUser((prev) => ({ ...prev, photoURL }));
+        setNotification({ message: 'Foto berhasil diganti', type: 'success' });
+      } catch (error) {
+        setNotification({
+          message: 'Gagal mengganti foto: ' + error.message,
+          type: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setNotification({
+        message: 'Pengguna tidak diautentikasi',
+        type: 'error',
+      });
+    }
+    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
+  };
+
+  const handleRemovePhoto = async () => {
+    if (auth.currentUser) {
+      setLoading(true);
+      try {
+        await deleteProfilePhoto(auth.currentUser.uid);
+        await updateProfile(auth.currentUser.uid, { photoURL: '/profile.png' });
+        setUser((prev) => ({ ...prev, photoURL: '/profile.png' }));
+        setNotification({
+          message: 'Foto dihapus, kembali ke default',
+          type: 'success',
+        });
+      } catch (error) {
+        setNotification({
+          message: 'Gagal menghapus foto: ' + error.message,
+          type: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
+  };
+
+  const handleSaveName = async () => {
+    if (newDisplayName.trim() && newDisplayName !== user.displayName) {
+      setLoading(true);
+      try {
+        await updateProfile(auth.currentUser.uid, {
+          displayName: newDisplayName,
+        });
+        setUser((prev) => ({ ...prev, displayName: newDisplayName }));
+        setNotification({ message: 'Nama berhasil diganti', type: 'success' });
+      } catch (error) {
+        setNotification({
+          message: 'Gagal mengganti nama: ' + error.message,
+          type: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setNotification({
+        message: 'Nama tidak boleh kosong atau sama',
+        type: 'error',
+      });
+    }
+    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
+  };
+
+  if (loading) return <div>Loading...</div>;
+  if (!user) return null;
 
   return (
     <div className="relative flex gap-3">
@@ -43,12 +140,15 @@ const WebProfileComponent = () => {
         onClick={toggleProfile}
       >
         <span className="font-semibold text-sm md:text-base">
-          Halo, {user.username || 'User'}!
+          Halo, {user.displayName || 'User'}!
         </span>
         <img
-          src="/profile.png"
+          src={user.photoURL || '/profile.png'}
           alt="Profile"
           className="w-6 h-6 md:w-8 md:h-8 rounded-full border border-white cursor-pointer"
+          onError={(e) => {
+            e.target.src = '/profile.png';
+          }}
         />
       </div>
 
@@ -79,6 +179,8 @@ const WebProfileComponent = () => {
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-gray-800 cursor-pointer"
               onClick={closeProfileModal}
+              aria-label="Close modal"
+              onKeyDown={(e) => e.key === 'Escape' && closeProfileModal()}
             >
               ✕
             </button>
@@ -87,23 +189,38 @@ const WebProfileComponent = () => {
             </h2>
             <div className="flex flex-col items-center space-y-4">
               <img
-                src="/profile.png"
+                src={user.photoURL || '/profile.png'}
                 alt="Profile"
                 className="w-24 h-24 rounded-full object-cover"
+                onError={(e) => {
+                  e.target.src = '/profile.png';
+                }}
               />
               <div className="flex gap-4">
-                <button className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 cursor-pointer">
+                <label className="bg-purple-600 text-white px-4 py-2 rounded-full hover:bg-purple-700 cursor-pointer">
                   Ganti foto
-                </button>
-                <button className="border border-purple-600 text-purple-600 px-4 py-2 rounded-full hover:bg-purple-100 cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                </label>
+                <button
+                  onClick={handleRemovePhoto}
+                  className="border border-purple-600 text-purple-600 px-4 py-2 rounded-full hover:bg-purple-100 cursor-pointer"
+                >
                   Hapus
                 </button>
               </div>
               <div className="w-full space-y-3 mt-4">
                 <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
-                  <span className="flex-1 text-gray-800">
-                    {user.username || 'User'}
-                  </span>
+                  <input
+                    type="text"
+                    value={newDisplayName}
+                    onChange={(e) => setNewDisplayName(e.target.value)}
+                    className="flex-1 bg-transparent text-gray-800 outline-none"
+                  />
                   <span className="text-gray-500">👤</span>
                 </div>
                 <div className="flex items-center bg-gray-100 rounded-full px-4 py-2">
@@ -117,11 +234,24 @@ const WebProfileComponent = () => {
                   </div>
                 )}
               </div>
-              <button className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 cursor-pointer">
-                Edit
+              <button
+                onClick={handleSaveName}
+                className="mt-4 bg-purple-600 text-white px-6 py-2 rounded-full hover:bg-purple-700 cursor-pointer"
+              >
+                Simpan
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {notification.message && (
+        <div
+          className={`fixed top-4 right-4 p-2 rounded ${
+            notification.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+          } text-white`}
+        >
+          {notification.message}
         </div>
       )}
     </div>

@@ -425,19 +425,21 @@ const CatatanView = ({
                   ),
                   { weekStartsOn: 1, locale: id },
                 );
+                const daysInMonth = getDaysInMonth(
+                  new Date(item.year, item.monthIndex),
+                );
+                const totalSlots =
+                  Math.ceil((firstDayOfMonth + daysInMonth) / 7) * 7;
+
+                // Logging untuk debugging
                 console.log(
                   `Bulan: ${
                     item.bulan
                   }, First Day: ${firstDayOfMonth}, Date: ${toZonedTime(
                     new Date(item.year, item.monthIndex, 1),
                     'Asia/Jakarta',
-                  )}`,
+                  )}, Mood History Count: ${moodHistory.length}`,
                 );
-                const daysInMonth = getDaysInMonth(
-                  new Date(item.year, item.monthIndex),
-                );
-                const totalSlots =
-                  Math.ceil((firstDayOfMonth + daysInMonth) / 7) * 7;
 
                 return (
                   <div
@@ -484,13 +486,13 @@ const CatatanView = ({
 
                         if (!day) return <div key={slotIndex}></div>;
 
+                        const targetDate = toZonedTime(
+                          new Date(item.year, item.monthIndex, day),
+                          'Asia/Jakarta',
+                        );
                         const entriesForDay = moodHistory.filter((m) => {
                           const entryDate = toZonedTime(
                             new Date(m.date),
-                            'Asia/Jakarta',
-                          );
-                          const targetDate = toZonedTime(
-                            new Date(item.year, item.monthIndex, day),
                             'Asia/Jakarta',
                           );
                           return (
@@ -500,6 +502,14 @@ const CatatanView = ({
                           );
                         });
 
+                        // Logging untuk memeriksa entri per hari
+                        console.log(
+                          `Tanggal: ${targetDate.toISOString()}, Entri: ${
+                            entriesForDay.length
+                          }`,
+                          entriesForDay,
+                        );
+
                         const moodEntry =
                           entriesForDay.length > 0
                             ? entriesForDay.sort(
@@ -508,12 +518,12 @@ const CatatanView = ({
                             : null;
                         const moodColor = moodEntry
                           ? getMoodColor(moodEntry.mood)
-                          : '#D1D5DB';
+                          : '#D1D5DB'; // Warna default untuk hari tanpa entri
 
                         return (
                           <div
                             key={slotIndex}
-                            className="p-1"
+                            className="p-1 text-center"
                             style={{ backgroundColor: moodColor }}
                           >
                             {day}

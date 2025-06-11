@@ -7,7 +7,7 @@ export default class LandingSudahModel {
       const history = await fetchMoodHistory();
       return history;
     } catch (error) {
-      console.error('Error fetching mood data:', error);
+      // console.error('Error fetching mood data:', error);
       return [];
     }
   }
@@ -24,7 +24,7 @@ export default class LandingSudahModel {
       }
       return { success: false, error: data.error };
     } catch (error) {
-      console.error('Error fetching user data:', error);
+      // console.error('Error fetching user data:', error);
       return { success: false, error: 'Failed to fetch user data' };
     }
   }

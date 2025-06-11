@@ -64,7 +64,7 @@ app.use(
 );
 app.use(express.json());
 
-// Simulasi database sementara
+// Simulasi database sementara (tidak digunakan jika Firebase sudah aktif)
 const users = {};
 
 // Rute dasar untuk testing
@@ -140,7 +140,7 @@ app.post("/api/auth/register", async (req, res) => {
       gender,
       password: hashedPassword,
     };
-    users[userRecord.uid] = user;
+    // Simpan ke objek users (opsional, karena Firebase sudah menyimpan)
     res.status(201).json({
       message: "Pengguna berhasil dibuat",
       user: { username, email, gender },
@@ -172,7 +172,13 @@ app.post("/api/auth/login", async (req, res) => {
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
     const uid = decodedToken.uid;
-    const user = users[uid] || { uid, username: "User", gender: "" };
+    // Ambil data dari Firebase Authentication (opsional, karena users adalah simulasi)
+    const userRecord = await admin.auth().getUser(uid);
+    const user = {
+      uid,
+      username: userRecord.displayName || "User",
+      gender: userRecord.gender || "",
+    };
     res.status(200).json({ success: true, user });
   } catch (error) {
     console.error("Error di login:", error.message, error.stack);
@@ -210,43 +216,14 @@ app.post("/api/auth/update-user", async (req, res) => {
     return res.status(400).json({ error: "UID dan username diperlukan" });
   }
   try {
-    const user = { uid, username, gender: gender || "" };
-    users[uid] = user;
-    console.log("Memperbarui data pengguna:", user);
+    await admin.auth().updateUser(uid, {
+      displayName: username,
+      ...(gender && { customClaims: { gender } }), // Simpan gender sebagai custom claim
+    });
     res.status(200).json({ success: true });
   } catch (error) {
     console.error("Error di update-user:", error.message, error.stack);
     res.status(500).json({ error: "Gagal memperbarui data pengguna", details: error.message });
-  }
-});
-
-// Endpoint sementara untuk uji Firebase
-app.post("/api/auth/test-firebase", async (req, res) => {
-  try {
-    const userRecord = await admin.auth().createUser({
-      email: "test@example.com",
-      password: "12345678",
-      displayName: "TestUser",
-    });
-    console.log("Berhasil membuat pengguna test:", userRecord.uid);
-    res.status(201).json({ message: "Test user created", uid: userRecord.uid });
-  } catch (error) {
-    console.error("Firebase test error:", error.message, error.stack);
-    res.status(400).json({ error: "Gagal membuat pengguna test", details: error.message });
-  }
-});
-
-app.get("/api/auth/user/:uid", async (req, res) => {
-  const { uid } = req.params;
-  try {
-    const user = users[uid];
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    res.status(200).json({ success: true, user: { uid, username: user.username, email: user.email, gender: user.gender } });
-  } catch (error) {
-    console.error("Error fetching user data:", error.message, error.stack);
-    res.status(500).json({ error: "Failed to fetch user data", details: error.message });
   }
 });
 
