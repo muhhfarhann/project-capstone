@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Aside from '../../../components/Eksplorasi Diri/General/Aside';
-import Profile from '../../../components/Eksplorasi Diri/General/profile';
-import ProfileWeb from '../../../components/Eksplorasi Diri/General/profile-web';
+import React, { useState } from "react";
+import Aside from "../../../components/Eksplorasi Diri/General/Aside";
+import Profile from "../../../components/Eksplorasi Diri/General/profile";
+import ProfileWeb from "../../../components/Eksplorasi Diri/General/profile-web";
 
 const RefleksiView = ({
   jawaban = [],
@@ -16,18 +16,18 @@ const RefleksiView = ({
 
   const getResultEmoji = (category) => {
     switch (category) {
-      case 'Normal':
-        return '/emoji/happy.png';
-      case 'Ringan':
-        return '/emoji/happy.png';
-      case 'Sedang':
-        return '/emoji/sad.png';
-      case 'Berat':
-        return '/emoji/very-sad.png';
-      case 'Sangat Berat':
-        return '/emoji/very-sad.png';
+      case "Normal":
+        return "/emoji/happy.png";
+      case "Ringan":
+        return "/emoji/happy.png";
+      case "Sedang":
+        return "/emoji/sad.png";
+      case "Berat":
+        return "/emoji/very-sad.png";
+      case "Sangat Berat":
+        return "/emoji/very-sad.png";
       default:
-        return '/emoji/happy.png';
+        return "/emoji/happy.png";
     }
   };
 
@@ -49,8 +49,7 @@ const RefleksiView = ({
             <ProfileWeb />
             <button
               className="md:hidden p-2"
-              onClick={() => setIsSidebarOpen(true)}
-            >
+              onClick={() => setIsSidebarOpen(true)}>
               <img
                 src="/icons/menu.png"
                 alt="Menu"
@@ -62,12 +61,11 @@ const RefleksiView = ({
 
         {/* Sidebar Mobile */}
         {isSidebarOpen && (
-          <div className="fixed inset-0 z-50 bg-black bg-opacity-40 md:hidden">
+          <div className="fixed inset-0 z-50 bg-opacity-40 md:hidden">
             <div className="w-3/4 max-w-sm h-full bg-[#f0f0ff] p-4 shadow-lg relative">
               <button
                 onClick={() => setIsSidebarOpen(false)}
-                className="absolute top-4 right-4 text-xl font-bold cursor-pointer"
-              >
+                className="absolute top-4 right-4 text-xl font-bold cursor-pointer">
                 ×
               </button>
 
@@ -86,32 +84,31 @@ const RefleksiView = ({
               <nav className="space-y-4 px-2">
                 {[
                   {
-                    label: 'Beranda',
-                    path: '/',
-                    icon: '/icons/home-mobile.png',
+                    label: "Beranda",
+                    path: "/",
+                    icon: "/icons/home-mobile.png",
                   },
                   {
-                    label: 'Catatan Mood',
-                    path: '/catatan',
-                    icon: '/icons/catatan-mobile.png',
+                    label: "Catatan Mood",
+                    path: "/catatan",
+                    icon: "/icons/catatan-mobile.png",
                   },
                   {
-                    label: 'Jurnal Harian',
-                    path: '/jurnal',
-                    icon: '/icons/jurnal-mobile.png',
+                    label: "Jurnal Harian",
+                    path: "/jurnal",
+                    icon: "/icons/jurnal-mobile.png",
                   },
                   {
-                    label: 'Refleksi Diri',
-                    path: '/refleksi',
-                    icon: '/icons/refleksi-mobile.png',
+                    label: "Refleksi Diri",
+                    path: "/refleksi",
+                    icon: "/icons/refleksi-mobile.png",
                   },
                 ].map((item) => (
                   <a
                     key={item.path}
                     href={item.path}
                     onClick={() => setIsSidebarOpen(false)}
-                    className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500"
-                  >
+                    className="flex items-center space-x-3 text-gray-700 font-medium hover:text-purple-500">
                     <img src={item.icon} alt={item.label} className="w-5 h-5" />
                     <span>{item.label}</span>
                   </a>
@@ -128,9 +125,8 @@ const RefleksiView = ({
               <div
                 key={index}
                 className={`bg-white p-5 rounded-xl shadow-md border-l-8 ${
-                  jawaban?.[index] ? 'border-purple-400' : 'border-gray-300'
-                }`}
-              >
+                  jawaban?.[index] ? "border-purple-400" : "border-gray-300"
+                }`}>
                 <p className="font-semibold mb-3">Pertanyaan {index + 1}</p>
                 <p className="text-gray-700 mb-4">{text}</p>
                 <div className="flex gap-4 justify-between text-sm text-gray-500">
@@ -144,10 +140,9 @@ const RefleksiView = ({
                       onClick={() => onPilihJawaban(index, val)}
                       className={`w-6 h-6 rounded-full border-2 ${
                         jawaban?.[index] === val
-                          ? 'bg-purple-400 border-purple-600'
-                          : 'border-gray-400'
-                      }`}
-                    ></button>
+                          ? "bg-purple-400 border-purple-600"
+                          : "border-gray-400"
+                      }`}></button>
                   ))}
                 </div>
               </div>
@@ -164,10 +159,9 @@ const RefleksiView = ({
               onClick={onSubmit}
               disabled={isLoading}
               className={`bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-md w-full ${
-                isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-              }`}
-            >
-              {isLoading ? 'Memproses...' : 'Lihat Hasil'}
+                isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+              }`}>
+              {isLoading ? "Memproses..." : "Lihat Hasil"}
             </button>
 
             <div className="bg-white p-5 rounded-xl text-center shadow space-y-2">
@@ -186,10 +180,10 @@ const RefleksiView = ({
                   </p>
                   <p className="text-sm text-gray-600">
                     Refleksi ini menunjukkan tingkat distres psikologis Anda.
-                    {result.category === 'Berat' ||
-                    result.category === 'Sangat Berat'
-                      ? ' Pertimbangkan untuk berkonsultasi dengan profesional kesehatan mental.'
-                      : ' Terus jaga kesehatan mental Anda!'}
+                    {result.category === "Berat" ||
+                    result.category === "Sangat Berat"
+                      ? " Pertimbangkan untuk berkonsultasi dengan profesional kesehatan mental."
+                      : " Terus jaga kesehatan mental Anda!"}
                   </p>
                 </>
               ) : (
@@ -212,16 +206,15 @@ const RefleksiView = ({
                 📊 Interpretasi Skor
               </h3>
               {[
-                { label: 'Sangat Berat', range: '80-100' },
-                { label: 'Berat', range: '61-79' },
-                { label: 'Sedang', range: '44-60' },
-                { label: 'Ringan', range: '35-43' },
-                { label: 'Normal', range: '0-34' },
+                { label: "Sangat Berat", range: "80-100" },
+                { label: "Berat", range: "61-79" },
+                { label: "Sedang", range: "44-60" },
+                { label: "Ringan", range: "35-43" },
+                { label: "Normal", range: "0-34" },
               ].map((item, i) => (
                 <div
                   key={i}
-                  className="flex justify-between items-center bg-yellow-100 px-3 py-1 rounded text-xs"
-                >
+                  className="flex justify-between items-center bg-yellow-100 px-3 py-1 rounded text-xs">
                   <span>{item.range}</span>
                   <span className="font-semibold">{item.label}</span>
                 </div>
