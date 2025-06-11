@@ -88,17 +88,17 @@ export default function LandingSudahView() {
                   {isSubmenuOpen && (
                     <ul className="pl-4 mt-2 space-y-2 text-sm text-gray-700">
                       <li>
-                        <a href="/catatan" className="hover:text-purple-700">
+                        <a href="#catatan" className="hover:text-purple-700">
                           Catatan Mood
                         </a>
                       </li>
                       <li>
-                        <a href="/jurnal" className="hover:text-purple-700">
+                        <a href="#jurnal" className="hover:text-purple-700">
                           Jurnal Harian
                         </a>
                       </li>
                       <li>
-                        <a href="/refleksi" className="hover:text-purple-700">
+                        <a href="#refleksi" className="hover:text-purple-700">
                           Refleksi Diri
                         </a>
                       </li>
@@ -106,12 +106,12 @@ export default function LandingSudahView() {
                   )}
                 </li>
                 <li>
-                  <a href="/tentangkami" className="hover:text-purple-700">
+                  <a href="#tentangkami" className="hover:text-purple-700">
                     Tentang Kami
                   </a>
                 </li>
                 <li>
-                  <a href="/testimoni" className="hover:text-purple-700">
+                  <a href="#testimoni" className="hover:text-purple-700">
                     Testimoni
                   </a>
                 </li>
@@ -138,21 +138,21 @@ export default function LandingSudahView() {
                 <ul className="absolute left-0 mt-2 bg-white rounded-md shadow-md text-sm py-2 w-48 z-20">
                   <li>
                     <a
-                      href="/catatan"
+                      href="#catatan"
                       className="block px-4 py-2 hover:bg-purple-100">
                       Catatan Mood
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/jurnal"
+                      href="#jurnal"
                       className="block px-4 py-2 hover:bg-purple-100">
                       Jurnal Harian
                     </a>
                   </li>
                   <li>
                     <a
-                      href="/refleksi"
+                      href="#refleksi"
                       className="block px-4 py-2 hover:bg-purple-100">
                       Refleksi Diri
                     </a>
@@ -161,12 +161,12 @@ export default function LandingSudahView() {
               )}
             </li>
             <li>
-              <a href="/tentangkami" className="hover:text-purple-700">
+              <a href="#tentangkami" className="hover:text-purple-700">
                 Tentang Kami
               </a>
             </li>
             <li>
-              <a href="/testimoni" className="hover:text-purple-700">
+              <a href="#testimoni" className="hover:text-purple-700">
                 Testimoni
               </a>
             </li>
@@ -225,7 +225,7 @@ export default function LandingSudahView() {
       </div>
 
       {/* Catatan */}
-      <section className="bg-[#e8e7f3] px-4 py-20">
+      <section id="catatan" className="bg-[#e8e7f3] px-4 py-20">
         <div className="flex flex-col-reverse md:flex-col text-center items-center">
           {/* Teks Section */}
           <div>
@@ -258,7 +258,9 @@ export default function LandingSudahView() {
       </section>
 
       {/* Jurnal */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative py-20">
+      <section
+        id="jurnal"
+        className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 relative py-20">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -300,7 +302,9 @@ export default function LandingSudahView() {
       </section>
 
       {/* Refleksi diri */}
-      <section className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
+      <section
+        id="refleksi"
+        className="bg-[#e8e7f3] min-h-screen flex items-center justify-center px-6 py-20 relative">
         {/* Background Wave Image */}
         <img
           src="/wave3.png"
@@ -342,7 +346,9 @@ export default function LandingSudahView() {
       </section>
 
       {/* Tentang kami */}
-      <section className="relative min-h-screen bg-[#e8e7f3] flex items-center justify-center px-6 py-16 overflow-hidden">
+      <section
+        id="tentangkami"
+        className="relative min-h-screen bg-[#e8e7f3] flex items-center justify-center px-6 py-16 overflow-hidden">
         {/* Background Wave */}
         <img
           src="/wave3.png"
@@ -417,6 +423,7 @@ export default function LandingSudahView() {
 
       {/* Testimoni */}
       <section
+        id="testimoni"
         style={{
           backgroundColor: "#e8e7f3",
           minHeight: "100vh",
@@ -469,6 +476,7 @@ export default function LandingSudahView() {
           </p>
 
           <button
+            onClick={() => (window.location.href = "/login")}
             style={{
               backgroundColor: "#7f6bdc",
               color: "white",
