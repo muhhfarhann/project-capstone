@@ -1,4 +1,4 @@
-# UrKins
+# Mamood
 
 <p>Your Skin, Your Solution.</p>
 
