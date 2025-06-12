@@ -20,11 +20,10 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    // Kirim error ke setError dari props
     this.props.setError(
       `Terjadi error: ${error.message}. Silakan coba lagi atau refresh halaman.`,
     );
-    this.setState({ hasError: false }); // Reset state agar ErrorBoundary tidak menampilkan fallback
+    this.setState({ hasError: false });
   }
 
   render() {
@@ -50,6 +49,8 @@ const JurnalView = ({
     toZonedTime(new Date(), 'Asia/Jakarta'),
   );
   const [editingJournal, setEditingJournal] = useState(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [journalIdToDelete, setJournalIdToDelete] = useState(null);
 
   const model = new JurnalModel();
   const presenter = new JurnalPresenter(model, {
@@ -98,8 +99,8 @@ const JurnalView = ({
       setError('Jurnal tidak boleh kosong!');
       return;
     }
-    setError(''); // Kosongkan error sebelum submit
-    setSuccess(''); // Kosongkan success sebelum submit
+    setError('');
+    setSuccess('');
     presenter.handleSubmit(jurnalHariIni);
   };
 
@@ -118,8 +119,8 @@ const JurnalView = ({
       return;
     }
     if (editingJournal) {
-      setError(''); // Kosongkan error sebelum submit
-      setSuccess(''); // Kosongkan success sebelum submit
+      setError('');
+      setSuccess('');
       presenter.handleEdit(editingJournal.id, jurnalHariIni);
     }
   };
@@ -129,11 +130,23 @@ const JurnalView = ({
       setError('Silakan login terlebih dahulu!');
       return;
     }
-    if (window.confirm('Yakin ingin menghapus jurnal ini?')) {
-      setError(''); // Kosongkan error sebelum delete
-      setSuccess(''); // Kosongkan success sebelum delete
-      presenter.handleDelete(journalId);
+    setJournalIdToDelete(journalId);
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (journalIdToDelete) {
+      setError('');
+      setSuccess('');
+      presenter.handleDelete(journalIdToDelete);
+      setIsDeleteModalOpen(false);
+      setJournalIdToDelete(null);
     }
+  };
+
+  const cancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setJournalIdToDelete(null);
   };
 
   const getMoodEmoji = (mood) => {
@@ -353,6 +366,34 @@ const JurnalView = ({
               </div>
             </section>
           </div>
+
+          {isDeleteModalOpen && (
+            <div className="fixed inset-0 bg-transparent backdrop-blur-sm bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-6 rounded-xl shadow-lg max-w-sm w-full">
+                <h3 className="text-lg font-semibold mb-4">
+                  Konfirmasi Penghapusan
+                </h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  Apakah Anda yakin ingin menghapus jurnal ini? Tindakan ini
+                  tidak dapat dibatalkan.
+                </p>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={cancelDelete}
+                    className="bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded-md"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                  >
+                    Hapus
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </ErrorBoundary>
