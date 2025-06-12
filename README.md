@@ -50,7 +50,7 @@
           <td>FC193D5Y1697</td>
           <td>Muhammad Farhan</td>
           <td>Frontend & Backend</td>
-          <td>Binasaran Informatika</td>
+          <td>Bina sarana Informatika</td>
           <td>
               <a href="https://www.linkedin.com/in/wanadya/"><img src="https://img.shields.io/badge/--linkedin?label=LinkedIn&logo=LinkedIn&style=social"></a>
               <a href="https://github.com/WanodyaHapsari"><img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white"></a>
